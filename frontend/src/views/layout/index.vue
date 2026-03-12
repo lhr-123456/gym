@@ -29,6 +29,26 @@
                 <i class="el-icon-list"></i>
                 <span slot="title">会员列表</span>
               </el-menu-item>
+              <el-menu-item index="/member/level">
+                <i class="el-icon-medal"></i>
+                <span slot="title">会员等级</span>
+              </el-menu-item>
+              <el-menu-item index="/member/card">
+                <i class="el-icon-credit-card"></i>
+                <span slot="title">会员卡管理</span>
+              </el-menu-item>
+              <el-menu-item index="/member/signin">
+                <i class="el-icon-calendar"></i>
+                <span slot="title">会员签到</span>
+              </el-menu-item>
+              <el-menu-item index="/member/bodyTest">
+                <i class="el-icon-data-analysis"></i>
+                <span slot="title">体测记录</span>
+              </el-menu-item>
+              <el-menu-item index="/member/consumption">
+                <i class="el-icon-shopping-cart-2"></i>
+                <span slot="title">消费记录</span>
+              </el-menu-item>
             </el-submenu>
             <el-submenu index="/coach">
               <template slot="title">
@@ -39,6 +59,34 @@
                 <i class="el-icon-list"></i>
                 <span slot="title">教练列表</span>
               </el-menu-item>
+              <el-menu-item index="/coach/certificate">
+                <i class="el-icon-medal"></i>
+                <span slot="title">教练证书</span>
+              </el-menu-item>
+              <el-menu-item index="/coach/specialty">
+                <i class="el-icon-star-on"></i>
+                <span slot="title">教练专长</span>
+              </el-menu-item>
+              <el-menu-item index="/coach/schedule">
+                <i class="el-icon-date"></i>
+                <span slot="title">教练排班</span>
+              </el-menu-item>
+              <el-menu-item index="/coach/shift">
+                <i class="el-icon-sort"></i>
+                <span slot="title">教练调班</span>
+              </el-menu-item>
+              <el-menu-item index="/coach/salary">
+                <i class="el-icon-money"></i>
+                <span slot="title">教练工资</span>
+              </el-menu-item>
+              <el-menu-item index="/coach/performance">
+                <i class="el-icon-data-line"></i>
+                <span slot="title">教练绩效</span>
+              </el-menu-item>
+              <el-menu-item index="/coach/review">
+                <i class="el-icon-chat-dot-round"></i>
+                <span slot="title">教练评价</span>
+              </el-menu-item>
             </el-submenu>
             <el-submenu index="/course">
               <template slot="title">
@@ -48,6 +96,30 @@
               <el-menu-item index="/course/list">
                 <i class="el-icon-list"></i>
                 <span slot="title">课程列表</span>
+              </el-menu-item>
+              <el-menu-item index="/course/category">
+                <i class="el-icon-folder"></i>
+                <span slot="title">课程分类</span>
+              </el-menu-item>
+              <el-menu-item index="/course/schedule">
+                <i class="el-icon-date"></i>
+                <span slot="title">课程排期</span>
+              </el-menu-item>
+              <el-menu-item index="/course/my">
+                <i class="el-icon-list"></i>
+                <span slot="title">我的课程</span>
+              </el-menu-item>
+              <el-menu-item index="/course/available">
+                <i class="el-icon-list"></i>
+                <span slot="title">可预约课程</span>
+              </el-menu-item>
+              <el-menu-item index="/course/booking">
+                <i class="el-icon-date"></i>
+                <span slot="title">课程预约</span>
+              </el-menu-item>
+              <el-menu-item index="/course/review">
+                <i class="el-icon-chat-dot-round"></i>
+                <span slot="title">课程评价</span>
               </el-menu-item>
             </el-submenu>
             <el-submenu index="/equipment">

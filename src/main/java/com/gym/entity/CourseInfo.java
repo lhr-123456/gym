@@ -2,6 +2,8 @@ package com.gym.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -22,8 +24,17 @@ public class CourseInfo implements Serializable {
     @TableField("coach_id")
     private Long coachId;
 
+    @TableField(exist = false)
+    private String coachName;
+
     @TableField("course_type")
     private String courseType;
+
+    @TableField("category_id")
+    private Long categoryId;
+
+    @TableField(exist = false)
+    private String categoryName;
 
     @TableField("description")
     private String description;
@@ -41,9 +52,13 @@ public class CourseInfo implements Serializable {
     private Integer currentCapacity;
 
     @TableField("start_time")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime startTime;
 
     @TableField("end_time")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime endTime;
 
     @TableField("status")

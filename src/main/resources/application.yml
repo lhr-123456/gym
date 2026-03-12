@@ -13,19 +13,19 @@ spring:
     username: root
     password: 123456
   
-  # Redis 配置（可选）
-  # 如果没有安装 Redis，可以先注释掉这部分
-  redis:
-    host: localhost
-    port: 6379
-    password: 
-    database: 0
-    lettuce:
-      pool:
-        max-active: 8
-        max-wait: -1ms
-        max-idle: 8
-        min-idle: 0
+  # Redis 配置（如果没有安装 Redis，请注释掉整个 redis 部分）
+  # 启动前请确保 Redis 已安装并运行
+  # redis:
+  #   host: localhost
+  #   port: 6379
+  #   password: 
+  #   database: 0
+  #   lettuce:
+  #     pool:
+  #       max-active: 8
+  #       max-wait: -1ms
+  #       max-idle: 8
+  #       min-idle: 0
   
   jackson:
     time-zone: Asia/Shanghai

@@ -6,6 +6,16 @@
           <el-form-item label="课程名称">
             <el-input v-model="queryForm.courseName" placeholder="请输入课程名称" clearable></el-input>
           </el-form-item>
+          <el-form-item label="课程分类">
+            <el-select v-model="queryForm.categoryId" placeholder="请选择" clearable>
+              <el-option
+                v-for="item in categoryList"
+                :key="item.categoryId"
+                :label="item.categoryName"
+                :value="item.categoryId">
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="课程类型">
             <el-select v-model="queryForm.courseType" placeholder="请选择" clearable>
               <el-option label="团课" value="团课"></el-option>
@@ -27,8 +37,9 @@
         <el-table :data="tableData" border :style="{ width: '100%' }" v-loading="loading">
         <el-table-column prop="courseId" label="课程 ID" width="80"></el-table-column>
         <el-table-column prop="courseName" label="课程名称" width="150"></el-table-column>
+        <el-table-column prop="categoryName" label="课程分类" width="100"></el-table-column>
         <el-table-column prop="courseType" label="课程类型" width="80"></el-table-column>
-        <el-table-column prop="coachId" label="教练 ID" width="80"></el-table-column>
+        <el-table-column prop="coachName" label="教练" width="100"></el-table-column>
         <el-table-column prop="durationMin" label="时长 (分钟)" width="80"></el-table-column>
         <el-table-column prop="price" label="价格" width="80"></el-table-column>
         <el-table-column prop="maxCapacity" label="最大容量" width="80"></el-table-column>
@@ -69,14 +80,31 @@
         <el-form-item label="课程名称" prop="courseName">
           <el-input v-model="formData.courseName" placeholder="请输入课程名称"></el-input>
         </el-form-item>
+        <el-form-item label="课程分类" prop="categoryId">
+          <el-select v-model="formData.categoryId" placeholder="请选择" style="width: 100%">
+            <el-option
+              v-for="item in categoryList"
+              :key="item.categoryId"
+              :label="item.categoryName"
+              :value="item.categoryId">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="课程类型" prop="courseType">
           <el-select v-model="formData.courseType" placeholder="请选择" style="width: 100%">
             <el-option label="团课" value="团课"></el-option>
             <el-option label="私教课" value="私教课"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="教练 ID" prop="coachId">
-          <el-input-number v-model="formData.coachId" :min="1"></el-input-number>
+        <el-form-item label="教练" prop="coachId">
+          <el-select v-model="formData.coachId" placeholder="请选择教练" style="width: 100%" filterable>
+            <el-option
+              v-for="item in coachList"
+              :key="item.coachId"
+              :label="item.coachName"
+              :value="item.coachId">
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="课程描述" prop="description">
           <el-input v-model="formData.description" type="textarea" :rows="3" placeholder="请输入课程描述"></el-input>
@@ -120,6 +148,8 @@
 
 <script>
 import { getCoursePage, addCourse, updateCourse, deleteCourse, bookCourse } from '@/api/course'
+import { getAllCategories } from '@/api/courseCategory'
+import { getCoachList } from '@/api/coach'
 
 export default {
   name: 'CourseList',
@@ -127,8 +157,11 @@ export default {
     return {
       queryForm: {
         courseName: '',
-        courseType: ''
+        courseType: '',
+        categoryId: null
       },
+      categoryList: [],
+      coachList: [],
       tableData: [],
       loading: false,
       pageNum: 1,
@@ -140,6 +173,7 @@ export default {
         courseId: null,
         courseName: '',
         courseType: '团课',
+        categoryId: null,
         coachId: null,
         description: '',
         durationMin: 60,
@@ -157,6 +191,8 @@ export default {
   },
   created() {
     this.getList()
+    this.getCategoryList()
+    this.getCoachList()
   },
   methods: {
     getList() {
@@ -173,6 +209,16 @@ export default {
         this.loading = false
       })
     },
+    getCategoryList() {
+      getAllCategories().then(response => {
+        this.categoryList = response.data || []
+      })
+    },
+    getCoachList() {
+      getCoachList().then(response => {
+        this.coachList = response.data || []
+      })
+    },
     handleQuery() {
       this.pageNum = 1
       this.getList()
@@ -180,7 +226,8 @@ export default {
     handleReset() {
       this.queryForm = {
         courseName: '',
-        courseType: ''
+        courseType: '',
+        categoryId: null
       }
       this.handleQuery()
     },
@@ -190,6 +237,7 @@ export default {
         courseId: null,
         courseName: '',
         courseType: '团课',
+        categoryId: null,
         coachId: null,
         description: '',
         durationMin: 60,

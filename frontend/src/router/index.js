@@ -40,13 +40,43 @@ export const constantRoutes = [
     path: '/member',
     component: () => import('@/views/layout/index'),
     redirect: '/member/list',
-    meta: { title: '会员管理', icon: 'user' },
+    meta: { title: '会员管理', icon: 'user', roles: [1] },
     children: [
       {
         path: 'list',
         component: () => import('@/views/member/list'),
         name: 'MemberList',
-        meta: { title: '会员列表', icon: 'list' }
+        meta: { title: '会员列表', icon: 'list', roles: [1] }
+      },
+      {
+        path: 'level',
+        component: () => import('@/views/member/level'),
+        name: 'MemberLevel',
+        meta: { title: '会员等级', icon: 'medal', roles: [1] }
+      },
+      {
+        path: 'card',
+        component: () => import('@/views/member/card'),
+        name: 'MemberCard',
+        meta: { title: '会员卡管理', icon: 'credit-card', roles: [1] }
+      },
+      {
+        path: 'signin',
+        component: () => import('@/views/member/signin'),
+        name: 'MemberSignin',
+        meta: { title: '会员签到', icon: 'calendar', roles: [1] }
+      },
+      {
+        path: 'bodyTest',
+        component: () => import('@/views/member/bodyTest'),
+        name: 'MemberBodyTest',
+        meta: { title: '体测记录', icon: 'data-analysis', roles: [1] }
+      },
+      {
+        path: 'consumption',
+        component: () => import('@/views/member/consumption'),
+        name: 'MemberConsumption',
+        meta: { title: '消费记录', icon: 'shopping-cart', roles: [1] }
       }
     ]
   },
@@ -61,6 +91,48 @@ export const constantRoutes = [
         component: () => import('@/views/coach/list'),
         name: 'CoachList',
         meta: { title: '教练列表', icon: 'list' }
+      },
+      {
+        path: 'certificate',
+        component: () => import('@/views/coach/certificate'),
+        name: 'CoachCertificate',
+        meta: { title: '教练证书', icon: 'peoples' }
+      },
+      {
+        path: 'specialty',
+        component: () => import('@/views/coach/specialty'),
+        name: 'CoachSpecialty',
+        meta: { title: '教练专长', icon: 'star' }
+      },
+      {
+        path: 'schedule',
+        component: () => import('@/views/coach/schedule'),
+        name: 'CoachSchedule',
+        meta: { title: '教练排班', icon: 'date' }
+      },
+      {
+        path: 'shift',
+        component: () => import('@/views/coach/shift'),
+        name: 'CoachShift',
+        meta: { title: '教练调班', icon: 'swap' }
+      },
+      {
+        path: 'salary',
+        component: () => import('@/views/coach/salary'),
+        name: 'CoachSalary',
+        meta: { title: '教练工资', icon: 'money' }
+      },
+      {
+        path: 'performance',
+        component: () => import('@/views/coach/performance'),
+        name: 'CoachPerformance',
+        meta: { title: '教练绩效', icon: 'chart' }
+      },
+      {
+        path: 'review',
+        component: () => import('@/views/coach/review'),
+        name: 'CoachReview',
+        meta: { title: '教练评价', icon: 'comment' }
       }
     ]
   },
@@ -77,6 +149,18 @@ export const constantRoutes = [
         meta: { title: '课程列表', icon: 'list' }
       },
       {
+        path: 'category',
+        component: () => import('@/views/course/category'),
+        name: 'CourseCategory',
+        meta: { title: '课程分类', icon: 'folder' }
+      },
+      {
+        path: 'schedule',
+        component: () => import('@/views/course/schedule'),
+        name: 'CourseSchedule',
+        meta: { title: '课程排期', icon: 'date' }
+      },
+      {
         path: 'my',
         component: () => import('@/views/course/my'),
         name: 'MyCourse',
@@ -87,6 +171,18 @@ export const constantRoutes = [
         component: () => import('@/views/course/available'),
         name: 'AvailableCourse',
         meta: { title: '可预约课程', icon: 'list' }
+      },
+      {
+        path: 'booking',
+        component: () => import('@/views/course/booking'),
+        name: 'CourseBooking',
+        meta: { title: '课程预约', icon: 'date' }
+      },
+      {
+        path: 'review',
+        component: () => import('@/views/course/review'),
+        name: 'CourseReview',
+        meta: { title: '课程评价', icon: 'comment' }
       }
     ]
   },
@@ -101,6 +197,12 @@ export const constantRoutes = [
         component: () => import('@/views/equipment/list'),
         name: 'EquipmentList',
         meta: { title: '器材列表', icon: 'list' }
+      },
+      {
+        path: 'booking',
+        component: () => import('@/views/equipment/booking'),
+        name: 'EquipmentBooking',
+        meta: { title: '器材预约', icon: 'date' }
       }
     ]
   },

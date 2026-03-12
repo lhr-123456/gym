@@ -28,12 +28,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, 
-                                   HttpServletResponse response, 
+    protected void doFilterInternal(HttpServletRequest request,
+                                   HttpServletResponse response,
                                    FilterChain filterChain) throws ServletException, IOException {
-        
+
         String path = request.getRequestURI();
-        
+        String method = request.getMethod();
+
+        // 处理OPTIONS预检请求
+        if ("OPTIONS".equalsIgnoreCase(method)) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return;
+        }
+
         // 公开路径不需要验证token
         if (isPublicPath(path)) {
             filterChain.doFilter(request, response);
@@ -64,8 +71,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     
     private boolean isPublicPath(String path) {
         // 公开路径：/auth/login, /auth/register, /public/**
-        return path.contains("/auth/login") 
-            || path.contains("/auth/register")
+        // 需要包含完整路径才放行
+        return path.endsWith("/auth/login")
+            || path.endsWith("/auth/register")
             || path.contains("/public/");
     }
 

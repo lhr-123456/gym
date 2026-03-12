@@ -3,6 +3,33 @@ import { Message } from 'element-ui'
 import store from '@/store'
 import router from '@/router'
 
+function formatDateTime(date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}
+
+function convertData(data) {
+  if (data && typeof data === 'object') {
+    const newData = {}
+    for (const key in data) {
+      if (data[key] instanceof Date) {
+        newData[key] = formatDateTime(data[key])
+      } else if (data[key] !== null && typeof data[key] === 'object' && !(data[key] instanceof Array)) {
+        newData[key] = convertData(data[key])
+      } else {
+        newData[key] = data[key]
+      }
+    }
+    return newData
+  }
+  return data
+}
+
 const service = axios.create({
   baseURL: '/api',
   timeout: 15000,
@@ -13,6 +40,10 @@ service.interceptors.request.use(
   config => {
     if (store.getters.token) {
       config.headers['Authorization'] = 'Bearer ' + store.getters.token
+    }
+    // 转换请求数据中的日期格式
+    if (config.data) {
+      config.data = convertData(config.data)
     }
     return config
   },
