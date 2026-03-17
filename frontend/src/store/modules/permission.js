@@ -103,29 +103,86 @@ const adminRoutes = [
 
 const coachRoutes = [
   {
-    path: '/dashboard',
+    path: '/coach-dashboard',
     component: () => import('@/views/layout/index'),
-    redirect: '/dashboard/index',
+    redirect: '/coach-dashboard/index',
+    meta: { title: '工作台', icon: 'dashboard' },
     children: [
       {
         path: 'index',
-        component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: '首页', icon: 'dashboard' }
+        component: () => import('@/views/coach/dashboard'),
+        name: 'CoachDashboard',
+        meta: { title: '工作台', icon: 'dashboard' }
       }
     ]
   },
   {
-    path: '/course',
+    path: '/coach-schedule',
     component: () => import('@/views/layout/index'),
-    redirect: '/course/my',
-    meta: { title: '课程管理', icon: 'documentation' },
+    redirect: '/coach-schedule/list',
+    meta: { title: '我的排课', icon: 'date' },
     children: [
       {
-        path: 'my',
-        component: () => import('@/views/course/my'),
-        name: 'MyCourse',
-        meta: { title: '我的课程', icon: 'list' }
+        path: 'list',
+        component: () => import('@/views/coach/mySchedule'),
+        name: 'CoachMySchedule',
+        meta: { title: '排课列表', icon: 'list' }
+      }
+    ]
+  },
+  {
+    path: '/coach-members',
+    component: () => import('@/views/layout/index'),
+    redirect: '/coach-members/list',
+    meta: { title: '学员管理', icon: 'user' },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/coach/members'),
+        name: 'CoachMembers',
+        meta: { title: '我的学员', icon: 'list' }
+      }
+    ]
+  },
+  {
+    path: '/coach-reviews',
+    component: () => import('@/views/layout/index'),
+    redirect: '/coach-reviews/list',
+    meta: { title: '课程评价', icon: 'comment' },
+    children: [
+      {
+        path: 'list',
+        component: () => import('@/views/coach/myReviews'),
+        name: 'CoachMyReviews',
+        meta: { title: '我的评价', icon: 'list' }
+      }
+    ]
+  },
+  {
+    path: '/coach-bodytest',
+    component: () => import('@/views/layout/index'),
+    redirect: '/coach-bodytest/add',
+    meta: { title: '体测管理', icon: 'data-analysis' },
+    children: [
+      {
+        path: 'add',
+        component: () => import('@/views/coach/bodyTest'),
+        name: 'CoachBodyTest',
+        meta: { title: '录入体测', icon: 'plus' }
+      }
+    ]
+  },
+  {
+    path: '/profile',
+    component: () => import('@/views/layout/index'),
+    redirect: '/profile/index',
+    meta: { title: '个人中心', icon: 'user' },
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/profile/index'),
+        name: 'Profile',
+        meta: { title: '个人中心', icon: 'user' }
       }
     ]
   }

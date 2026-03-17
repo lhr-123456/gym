@@ -74,7 +74,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="出生日期" prop="birthDate">
-          <el-date-picker v-model="formData.birthDate" type="date" placeholder="选择日期" style="width: 100%"></el-date-picker>
+          <el-date-picker v-model="formData.birthDate" type="date" placeholder="选择日期" style="width: 100%" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
         <el-form-item label="手机号" prop="phoneNum">
           <el-input v-model="formData.phoneNum" placeholder="请输入手机号"></el-input>

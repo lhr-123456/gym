@@ -8,32 +8,6 @@
     </div>
 
     <div class="login-box">
-      <!-- 左侧健身房展示 -->
-      <div class="login-left">
-        <div class="left-content">
-          <div class="logo">
-            <i class="el-icon-gym"></i>
-          </div>
-          <h1>健身房管理系统</h1>
-          <p>科学健身 · 专业指导 · 品质生活</p>
-          <div class="features">
-            <div class="feature-item">
-              <i class="el-icon-user"></i>
-              <span>会员管理</span>
-            </div>
-            <div class="feature-item">
-              <i class="el-icon-sports"></i>
-              <span>课程预约</span>
-            </div>
-            <div class="feature-item">
-              <i class="el-icon-tools"></i>
-              <span>器材管理</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 右侧登录/注册表单 -->
       <div class="login-right">
         <div class="form-container">
           <!-- 切换标签 -->
@@ -284,7 +258,10 @@ export default {
 .login-container {
   min-height: 100vh;
   width: 100%;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.6)),
+              url('~@/assets/images/gym1.jpg') no-repeat center center;
+  background-size: cover;
+  background-position: center;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -356,99 +333,23 @@ export default {
   .login-box {
     position: relative;
     z-index: 1;
-    width: 900px;
-    height: 550px;
+    width: 420px;
+    padding: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
     display: flex;
-    background: #fff;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-
-    .login-left {
-      width: 45%;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 40px;
-      position: relative;
-      overflow: hidden;
-
-      &::before {
-        content: '';
-        position: absolute;
-        width: 200%;
-        height: 200%;
-        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-        top: -50%;
-        left: -50%;
-      }
-
-      .left-content {
-        position: relative;
-        z-index: 1;
-        text-align: center;
-        color: #fff;
-
-        .logo {
-          width: 100px;
-          height: 100px;
-          background: rgba(255, 255, 255, 0.2);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto 30px;
-
-          i {
-            font-size: 50px;
-            color: #fff;
-          }
-        }
-
-        h1 {
-          font-size: 28px;
-          font-weight: bold;
-          margin-bottom: 15px;
-        }
-
-        p {
-          font-size: 14px;
-          opacity: 0.9;
-          margin-bottom: 40px;
-        }
-
-        .features {
-          display: flex;
-          flex-direction: column;
-          gap: 20px;
-
-          .feature-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 16px;
-
-            i {
-              font-size: 24px;
-            }
-          }
-        }
-      }
-    }
+    justify-content: center;
 
     .login-right {
-      width: 55%;
+      width: 100%;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 40px;
-      background: #fff;
+      padding: 0;
 
       .form-container {
         width: 100%;
-        max-width: 360px;
 
         .tabs {
           display: flex;
@@ -534,19 +435,11 @@ export default {
 @media (max-width: 960px) {
   .login-container {
     .login-box {
-      width: 95%;
-      height: auto;
-      flex-direction: column;
-
-      .login-left {
-        width: 100%;
-        padding: 30px;
-        display: none;
-      }
+      width: 90%;
+      padding: 20px;
 
       .login-right {
-        width: 100%;
-        padding: 30px;
+        padding: 0;
       }
     }
   }

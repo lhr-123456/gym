@@ -2,18 +2,27 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+import Login from '@/views/login/index.vue'
+import NotFound from '@/views/404.vue'
+import Layout from '@/views/layout/index.vue'
+import Dashboard from '@/views/dashboard/index.vue'
+import CoachDashboard from '@/views/coach/dashboard.vue'
+import CoachMySchedule from '@/views/coach/mySchedule.vue'
+import CoachMembers from '@/views/coach/members.vue'
+import CoachMyReviews from '@/views/coach/myReviews.vue'
+import CoachBodyTest from '@/views/coach/bodyTest.vue'
 
 Vue.use(Router)
 
 export const constantRoutes = [
   {
     path: '/login',
-    component: () => import('@/views/login/index'),
+    component: Login,
     hidden: true
   },
   {
     path: '/404',
-    component: () => import('@/views/404'),
+    component: NotFound,
     hidden: true
   },
   {
@@ -24,15 +33,81 @@ export const constantRoutes = [
   // 管理员路由
   {
     path: '/dashboard',
-    component: () => import('@/views/layout/index'),
+    component: Layout,
     redirect: '/dashboard/index',
     hidden: true,
     children: [
       {
         path: 'index',
-        component: () => import('@/views/dashboard/index'),
+        component: Dashboard,
         name: 'Dashboard',
         meta: { title: '首页', icon: 'dashboard' }
+      }
+    ]
+  },
+  // 教练端路由（教练登录后默认进入这些页面）
+  {
+    path: '/coach-dashboard',
+    component: Layout,
+    redirect: '/coach-dashboard/index',
+    children: [
+      {
+        path: 'index',
+        component: CoachDashboard,
+        name: 'CoachDashboard',
+        meta: { title: '工作台', icon: 'dashboard', roles: [2] }
+      }
+    ]
+  },
+  {
+    path: '/coach-schedule',
+    component: Layout,
+    redirect: '/coach-schedule/list',
+    children: [
+      {
+        path: 'list',
+        component: CoachMySchedule,
+        name: 'CoachMySchedule',
+        meta: { title: '我的排课', icon: 'date', roles: [2] }
+      }
+    ]
+  },
+  {
+    path: '/coach-members',
+    component: Layout,
+    redirect: '/coach-members/list',
+    children: [
+      {
+        path: 'list',
+        component: CoachMembers,
+        name: 'CoachMembers',
+        meta: { title: '我的学员', icon: 'user', roles: [2] }
+      }
+    ]
+  },
+  {
+    path: '/coach-reviews',
+    component: Layout,
+    redirect: '/coach-reviews/list',
+    children: [
+      {
+        path: 'list',
+        component: CoachMyReviews,
+        name: 'CoachMyReviews',
+        meta: { title: '我的评价', icon: 'comment', roles: [2] }
+      }
+    ]
+  },
+  {
+    path: '/coach-bodytest',
+    component: Layout,
+    redirect: '/coach-bodytest/add',
+    children: [
+      {
+        path: 'add',
+        component: CoachBodyTest,
+        name: 'CoachBodyTest',
+        meta: { title: '录入体测', icon: 'data-analysis', roles: [2] }
       }
     ]
   },
@@ -219,6 +294,12 @@ export const constantRoutes = [
         meta: { title: '个人中心', icon: 'user' }
       }
     ]
+  },
+  // 兜底：未匹配到路由时跳 404，避免出现空白页
+  {
+    path: '*',
+    redirect: '/404',
+    hidden: true
   }
 ]
 
@@ -229,6 +310,14 @@ const createRouter = () => new Router({
 })
 
 const router = createRouter()
+
+// 兜底：懒加载 chunk 失效（常见于部署后旧缓存）时自动刷新，避免白屏
+router.onError((error) => {
+  const message = (error && error.message) || ''
+  if (/Loading chunk \\d+ failed|ChunkLoadError/i.test(message)) {
+    window.location.reload()
+  }
+})
 
 // 路由守卫
 router.beforeEach((to, from, next) => {
@@ -241,10 +330,21 @@ router.beforeEach((to, from, next) => {
     } else {
       // 检查是否有用户信息
       if (store.getters.userInfo && store.getters.userInfo.userType) {
+        // 教练/管理员访问根路径时，按身份跳转默认首页，避免落到不存在的页面
+        if (to.path === '/') {
+          const userType = store.getters.userInfo.userType
+          next({ path: userType === 2 ? '/coach-dashboard/index' : '/dashboard/index' })
+          return
+        }
         next()
       } else {
         // 获取用户信息
         store.dispatch('user/getInfo').then(() => {
+          if (to.path === '/') {
+            const userType = store.getters.userInfo.userType
+            next({ path: userType === 2 ? '/coach-dashboard/index' : '/dashboard/index' })
+            return
+          }
           next()
         }).catch(() => {
           store.dispatch('user/logout')

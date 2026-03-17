@@ -124,6 +124,7 @@
             type="datetime"
             placeholder="选择开始时间"
             style="width: 100%"
+            value-format="yyyy-MM-dd HH:mm:ss"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间" prop="endTime">
@@ -132,6 +133,7 @@
             type="datetime"
             placeholder="选择结束时间"
             style="width: 100%"
+            value-format="yyyy-MM-dd HH:mm:ss"
           ></el-date-picker>
         </el-form-item>
         <el-form-item label="教室" prop="room">

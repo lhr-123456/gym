@@ -1,6 +1,7 @@
 package com.gym.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -22,6 +23,7 @@ public class CoachInfo implements Serializable {
     private String gender;
 
     @TableField("birth_date")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private LocalDate birthDate;
 
     @TableField("phone_num")
@@ -46,6 +48,7 @@ public class CoachInfo implements Serializable {
     private Integer status;
 
     @TableField(value = "hire_date", fill = FieldFill.INSERT)
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private LocalDate hireDate;
 
     @TableLogic

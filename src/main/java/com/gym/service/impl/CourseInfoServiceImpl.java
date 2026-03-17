@@ -190,7 +190,7 @@ public class CourseInfoServiceImpl implements CourseInfoService {
                    .eq(courseInfo.getCategoryId() != null, CourseInfo::getCategoryId, courseInfo.getCategoryId())
                    .eq(courseInfo.getStatus() != null, CourseInfo::getStatus, courseInfo.getStatus())
                    .ge(courseInfo.getStartTime() != null, CourseInfo::getStartTime, courseInfo.getStartTime())
-                   .le(courseInfo.getEndTime() != null, CourseInfo::getEndTime, courseInfo.getEndTime());
+                   .le(courseInfo.getEndTime() != null, CourseInfo::getStartTime, courseInfo.getEndTime());
         }
 
         wrapper.orderByDesc(CourseInfo::getStartTime);

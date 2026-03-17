@@ -88,7 +88,7 @@
           </el-select>
         </el-form-item>
         <el-form-item label="购买日期" prop="purchaseDate">
-          <el-date-picker v-model="formData.purchaseDate" type="date" placeholder="选择日期" style="width: 100%"></el-date-picker>
+          <el-date-picker v-model="formData.purchaseDate" type="date" placeholder="选择日期" style="width: 100%" value-format="yyyy-MM-dd"></el-date-picker>
         </el-form-item>
         <el-form-item label="位置" prop="location">
           <el-input v-model="formData.location" placeholder="请输入位置"></el-input>

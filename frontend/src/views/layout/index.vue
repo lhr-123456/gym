@@ -136,20 +136,30 @@
 
           <!-- 教练菜单 -->
           <template v-else-if="userType === 2">
-            <el-menu-item index="/dashboard/index">
+            <el-menu-item index="/coach-dashboard/index">
               <i class="el-icon-s-home"></i>
-              <span slot="title">首页</span>
+              <span slot="title">工作台</span>
             </el-menu-item>
-            <el-submenu index="/course">
-              <template slot="title">
-                <i class="el-icon-reading"></i>
-                <span slot="title">课程管理</span>
-              </template>
-              <el-menu-item index="/course/my">
-                <i class="el-icon-list"></i>
-                <span slot="title">我的课程</span>
-              </el-menu-item>
-            </el-submenu>
+            <el-menu-item index="/coach-schedule/list">
+              <i class="el-icon-date"></i>
+              <span slot="title">我的排课</span>
+            </el-menu-item>
+            <el-menu-item index="/coach-members/list">
+              <i class="el-icon-user"></i>
+              <span slot="title">我的学员</span>
+            </el-menu-item>
+            <el-menu-item index="/coach-reviews/list">
+              <i class="el-icon-chat-dot-round"></i>
+              <span slot="title">我的评价</span>
+            </el-menu-item>
+            <el-menu-item index="/coach-bodytest/add">
+              <i class="el-icon-data-analysis"></i>
+              <span slot="title">录入体测</span>
+            </el-menu-item>
+            <el-menu-item index="/profile/index">
+              <i class="el-icon-setting"></i>
+              <span slot="title">个人中心</span>
+            </el-menu-item>
           </template>
 
           <!-- 会员菜单 -->

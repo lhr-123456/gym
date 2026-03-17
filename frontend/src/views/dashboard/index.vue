@@ -2,6 +2,14 @@
   <div class="dashboard-container">
     <!-- 欢迎横幅 -->
     <el-card class="welcome-card">
+      <div class="welcome-bg-images">
+        <div class="welcome-bg-half welcome-bg-half-left">
+          <img src="@/assets/images/welcome-bg1.jpg" alt="" class="welcome-bg-img" />
+        </div>
+        <div class="welcome-bg-half welcome-bg-half-right">
+          <img src="@/assets/images/welcome-bg2.jpg" alt="" class="welcome-bg-img" />
+        </div>
+      </div>
       <div class="welcome-content">
         <div class="welcome-text">
           <h2>欢迎回来，{{ username }}！</h2>
@@ -18,8 +26,8 @@
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" @click.native="goTo('/member/list')">
           <div class="stat-item">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)">
-              <i class="el-icon-user"></i>
+            <div class="stat-icon">
+              <img src="@/assets/images/member-icon.jpeg" alt="会员" />
             </div>
             <div class="stat-info">
               <div class="stat-value">{{ statistics.memberCount }}</div>
@@ -32,8 +40,8 @@
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" @click.native="goTo('/coach/list')">
           <div class="stat-item">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%)">
-              <i class="el-icon-user-solid"></i>
+            <div class="stat-icon">
+              <img src="@/assets/images/coach-icon.jpeg" alt="教练" />
             </div>
             <div class="stat-info">
               <div class="stat-value">{{ statistics.coachCount }}</div>
@@ -46,8 +54,8 @@
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" @click.native="goTo('/course/list')">
           <div class="stat-item">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)">
-              <i class="el-icon-video-play"></i>
+            <div class="stat-icon">
+              <img src="@/assets/images/course-icon.png" alt="课程" />
             </div>
             <div class="stat-info">
               <div class="stat-value">{{ statistics.courseCount }}</div>
@@ -60,8 +68,8 @@
       <el-col :span="6">
         <el-card shadow="hover" class="stat-card" @click.native="goTo('/equipment/list')">
           <div class="stat-item">
-            <div class="stat-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)">
-              <i class="el-icon-sports"></i>
+            <div class="stat-icon">
+              <img src="@/assets/images/equipment-icon.jpeg" alt="器材" />
             </div>
             <div class="stat-info">
               <div class="stat-value">{{ statistics.equipmentCount }}</div>
@@ -146,8 +154,8 @@
           </div>
           <div class="today-overview">
             <div class="overview-item">
-              <div class="overview-icon" style="background: #409EFF">
-                <i class="el-icon-date"></i>
+              <div class="overview-icon overview-icon-img">
+                <img src="@/assets/images/date-icon.png" alt="今日日期" />
               </div>
               <div class="overview-info">
                 <div class="overview-value">{{ todayDate }}</div>
@@ -155,8 +163,8 @@
               </div>
             </div>
             <div class="overview-item">
-              <div class="overview-icon" style="background: #67C23A">
-                <i class="el-icon-sunny"></i>
+              <div class="overview-icon overview-icon-img">
+                <img src="@/assets/images/greeting-icon.jpg" alt="时段问候" />
               </div>
               <div class="overview-info">
                 <div class="overview-value">{{ greeting }}</div>
@@ -261,11 +269,51 @@ export default {
 .dashboard-container {
   .welcome-card {
     margin-bottom: 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.5) 0%, rgba(118, 75, 162, 0.5) 100%);
     border: none;
+    position: relative;
+    overflow: hidden;
 
     ::v-deep .el-card__body {
       padding: 30px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .welcome-bg-images {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 0;
+      pointer-events: none;
+      display: flex;
+    }
+
+    .welcome-bg-half {
+      width: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .welcome-bg-half-left {
+      justify-content: center;
+    }
+
+    .welcome-bg-half-right {
+      justify-content: center;
+    }
+
+    .welcome-bg-img {
+      max-height: 100%;
+      max-width: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      opacity: 0.85;
     }
 
     .welcome-content {
@@ -320,9 +368,11 @@ export default {
           justify-content: center;
           margin-right: 15px;
 
-          i {
-            font-size: 28px;
-            color: #fff;
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
           }
         }
 
@@ -438,10 +488,18 @@ export default {
           align-items: center;
           justify-content: center;
           margin-right: 15px;
+          overflow: hidden;
 
           i {
             font-size: 24px;
             color: #fff;
+          }
+
+          &.overview-icon-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
           }
         }
 

@@ -56,6 +56,13 @@ public class AuthController {
                 return ApiResponse.error("用户不存在或已被禁用");
             }
 
+            // 校验用户类型（前端登录页会选择用户类型；若与数据库不一致，直接拒绝，避免登录到错误端导致“页面不符合预期”）
+            if (loginRequest.getUserType() != null
+                && userInfo.getUserType() != null
+                && !loginRequest.getUserType().equals(userInfo.getUserType())) {
+                return ApiResponse.error("用户类型不匹配，请选择正确的用户类型登录");
+            }
+
             // 生成JWT令牌
             String token = jwtUtil.generateToken(
                 userInfo.getUsername(), 
@@ -198,6 +205,38 @@ public class AuthController {
             return ApiResponse.success("密码修改成功");
         } catch (Exception e) {
             return ApiResponse.error("修改密码失败：" + e.getMessage());
+        }
+    }
+
+    // 临时接口：修复用户类型（仅用于调试）
+    @PutMapping("/fix-user-type")
+    public ApiResponse<String> fixUserType(@RequestBody Map<String, Object> request) {
+        try {
+            String username = (String) request.get("username");
+            Integer userType = (Integer) request.get("userType");
+            Long coachId = request.get("coachId") != null ? Long.valueOf(request.get("coachId").toString()) : null;
+
+            if (username == null || userType == null) {
+                return ApiResponse.error("参数不完整");
+            }
+
+            LambdaQueryWrapper<UserInfo> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(UserInfo::getUsername, username);
+            UserInfo userInfo = userInfoMapper.selectOne(wrapper);
+
+            if (userInfo == null) {
+                return ApiResponse.error("用户不存在");
+            }
+
+            userInfo.setUserType(userType);
+            if (coachId != null) {
+                userInfo.setCoachId(coachId);
+            }
+            userInfoMapper.updateById(userInfo);
+
+            return ApiResponse.success("用户类型已修复为: " + userType);
+        } catch (Exception e) {
+            return ApiResponse.error("修复失败：" + e.getMessage());
         }
     }
 }
