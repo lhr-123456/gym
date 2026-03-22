@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gym.dto.ApiResponse;
 import com.gym.entity.CourseReview;
 import com.gym.service.CourseReviewService;
+import com.gym.service.MemberMessageService;
+import com.gym.service.MemberPointsRecordService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,9 +15,15 @@ import java.util.List;
 public class CourseReviewController {
 
     private final CourseReviewService courseReviewService;
+    private final MemberMessageService memberMessageService;
+    private final MemberPointsRecordService pointsRecordService;
 
-    public CourseReviewController(CourseReviewService courseReviewService) {
+    public CourseReviewController(CourseReviewService courseReviewService,
+                                 MemberMessageService memberMessageService,
+                                 MemberPointsRecordService pointsRecordService) {
         this.courseReviewService = courseReviewService;
+        this.memberMessageService = memberMessageService;
+        this.pointsRecordService = pointsRecordService;
     }
 
     @GetMapping("/page")
@@ -52,6 +60,16 @@ public class CourseReviewController {
     public ApiResponse<String> save(@RequestBody CourseReview courseReview) {
         boolean result = courseReviewService.save(courseReview);
         if (result) {
+            // 记录评价积分
+            if (courseReview.getMemberId() != null) {
+                pointsRecordService.recordPoints(
+                    courseReview.getMemberId(),
+                    "review",
+                    courseReview.getReviewId() != null ? String.valueOf(courseReview.getReviewId()) : null,
+                    "course_review",
+                    null
+                );
+            }
             return ApiResponse.success("添加评价成功");
         }
         return ApiResponse.error("添加评价失败");
@@ -81,8 +99,18 @@ public class CourseReviewController {
     @PostMapping("/reply/{id}")
     public ApiResponse<String> reply(@PathVariable Long id, @RequestParam String reply) {
         try {
+            CourseReview review = courseReviewService.getById(id);
             boolean result = courseReviewService.reply(id, reply);
             if (result) {
+                // 推送消息给会员
+                if (review != null && review.getMemberId() != null) {
+                    memberMessageService.pushMessage(
+                        review.getMemberId(), "coach",
+                        "教练已回复您的评价",
+                        "教练回复：" + reply,
+                        String.valueOf(review.getReviewId()), "course_review"
+                    );
+                }
                 return ApiResponse.success("回复成功");
             }
             return ApiResponse.error("回复失败");

@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gym.dto.ApiResponse;
 import com.gym.entity.MemberSignin;
 import com.gym.mapper.MemberSigninMapper;
+import com.gym.service.MemberPointsRecordService;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -16,9 +17,12 @@ import java.util.List;
 public class MemberSigninController {
 
     private final MemberSigninMapper memberSigninMapper;
+    private final MemberPointsRecordService pointsRecordService;
 
-    public MemberSigninController(MemberSigninMapper memberSigninMapper) {
+    public MemberSigninController(MemberSigninMapper memberSigninMapper,
+                                 MemberPointsRecordService pointsRecordService) {
         this.memberSigninMapper = memberSigninMapper;
+        this.pointsRecordService = pointsRecordService;
     }
 
     /**
@@ -97,6 +101,16 @@ public class MemberSigninController {
         signin.setPointsEarned(basePoints);
 
         memberSigninMapper.insert(signin);
+
+        // 记录积分明细
+        pointsRecordService.recordPoints(
+            signin.getMemberId(),
+            "signin",
+            String.valueOf(signin.getSigninId()),
+            "member_signin",
+            "连续签到" + consecutiveDays + "天"
+        );
+
         return ApiResponse.success("签到成功，获得" + basePoints + "积分，连续签到" + consecutiveDays + "天");
     }
 

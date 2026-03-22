@@ -3,33 +3,18 @@
     <el-card>
       <div class="header">
         <h2>课程评价</h2>
-      </div>
-
-      <!-- 搜索区域 -->
-      <div class="search-area">
-        <el-form :inline="true">
-          <el-form-item label="课程">
-            <el-select v-model="queryForm.courseId" placeholder="全部课程" clearable>
-              <el-option
-                v-for="course in courseList"
-                :key="course.courseId"
-                :label="course.courseName"
-                :value="course.courseId"
-              ></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="handleQuery">查询</el-button>
-          </el-form-item>
-        </el-form>
+        <span class="sub-title">以下评价来自上过您课程的会员</span>
       </div>
 
       <el-table :data="tableData" border style="width: 100%" v-loading="loading">
-        <el-table-column prop="bookingId" label="预约ID" width="80"></el-table-column>
-        <el-table-column prop="courseName" label="课程" width="150"></el-table-column>
-        <el-table-column prop="memberName" label="学员" width="100"></el-table-column>
-        <el-table-column prop="classTime" label="上课时间" width="160"></el-table-column>
-        <el-table-column prop="rating" label="评分" width="100">
+        <el-table-column prop="reviewId" label="评价ID" width="80"></el-table-column>
+        <el-table-column prop="memberName" label="会员" width="120">
+          <template slot-scope="scope">{{ scope.row.memberName || '-' }}</template>
+        </el-table-column>
+        <el-table-column prop="courseName" label="课程" width="140">
+          <template slot-scope="scope">{{ scope.row.courseName || '-' }}</template>
+        </el-table-column>
+        <el-table-column prop="rating" label="评分" width="120" align="center">
           <template slot-scope="scope">
             <el-rate
               v-model="scope.row.rating"
@@ -39,87 +24,36 @@
             ></el-rate>
           </template>
         </el-table-column>
-        <el-table-column prop="comment" label="评价内容"></el-table-column>
-        <el-table-column prop="createTime" label="评价时间" width="160"></el-table-column>
-        <el-table-column label="操作" fixed="right" width="120">
+        <el-table-column prop="content" label="评价内容" min-width="200" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="createTime" label="评价时间" width="170">
+          <template slot-scope="scope">{{ formatTime(scope.row.createTime) }}</template>
+        </el-table-column>
+        <el-table-column label="回复状态" width="100" align="center">
           <template slot-scope="scope">
-            <el-button
-              v-if="!scope.row.rating"
-              size="mini"
-              type="primary"
-              @click="handleAddReview(scope.row)"
-            >评价</el-button>
+            <el-tag size="mini" :type="scope.row.reply ? 'success' : 'info'">
+              {{ scope.row.reply ? '已回复' : '未回复' }}
+            </el-tag>
           </template>
         </el-table-column>
       </el-table>
 
-      <div class="pagination">
-        <el-pagination
-          :current-page="pageNum"
-          :page-size="pageSize"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        ></el-pagination>
+      <div v-if="tableData.length === 0 && !loading" class="empty-tip">
+        <i class="el-icon-chat-line-round"></i>
+        <p>暂无课程评价</p>
       </div>
     </el-card>
-
-    <!-- 评价对话框 -->
-    <el-dialog title="课程评价" :visible.sync="dialogVisible" width="500px">
-      <el-form ref="reviewForm" :model="reviewData" :rules="reviewRules" label-width="80px">
-        <el-form-item label="学员" prop="memberName">
-          <span>{{ reviewData.memberName }}</span>
-        </el-form-item>
-        <el-form-item label="课程" prop="courseName">
-          <span>{{ reviewData.courseName }}</span>
-        </el-form-item>
-        <el-form-item label="评分" prop="rating">
-          <el-rate v-model="reviewData.rating" :colors="['#99A9BF', '#F7BA2A', '#FF9900']"></el-rate>
-        </el-form-item>
-        <el-form-item label="评价" prop="comment">
-          <el-input
-            v-model="reviewData.comment"
-            type="textarea"
-            :rows="4"
-            placeholder="请输入评价内容"
-          ></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSubmitReview">确定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
+import { getCoachReviews } from '@/api/coachDashboard'
+
 export default {
   name: 'CoachMyReviews',
   data() {
     return {
-      queryForm: {
-        courseId: null
-      },
-      courseList: [],
       tableData: [],
-      loading: false,
-      pageNum: 1,
-      pageSize: 10,
-      total: 0,
-      dialogVisible: false,
-      reviewData: {
-        bookingId: null,
-        memberName: '',
-        courseName: '',
-        rating: 5,
-        comment: ''
-      },
-      reviewRules: {
-        rating: [{ required: true, message: '请选择评分', trigger: 'change' }],
-        comment: [{ required: true, message: '请输入评价内容', trigger: 'blur' }]
-      }
+      loading: false
     }
   },
   created() {
@@ -127,61 +61,24 @@ export default {
   },
   methods: {
     getList() {
-      // 模拟数据
-      this.loading = false
-      this.tableData = [
-        {
-          bookingId: 1,
-          courseName: '减脂训练',
-          memberName: '张三',
-          classTime: '2026-03-10 14:00',
-          rating: 5,
-          comment: '教练很专业，课程安排合理',
-          createTime: '2026-03-10 16:00'
-        },
-        {
-          bookingId: 2,
-          courseName: '力量训练',
-          memberName: '李四',
-          classTime: '2026-03-11 10:00',
-          rating: null,
-          comment: '',
-          createTime: ''
+      this.loading = true
+      // 不传 coachId，后端 JWT 会自动关联到当前教练
+      getCoachReviews(null).then(res => {
+        this.loading = false
+        if (res.code === 200 || res.code === 0) {
+          this.tableData = res.data || []
+        } else {
+          this.$message.error(res.message || res.msg || '获取评价列表失败')
         }
-      ]
-      this.total = this.tableData.length
-    },
-    handleQuery() {
-      this.pageNum = 1
-      this.getList()
-    },
-    handleSizeChange(val) {
-      this.pageSize = val
-      this.getList()
-    },
-    handleCurrentChange(val) {
-      this.pageNum = val
-      this.getList()
-    },
-    handleAddReview(row) {
-      this.reviewData = {
-        bookingId: row.bookingId,
-        memberName: row.memberName,
-        courseName: row.courseName,
-        rating: 5,
-        comment: ''
-      }
-      this.dialogVisible = true
-    },
-    handleSubmitReview() {
-      this.$refs.reviewForm.validate(valid => {
-        if (valid) {
-          // 调用 API 保存评价
-          this.$message.success('评价提交成功')
-          this.dialogVisible = false
-          this.getList()
-        }
+      }).catch(err => {
+        this.loading = false
+        this.$message.error((err && err.message) ? err.message : '获取评价列表失败')
       })
+    },
+    formatTime(val) {
+      if (!val) return '-'
+      if (typeof val === 'string') return val.replace('T', ' ').substring(0, 19)
+      return val
     }
   }
 }
@@ -191,18 +88,18 @@ export default {
 .coach-reviews-container {
   .header {
     margin-bottom: 20px;
-    h2 {
-      margin: 0;
-    }
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    h2 { margin: 0; }
+    .sub-title { font-size: 13px; color: #909399; font-weight: normal; }
   }
-
-  .search-area {
-    margin-bottom: 20px;
-  }
-
-  .pagination {
-    margin-top: 20px;
-    text-align: right;
+  .empty-tip {
+    text-align: center;
+    padding: 40px 0;
+    color: #909399;
+    i { font-size: 48px; display: block; margin-bottom: 12px; }
+    p { margin: 0; }
   }
 }
 </style>

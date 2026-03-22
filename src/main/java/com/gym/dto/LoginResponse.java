@@ -16,4 +16,12 @@ public class LoginResponse {
     private Long userId;
     private Integer userType;
     private String role;
+    /**
+     * 会员ID（仅 userType=3 时有值）
+     */
+    private Long memberId;
+    /**
+     * 教练ID（仅 userType=2 时有值）
+     */
+    private Long coachId;
 }

@@ -1,5 +1,6 @@
 package com.gym.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gym.dto.ApiResponse;
 import com.gym.entity.*;
@@ -24,17 +25,23 @@ public class CoachDashboardController {
     private final CourseInfoMapper courseInfoMapper;
     private final CoachInfoMapper coachInfoMapper;
     private final UserInfoMapper userInfoMapper;
+    private final CourseReviewService courseReviewService;
+    private final MemberBodyTestMapper memberBodyTestMapper;
 
     public CoachDashboardController(CourseBookingMapper courseBookingMapper,
                                    MemberInfoMapper memberInfoMapper,
                                    CourseInfoMapper courseInfoMapper,
                                    CoachInfoMapper coachInfoMapper,
-                                   UserInfoMapper userInfoMapper) {
+                                   UserInfoMapper userInfoMapper,
+                                   CourseReviewService courseReviewService,
+                                   MemberBodyTestMapper memberBodyTestMapper) {
         this.courseBookingMapper = courseBookingMapper;
         this.memberInfoMapper = memberInfoMapper;
         this.courseInfoMapper = courseInfoMapper;
         this.coachInfoMapper = coachInfoMapper;
         this.userInfoMapper = userInfoMapper;
+        this.courseReviewService = courseReviewService;
+        this.memberBodyTestMapper = memberBodyTestMapper;
     }
 
     /**
@@ -462,6 +469,191 @@ public class CoachDashboardController {
         } catch (Exception e) {
             e.printStackTrace();
             return ApiResponse.error("获取待办失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 教练端「课程评价」列表：查询 course_review，并填充会员/教练姓名。
+     * 必须使用固定路径 /reviews，否则会命中 {@link CoachInfoController} 的 /coach/{id}，把 "reviews" 当成 Long 解析报错。
+     */
+    @GetMapping("/reviews")
+    public ApiResponse<List<CourseReview>> getCoachCourseReviews(
+            @RequestParam(required = false) Long coachId,
+            HttpServletRequest request) {
+        try {
+            Long userId = (Long) request.getAttribute("userId");
+            Integer userType = (Integer) request.getAttribute("userType");
+            if (userType == null || (userType != 1 && userType != 2)) {
+                return ApiResponse.error("无权限访问");
+            }
+            CourseReview query = new CourseReview();
+            if (userType == 2) {
+                UserInfo ui = userInfoMapper.selectById(userId);
+                if (ui == null || ui.getCoachId() == null) {
+                    return ApiResponse.error("教练信息不存在");
+                }
+                query.setCoachId(ui.getCoachId());
+            } else if (coachId != null) {
+                query.setCoachId(coachId);
+            }
+            List<CourseReview> list = courseReviewService.getList(query);
+            return ApiResponse.success(list);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ApiResponse.error("获取评价列表失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 教练端学员详情：基本信息 + 体测记录（最近5条）+ 课程记录（最近10条）+ 评价记录。
+     * 校验：教练只能查看自己带过的学员。
+     */
+    @GetMapping("/member/{memberId}/detail")
+    public ApiResponse<Map<String, Object>> getMemberDetail(
+            @PathVariable Long memberId,
+            HttpServletRequest request) {
+        try {
+            Long userId = (Long) request.getAttribute("userId");
+            Integer userType = (Integer) request.getAttribute("userType");
+            if (userType == null || (userType != 1 && userType != 2)) {
+                return ApiResponse.error("无权限访问");
+            }
+
+            Long coachId = null;
+            if (userType == 2) {
+                UserInfo ui = userInfoMapper.selectById(userId);
+                if (ui == null || ui.getCoachId() == null) {
+                    return ApiResponse.error("教练信息不存在");
+                }
+                coachId = ui.getCoachId();
+            }
+
+            MemberInfo member = memberInfoMapper.selectById(memberId);
+            if (member == null) {
+                return ApiResponse.error("学员不存在");
+            }
+
+            // 校验：教练只能查看自己带过的学员
+            if (coachId != null) {
+                Long count = courseBookingMapper.selectCount(
+                    new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<CourseBooking>()
+                        .eq(CourseBooking::getMemberId, memberId)
+                        .eq(CourseBooking::getCoachId, coachId)
+                );
+                if (count == null || count == 0L) {
+                    return ApiResponse.error("该学员不在您的名下，无权查看");
+                }
+            }
+
+            Map<String, Object> result = new HashMap<>();
+
+            // 基本信息（隐藏部分敏感字段）
+            Map<String, Object> basic = new HashMap<>();
+            basic.put("memberId", member.getMemberId());
+            basic.put("memberName", member.getMemberName());
+            basic.put("gender", member.getGender());
+            basic.put("phoneNum", member.getPhoneNum() != null ?
+                member.getPhoneNum().replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2") : null);
+            basic.put("memberLevel", member.getMemberLevel());
+            basic.put("fitnessLevel", member.getFitnessLevel());
+            basic.put("points", member.getPoints());
+            basic.put("balance", member.getBalance());
+            basic.put("regTime", member.getRegTime());
+            basic.put("lastVisit", member.getLastVisit());
+            basic.put("accountStatus", member.getAccountStatus());
+            result.put("basic", basic);
+
+            // 课程统计
+            LambdaQueryWrapper<CourseBooking> bookingWrapper = new LambdaQueryWrapper<CourseBooking>()
+                .eq(CourseBooking::getMemberId, memberId)
+                .orderByDesc(CourseBooking::getClassTime);
+            if (coachId != null) {
+                bookingWrapper.eq(CourseBooking::getCoachId, coachId);
+            }
+            List<CourseBooking> bookings = courseBookingMapper.selectList(bookingWrapper);
+            long total = bookings.size();
+            long completed = bookings.stream().filter(b -> "已完成".equals(b.getStatus())).count();
+            LocalDateTime lastTime = bookings.stream()
+                .map(CourseBooking::getClassTime)
+                .filter(Objects::nonNull)
+                .max(LocalDateTime::compareTo)
+                .orElse(null);
+
+            Map<String, Object> stats = new HashMap<>();
+            stats.put("totalCourses", total);
+            stats.put("completedCourses", completed);
+            stats.put("remainingCourses", Math.max(0, total - completed));
+            stats.put("lastCourseDate", lastTime != null ? lastTime.toLocalDate().toString() : null);
+            result.put("courseStats", stats);
+
+            // 课程记录（最近10条，含课程名）
+            List<Long> courseIds = bookings.stream()
+                .map(CourseBooking::getCourseId).filter(Objects::nonNull).distinct()
+                .collect(Collectors.toList());
+            Map<Long, CourseInfo> courseMap = new HashMap<>();
+            if (!courseIds.isEmpty()) {
+                courseInfoMapper.selectBatchIds(courseIds).forEach(c ->
+                    courseMap.put(c.getCourseId(), c));
+            }
+            List<Map<String, Object>> recentBookings = bookings.stream()
+                .limit(10)
+                .map(b -> {
+                    Map<String, Object> m = new HashMap<>();
+                    m.put("bookingId", b.getBookingId());
+                    CourseInfo ci = courseMap.get(b.getCourseId());
+                    m.put("courseName", ci != null ? ci.getCourseName() : "未知课程");
+                    m.put("classTime", b.getClassTime());
+                    m.put("status", b.getStatus());
+                    return m;
+                }).collect(Collectors.toList());
+            result.put("recentBookings", recentBookings);
+
+            // 体测记录（最近5条）
+            LambdaQueryWrapper<MemberBodyTest> testWrapper = new LambdaQueryWrapper<MemberBodyTest>()
+                .eq(MemberBodyTest::getMemberId, memberId)
+                .orderByDesc(MemberBodyTest::getTestDate)
+                .last("LIMIT 5");
+            List<MemberBodyTest> bodyTests = memberBodyTestMapper.selectList(testWrapper);
+            List<Map<String, Object>> recentTests = bodyTests.stream().map(t -> {
+                Map<String, Object> m = new HashMap<>();
+                m.put("testId", t.getTestId());
+                m.put("testDate", t.getTestDate());
+                m.put("height", t.getHeight());
+                m.put("weight", t.getWeight());
+                m.put("bmi", t.getBmi());
+                m.put("bodyFatRate", t.getBodyFatRate());
+                m.put("muscleMass", t.getMuscleMass());
+                m.put("healthScore", t.getHealthScore());
+                m.put("coachId", t.getCoachId());
+                m.put("remarks", t.getRemarks());
+                return m;
+            }).collect(Collectors.toList());
+            result.put("bodyTests", recentTests);
+
+            // 评价记录
+            CourseReview reviewQuery = new CourseReview();
+            reviewQuery.setMemberId(memberId);
+            if (coachId != null) {
+                reviewQuery.setCoachId(coachId);
+            }
+            List<CourseReview> reviews = courseReviewService.getList(reviewQuery);
+            List<Map<String, Object>> recentReviews = reviews.stream().limit(10).map(r -> {
+                Map<String, Object> m = new HashMap<>();
+                m.put("reviewId", r.getReviewId());
+                m.put("courseName", r.getCourseName());
+                m.put("rating", r.getRating());
+                m.put("content", r.getContent());
+                m.put("createTime", r.getCreateTime());
+                m.put("reply", r.getReply());
+                m.put("coachName", r.getCoachName());
+                return m;
+            }).collect(Collectors.toList());
+            result.put("reviews", recentReviews);
+
+            return ApiResponse.success(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ApiResponse.error("获取学员详情失败：" + e.getMessage());
         }
     }
 }

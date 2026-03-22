@@ -213,7 +213,21 @@ export default {
           this.$store
             .dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: '/dashboard/index' })
+              const ut = Number(this.loginForm.userType)
+              let path = '/dashboard/index'
+              if (ut === 2) path = '/coach-dashboard/index'
+              else if (ut === 3) path = '/member/home'
+              const redir = this.$route.query.redirect
+              if (redir && typeof redir === 'string') {
+                const r = decodeURIComponent(redir).replace(/^#\/?/, '/')
+                // 教练/会员不允许通过 redirect 落到管理端首页
+                if (ut === 1) {
+                  path = r
+                } else if (!/^\/dashboard(\/index)?$/.test(r) && !/^\/dashboard$/.test(r)) {
+                  path = r
+                }
+              }
+              this.$router.push({ path })
               this.loading = false
             })
             .catch((err) => {

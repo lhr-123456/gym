@@ -1,11 +1,24 @@
 server:
   port: 8080
-  servlet:
-    context-path: /api
+  # 去掉 context-path 配置，简化API路径
+  # servlet:
+  #   context-path: /api
 
 spring:
   application:
     name: gym-management-system
+
+  # 文件上传配置
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 5MB
+      max-request-size: 10MB
+
+  # 静态资源配置（器材图片等）
+  resources:
+    static-locations: classpath:/static/,classpath:/public/,file:./uploads/
+    add-mappings: true
   
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

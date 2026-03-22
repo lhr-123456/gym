@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gym.dto.ApiResponse;
 import com.gym.entity.CourseBooking;
 import com.gym.service.CourseBookingService;
+import com.gym.service.MemberMessageService;
+import com.gym.service.MemberPointsRecordService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,9 +15,15 @@ import java.util.List;
 public class CourseBookingController {
 
     private final CourseBookingService courseBookingService;
+    private final MemberMessageService memberMessageService;
+    private final MemberPointsRecordService pointsRecordService;
 
-    public CourseBookingController(CourseBookingService courseBookingService) {
+    public CourseBookingController(CourseBookingService courseBookingService,
+                                  MemberMessageService memberMessageService,
+                                  MemberPointsRecordService pointsRecordService) {
         this.courseBookingService = courseBookingService;
+        this.memberMessageService = memberMessageService;
+        this.pointsRecordService = pointsRecordService;
     }
 
     @GetMapping("/page")
@@ -72,8 +80,18 @@ public class CourseBookingController {
     @PutMapping("/approve/{id}")
     public ApiResponse<String> approve(@PathVariable Long id) {
         try {
+            CourseBooking booking = courseBookingService.getById(id);
             boolean result = courseBookingService.approveBooking(id);
             if (result) {
+                // 推送消息给会员
+                if (booking != null && booking.getMemberId() != null) {
+                    memberMessageService.pushMessage(
+                        booking.getMemberId(), "course",
+                        "预约审核通过",
+                        "您预约的课程已审核通过，请按时参加。",
+                        String.valueOf(booking.getBookingId()), "course_booking"
+                    );
+                }
                 return ApiResponse.success("审核通过");
             }
             return ApiResponse.error("审核失败");
@@ -85,8 +103,18 @@ public class CourseBookingController {
     @PutMapping("/reject/{id}")
     public ApiResponse<String> reject(@PathVariable Long id, @RequestParam String reason) {
         try {
+            CourseBooking booking = courseBookingService.getById(id);
             boolean result = courseBookingService.rejectBooking(id, reason);
             if (result) {
+                // 推送消息给会员
+                if (booking != null && booking.getMemberId() != null) {
+                    memberMessageService.pushMessage(
+                        booking.getMemberId(), "course",
+                        "预约审核拒绝",
+                        "您预约的课程未通过审核，原因：" + reason,
+                        String.valueOf(booking.getBookingId()), "course_booking"
+                    );
+                }
                 return ApiResponse.success("拒绝成功");
             }
             return ApiResponse.error("拒绝失败");
@@ -108,6 +136,15 @@ public class CourseBookingController {
             booking.setStatus("已取消");
             boolean result = courseBookingService.updateById(booking);
             if (result) {
+                // 推送消息给会员
+                if (booking.getMemberId() != null) {
+                    memberMessageService.pushMessage(
+                        booking.getMemberId(), "course",
+                        "课程取消通知",
+                        "您预约的课程已取消，请知悉。",
+                        String.valueOf(booking.getBookingId()), "course_booking"
+                    );
+                }
                 return ApiResponse.success("取消成功");
             }
             return ApiResponse.error("取消失败");
@@ -121,6 +158,24 @@ public class CourseBookingController {
         try {
             boolean result = courseBookingService.signIn(id);
             if (result) {
+                // 推送消息给会员
+                CourseBooking booking = courseBookingService.getById(id);
+                if (booking != null && booking.getMemberId() != null) {
+                    memberMessageService.pushMessage(
+                        booking.getMemberId(), "course",
+                        "课程签到成功",
+                        "您已成功签到，祝您训练愉快！",
+                        String.valueOf(booking.getBookingId()), "course_booking"
+                    );
+                    // 记录完成课程积分
+                    pointsRecordService.recordPoints(
+                        booking.getMemberId(),
+                        "complete_course",
+                        String.valueOf(booking.getBookingId()),
+                        "course_booking",
+                        null
+                    );
+                }
                 return ApiResponse.success("签到成功");
             }
             return ApiResponse.error("签到失败");
@@ -142,6 +197,16 @@ public class CourseBookingController {
             booking.setStatus("已签到");
             boolean result = courseBookingService.updateById(booking);
             if (result) {
+                // 记录完成课程积分
+                if (booking.getMemberId() != null) {
+                    pointsRecordService.recordPoints(
+                        booking.getMemberId(),
+                        "complete_course",
+                        String.valueOf(booking.getBookingId()),
+                        "course_booking",
+                        null
+                    );
+                }
                 return ApiResponse.success("课程已开始");
             }
             return ApiResponse.error("开始课程失败");

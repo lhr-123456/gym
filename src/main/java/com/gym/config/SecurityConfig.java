@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/public/**").permitAll()
+                .antMatchers("/uploads/**").permitAll()
                 .anyRequest().authenticated()
             )
             .userDetailsService(userDetailsService)

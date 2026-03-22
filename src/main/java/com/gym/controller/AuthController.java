@@ -4,7 +4,9 @@ import com.gym.config.JwtUtil;
 import com.gym.dto.LoginRequest;
 import com.gym.dto.LoginResponse;
 import com.gym.dto.ApiResponse;
+import com.gym.entity.MemberInfo;
 import com.gym.entity.UserInfo;
+import com.gym.mapper.MemberInfoMapper;
 import com.gym.mapper.UserInfoMapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -23,15 +26,18 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final UserInfoMapper userInfoMapper;
+    private final MemberInfoMapper memberInfoMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthController(AuthenticationManager authenticationManager, 
-                         JwtUtil jwtUtil, 
+    public AuthController(AuthenticationManager authenticationManager,
+                         JwtUtil jwtUtil,
                          UserInfoMapper userInfoMapper,
+                         MemberInfoMapper memberInfoMapper,
                          PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.userInfoMapper = userInfoMapper;
+        this.memberInfoMapper = memberInfoMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -63,11 +69,13 @@ public class AuthController {
                 return ApiResponse.error("用户类型不匹配，请选择正确的用户类型登录");
             }
 
-            // 生成JWT令牌
+            // 生成JWT令牌（携带 memberId/coachId 方便各 Controller 直接从 request 取用）
             String token = jwtUtil.generateToken(
-                userInfo.getUsername(), 
-                userInfo.getUserId(), 
-                userInfo.getUserType()
+                userInfo.getUsername(),
+                userInfo.getUserId(),
+                userInfo.getUserType(),
+                userInfo.getMemberId(),
+                userInfo.getCoachId()
             );
 
             // 创建响应对象
@@ -78,6 +86,8 @@ public class AuthController {
                 .userId(userInfo.getUserId())
                 .userType(userInfo.getUserType())
                 .role(role)
+                .memberId(userInfo.getMemberId())
+                .coachId(userInfo.getCoachId())
                 .build();
 
             return ApiResponse.success(response);
@@ -89,7 +99,6 @@ public class AuthController {
     @PostMapping("/register")
     public ApiResponse<String> register(@RequestBody UserInfo userInfo) {
         try {
-            // 检查用户名是否已存在
             LambdaQueryWrapper<UserInfo> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(UserInfo::getUsername, userInfo.getUsername());
             UserInfo existingUser = userInfoMapper.selectOne(wrapper);
@@ -98,12 +107,28 @@ public class AuthController {
                 return ApiResponse.error("用户名已存在");
             }
 
-            // 加密密码
             userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
-            userInfo.setStatus(1); // 默认启用
-
-            // 保存用户信息
+            userInfo.setStatus(1);
             userInfoMapper.insert(userInfo);
+
+            // 如果注册的是会员类型，自动创建 MemberInfo 档案
+            Integer ut = userInfo.getUserType();
+            if (ut != null && ut == 3) {
+                MemberInfo member = new MemberInfo();
+                member.setMemberName(userInfo.getUsername());
+                member.setPhoneNum("");
+                member.setFitnessLevel("初级");
+                member.setMemberLevel(1);
+                member.setPoints(0);
+                member.setBalance(0.0);
+                member.setAccountStatus(0);
+                member.setRegTime(LocalDateTime.now());
+                memberInfoMapper.insert(member);
+
+                // 回填 user_info.member_id 关联
+                userInfo.setMemberId(member.getMemberId());
+                userInfoMapper.updateById(userInfo);
+            }
 
             return ApiResponse.success("注册成功");
         } catch (Exception e) {

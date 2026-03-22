@@ -52,6 +52,15 @@ public class MemberInfo implements Serializable {
     @TableField("balance")
     private Double balance;
 
+    @TableField("avatar")
+    private String avatar;
+
+    @TableField("coach_id")
+    private Long coachId;
+
+    @TableField(exist = false)
+    private String coachName;
+
     @TableLogic
     private Integer deleted;
 }

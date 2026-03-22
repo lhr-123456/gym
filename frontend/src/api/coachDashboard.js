@@ -72,7 +72,7 @@ export function getCoachTodos(coachId) {
 // 录入体测
 export function addBodyTest(data) {
   return request({
-    url: '/member/body-test',
+    url: '/member/bodyTest',
     method: 'post',
     data
   })
@@ -134,5 +134,13 @@ export function endSchedule(scheduleId) {
   return request({
     url: `/coach/schedule/end/${scheduleId}`,
     method: 'put'
+  })
+}
+
+// 获取教练学员详情
+export function getCoachMemberDetail(memberId) {
+  return request({
+    url: `/coach/member/${memberId}/detail`,
+    method: 'get'
   })
 }

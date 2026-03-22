@@ -1,5 +1,9 @@
 <template>
   <div class="dashboard-container">
+    <!-- 会员端首页 -->
+    <member-dashboard v-if="userType === 3" />
+    <!-- 管理员首页 -->
+    <template v-else>
     <!-- 欢迎横幅 -->
     <el-card class="welcome-card">
       <div class="welcome-bg-images">
@@ -24,7 +28,7 @@
     <!-- 统计卡片 -->
     <el-row :gutter="20" class="stat-row">
       <el-col :span="6">
-        <el-card shadow="hover" class="stat-card" @click.native="goTo('/member/list')">
+        <el-card shadow="hover" class="stat-card" @click.native="goTo('/admin-member/list')">
           <div class="stat-item">
             <div class="stat-icon">
               <img src="@/assets/images/member-icon.jpeg" alt="会员" />
@@ -89,7 +93,7 @@
             <span>快捷操作</span>
           </div>
           <div class="quick-actions">
-            <div class="action-item" @click="goTo('/member/list')">
+            <div class="action-item" @click="goTo('/admin-member/list')">
               <div class="action-icon" style="background: #409EFF">
                 <i class="el-icon-plus"></i>
               </div>
@@ -175,15 +179,18 @@
         </el-card>
       </el-col>
     </el-row>
+    </template>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
 import { getDashboardStatistics } from '@/api/statistics'
+import MemberDashboard from '@/views/member/dashboard.vue'
 
 export default {
   name: 'Dashboard',
+  components: { MemberDashboard },
   data() {
     return {
       statistics: {
@@ -198,6 +205,9 @@ export default {
   },
   computed: {
     ...mapGetters(['username', 'role']),
+    userType() {
+      return this.$store.getters.userType || 1
+    },
     todayDate() {
       const date = new Date()
       const year = date.getFullYear()
@@ -227,6 +237,15 @@ export default {
     }
   },
   created() {
+    const t = Number(this.$store.getters.userType)
+    if (t === 2) {
+      this.$router.replace('/coach-dashboard/index')
+      return
+    }
+    if (t === 3) {
+      this.$router.replace('/member/home')
+      return
+    }
     this.fetchStatistics()
     this.updateTime()
     this.timer = setInterval(this.updateTime, 1000)

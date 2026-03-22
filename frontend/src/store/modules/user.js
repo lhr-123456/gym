@@ -7,7 +7,11 @@ const state = {
   userId: null,
   userType: null,
   role: '',
-  permissions: []
+  permissions: [],
+  /** 会员ID（userType=3 时有效） */
+  memberId: null,
+  /** 教练ID（userType=2 时有效） */
+  coachId: null
 }
 
 const mutations = {
@@ -28,6 +32,12 @@ const mutations = {
   },
   SET_PERMISSIONS: (state, permissions) => {
     state.permissions = permissions
+  },
+  SET_MEMBER_ID: (state, memberId) => {
+    state.memberId = memberId
+  },
+  SET_COACH_ID: (state, coachId) => {
+    state.coachId = coachId
   }
 }
 
@@ -39,12 +49,21 @@ const actions = {
         const { data } = response
         commit('SET_TOKEN', data.token)
         setToken(data.token)
-        setUserInfo({
+        const info = {
           username: data.username,
           userId: data.userId,
           userType: data.userType,
-          role: data.role
-        })
+          role: data.role,
+          memberId: data.memberId,
+          coachId: data.coachId
+        }
+        setUserInfo(info)
+        commit('SET_USERNAME', info.username)
+        commit('SET_USER_ID', info.userId)
+        commit('SET_USER_TYPE', info.userType)
+        commit('SET_ROLE', info.role || '')
+        commit('SET_MEMBER_ID', info.memberId || null)
+        commit('SET_COACH_ID', info.coachId || null)
         resolve()
       }).catch(error => {
         reject(error)
@@ -60,6 +79,8 @@ const actions = {
         commit('SET_USER_ID', userInfo.userId)
         commit('SET_USER_TYPE', userInfo.userType)
         commit('SET_ROLE', userInfo.role)
+        commit('SET_MEMBER_ID', userInfo.memberId || null)
+        commit('SET_COACH_ID', userInfo.coachId || null)
         resolve(userInfo)
       } else {
         getInfo().then(response => {
@@ -68,6 +89,8 @@ const actions = {
           commit('SET_USER_ID', data.userId)
           commit('SET_USER_TYPE', data.userType)
           commit('SET_ROLE', data.role)
+          commit('SET_MEMBER_ID', data.memberId || null)
+          commit('SET_COACH_ID', data.coachId || null)
           resolve(data)
         }).catch(error => {
           reject(error)
@@ -86,6 +109,8 @@ const actions = {
       commit('SET_USER_TYPE', null)
       commit('SET_ROLE', '')
       commit('SET_PERMISSIONS', [])
+      commit('SET_MEMBER_ID', null)
+      commit('SET_COACH_ID', null)
       resolve()
     })
   },
@@ -100,6 +125,8 @@ const actions = {
       commit('SET_USER_TYPE', null)
       commit('SET_ROLE', '')
       commit('SET_PERMISSIONS', [])
+      commit('SET_MEMBER_ID', null)
+      commit('SET_COACH_ID', null)
       resolve()
     })
   }

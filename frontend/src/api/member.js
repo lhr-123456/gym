@@ -45,3 +45,29 @@ export function deleteMember(id) {
     method: 'delete'
   })
 }
+
+export function adjustPoints(id, data) {
+  return request({
+    url: `/member/points/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+export function uploadAvatar(file) {
+  const formData = new FormData()
+  formData.append('file', file)
+  return request({
+    url: '/member/avatar',
+    method: 'post',
+    data: formData
+  })
+}
+
+export function assignCoach(data) {
+  return request({
+    url: '/member/assign-coach',
+    method: 'put',
+    data
+  })
+}

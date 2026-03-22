@@ -404,14 +404,26 @@ export default {
       })
     },
     handleSignin(course) {
-      this.$prompt('请输入学员姓名或会员卡号进行签到', '学员签到', {
+      if (!course.bookingId) {
+        this.$message.error('预约信息无效，无法签到')
+        return
+      }
+      this.$confirm(`确认签到「${course.courseName}」课程吗？`, '学员签到', {
         confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(({ value }) => {
-        // 实际应该根据输入查找对应预约进行签到
-        this.$message.success(`学员 ${value} 签到成功`)
-        this.fetchTodayCourses()
-      })
+        cancelButtonText: '取消',
+        type: 'info'
+      }).then(() => {
+        signinMember(course.bookingId).then(res => {
+          if (res.code === 200 || res.code === 0) {
+            this.$message.success('签到成功')
+            this.fetchTodayCourses()
+          } else {
+            this.$message.error(res.message || res.msg || '签到失败')
+          }
+        }).catch(err => {
+          this.$message.error((err && err.message) ? err.message : '签到失败，请重试')
+        })
+      }).catch(() => {})
     },
     handleQuickAction(type) {
       switch (type) {
@@ -428,7 +440,7 @@ export default {
           this.$router.push('/coach-bodytest/add')
           break
         case 'contact':
-          this.$message.info('联系学员功能开发中')
+          this.$router.push('/coach-messages/list')
           break
         case 'review':
           this.$router.push('/coach-reviews/list')

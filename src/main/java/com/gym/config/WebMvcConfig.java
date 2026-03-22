@@ -13,8 +13,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -59,5 +61,24 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(0, mappingJackson2HttpMessageConverter());
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 器材图片等上传文件的访问路径映射
+        // 将 /uploads/** 请求映射到服务器上的 ./uploads/ 目录
+        String uploadsPath = System.getProperty("user.dir") + File.separator + "uploads" + File.separator;
+        // 确保目录存在
+        File uploadDir = new File(uploadsPath);
+        if (!uploadDir.exists()) {
+            uploadDir.mkdirs();
+        }
+        File equipmentDir = new File(uploadsPath + "equipment" + File.separator);
+        if (!equipmentDir.exists()) {
+            equipmentDir.mkdirs();
+        }
+
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:" + uploadsPath);
     }
 }

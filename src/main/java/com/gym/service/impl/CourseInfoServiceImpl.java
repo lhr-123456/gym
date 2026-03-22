@@ -11,7 +11,7 @@ import com.gym.mapper.CourseBookingMapper;
 import com.gym.mapper.CourseCategoryMapper;
 import com.gym.mapper.CourseInfoMapper;
 import com.gym.service.CourseInfoService;
-import org.springframework.cache.annotation.Cacheable;
+import com.gym.service.CourseReminderService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -29,15 +29,18 @@ public class CourseInfoServiceImpl implements CourseInfoService {
     private final CourseBookingMapper courseBookingMapper;
     private final CoachInfoMapper coachInfoMapper;
     private final CourseCategoryMapper courseCategoryMapper;
+    private final CourseReminderService reminderService;
 
     public CourseInfoServiceImpl(CourseInfoMapper courseInfoMapper,
                                 CourseBookingMapper courseBookingMapper,
                                 CoachInfoMapper coachInfoMapper,
-                                CourseCategoryMapper courseCategoryMapper) {
+                                CourseCategoryMapper courseCategoryMapper,
+                                CourseReminderService reminderService) {
         this.courseInfoMapper = courseInfoMapper;
         this.courseBookingMapper = courseBookingMapper;
         this.coachInfoMapper = coachInfoMapper;
         this.courseCategoryMapper = courseCategoryMapper;
+        this.reminderService = reminderService;
     }
 
     @Override
@@ -55,9 +58,9 @@ public class CourseInfoServiceImpl implements CourseInfoService {
         Page<CourseInfo> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<CourseInfo> wrapper = new LambdaQueryWrapper<>();
 
-        // 只查询状态为0（正常）且未满员的课程
+        // 只查询状态为0（正常）且未满员的课程（以实际预约记录为准，避免 current_capacity 与预约表不一致）
         wrapper.eq(CourseInfo::getStatus, 0)
-               .apply("current_capacity < max_capacity");
+               .apply("(SELECT COUNT(*) FROM course_booking WHERE course_id = course_info.course_id AND deleted = 0 AND NOT (status <=> '已取消')) < max_capacity");
 
         if (courseInfo != null) {
             wrapper.like(StringUtils.hasText(courseInfo.getCourseName()), CourseInfo::getCourseName, courseInfo.getCourseName())
@@ -100,6 +103,7 @@ public class CourseInfoServiceImpl implements CourseInfoService {
     }
 
     @Override
+    @Transactional
     public boolean updateById(CourseInfo courseInfo) {
         return courseInfoMapper.updateById(courseInfo) > 0;
     }
@@ -117,6 +121,17 @@ public class CourseInfoServiceImpl implements CourseInfoService {
         return result;
     }
 
+    /**
+     * 统计某课程当前有效预约人数（不含已取消）
+     */
+    private int countActiveBookings(Long courseId) {
+        LambdaQueryWrapper<CourseBooking> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(CourseBooking::getCourseId, courseId)
+                .apply("NOT (status <=> {0})", "已取消");
+        Long c = courseBookingMapper.selectCount(wrapper);
+        return c == null ? 0 : c.intValue();
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean bookCourse(Long courseId, Long memberId, Long coachId) {
@@ -129,7 +144,26 @@ public class CourseInfoServiceImpl implements CourseInfoService {
             throw new RuntimeException("课程已取消或已满员");
         }
 
-        if (courseInfo.getCurrentCapacity() >= courseInfo.getMaxCapacity()) {
+        // 同一会员不可重复预约同一门未取消的课程
+        LambdaQueryWrapper<CourseBooking> dup = new LambdaQueryWrapper<>();
+        dup.eq(CourseBooking::getCourseId, courseId)
+                .eq(CourseBooking::getMemberId, memberId)
+                .apply("NOT (status <=> {0})", "已取消");
+        if (courseBookingMapper.selectCount(dup) > 0) {
+            throw new RuntimeException("您已预约该课程，无需重复兑换");
+        }
+
+        // 以预约表实际人数为准同步 current_capacity，避免与列表展示不一致
+        int actualBookings = countActiveBookings(courseId);
+        courseInfo.setCurrentCapacity(actualBookings);
+        courseInfoMapper.updateById(courseInfo);
+
+        Integer maxCap = courseInfo.getMaxCapacity();
+        if (maxCap == null || maxCap <= 0) {
+            throw new RuntimeException("课程设置异常，无法预约");
+        }
+
+        if (actualBookings >= maxCap) {
             courseInfo.setStatus(2);
             courseInfoMapper.updateById(courseInfo);
             throw new RuntimeException("课程已满员");
@@ -149,6 +183,23 @@ public class CourseInfoServiceImpl implements CourseInfoService {
                 courseInfo.setStatus(2);
             }
             courseInfoMapper.updateById(courseInfo);
+
+            // 创建课程提醒（开课前1小时）
+            String coachName = null;
+            if (coachId != null) {
+                CoachInfo coach = coachInfoMapper.selectById(coachId);
+                if (coach != null) coachName = coach.getCoachName();
+            }
+            reminderService.createReminder(
+                memberId,
+                booking.getBookingId(),
+                courseId,
+                courseInfo.getCourseName(),
+                coachName,
+                courseInfo.getStartTime(),
+                courseInfo.getRoom()
+            );
+
             return true;
         }
 
@@ -166,8 +217,9 @@ public class CourseInfoServiceImpl implements CourseInfoService {
         booking.setStatus("已取消");
         if (courseBookingMapper.updateById(booking) > 0) {
             CourseInfo courseInfo = courseInfoMapper.selectById(booking.getCourseId());
-            if (courseInfo != null && courseInfo.getCurrentCapacity() > 0) {
-                courseInfo.setCurrentCapacity(courseInfo.getCurrentCapacity() - 1);
+            if (courseInfo != null) {
+                // 以预约表实际人数为准重新同步
+                courseInfo.setCurrentCapacity(countActiveBookings(booking.getCourseId()));
                 if (courseInfo.getStatus() == 2) {
                     courseInfo.setStatus(0);
                 }

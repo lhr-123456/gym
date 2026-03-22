@@ -5,6 +5,7 @@ import com.gym.dto.ApiResponse;
 import com.gym.entity.CourseBooking;
 import com.gym.entity.CourseInfo;
 import com.gym.service.CourseInfoService;
+import com.gym.service.MemberPointsRecordService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,9 +15,12 @@ import java.util.List;
 public class CourseInfoController {
 
     private final CourseInfoService courseInfoService;
+    private final MemberPointsRecordService pointsRecordService;
 
-    public CourseInfoController(CourseInfoService courseInfoService) {
+    public CourseInfoController(CourseInfoService courseInfoService,
+                               MemberPointsRecordService pointsRecordService) {
         this.courseInfoService = courseInfoService;
+        this.pointsRecordService = pointsRecordService;
     }
 
     @GetMapping("/page")
@@ -72,11 +76,16 @@ public class CourseInfoController {
         if (courseInfo.getCourseId() == null) {
             return ApiResponse.error("课程 ID 不能为空");
         }
-        boolean result = courseInfoService.updateById(courseInfo);
-        if (result) {
-            return ApiResponse.success("更新课程成功");
+        try {
+            boolean result = courseInfoService.updateById(courseInfo);
+            if (result) {
+                return ApiResponse.success("更新课程成功");
+            }
+            return ApiResponse.error("更新课程失败");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ApiResponse.error("更新课程失败：" + e.getMessage());
         }
-        return ApiResponse.error("更新课程失败");
     }
 
     @DeleteMapping("/{id}")
@@ -96,6 +105,14 @@ public class CourseInfoController {
         try {
             boolean result = courseInfoService.bookCourse(courseId, memberId, coachId);
             if (result) {
+                // 记录积分明细
+                pointsRecordService.recordPoints(
+                    memberId,
+                    "booking",
+                    String.valueOf(courseId),
+                    "course_booking",
+                    null
+                );
                 return ApiResponse.success("预约课程成功");
             }
             return ApiResponse.error("预约课程失败");

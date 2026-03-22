@@ -46,6 +46,9 @@ public class EquipmentInfo implements Serializable {
     @TableField("location")
     private String location;
 
+    @TableField("image")
+    private String image;
+
     @TableLogic
     private Integer deleted;
 }

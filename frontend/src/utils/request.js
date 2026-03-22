@@ -41,8 +41,8 @@ service.interceptors.request.use(
     if (store.getters.token) {
       config.headers['Authorization'] = 'Bearer ' + store.getters.token
     }
-    // 转换请求数据中的日期格式
-    if (config.data) {
+    // 转换请求数据中的日期格式（FormData 不能走 convertData，否则会变成空对象，文件上传会丢失 file）
+    if (config.data && !(config.data instanceof FormData)) {
       config.data = convertData(config.data)
     }
     return config

@@ -3,28 +3,39 @@ package com.gym.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gym.entity.MemberInfo;
+import com.gym.entity.CoachInfo;
 import com.gym.mapper.MemberInfoMapper;
+import com.gym.mapper.CoachInfoMapper;
 import com.gym.service.MemberInfoService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.stream.Collectors;
 
 @Service
 public class MemberInfoServiceImpl implements MemberInfoService {
 
     private final MemberInfoMapper memberInfoMapper;
+    private final CoachInfoMapper coachInfoMapper;
 
-    public MemberInfoServiceImpl(MemberInfoMapper memberInfoMapper) {
+    public MemberInfoServiceImpl(MemberInfoMapper memberInfoMapper,
+                                CoachInfoMapper coachInfoMapper) {
         this.memberInfoMapper = memberInfoMapper;
+        this.coachInfoMapper = coachInfoMapper;
     }
 
     @Override
     public Page<MemberInfo> getMemberPage(int pageNum, int pageSize, MemberInfo memberInfo) {
         Page<MemberInfo> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<MemberInfo> wrapper = buildQueryWrapper(memberInfo);
-        return memberInfoMapper.selectPage(page, wrapper);
+        Page<MemberInfo> result = memberInfoMapper.selectPage(page, wrapper);
+        // 填充教练名称
+        fillCoachNames(result.getRecords());
+        return result;
     }
 
     @Override
@@ -58,7 +69,29 @@ public class MemberInfoServiceImpl implements MemberInfoService {
     @Override
     public List<MemberInfo> list(MemberInfo memberInfo) {
         LambdaQueryWrapper<MemberInfo> wrapper = buildQueryWrapper(memberInfo);
-        return memberInfoMapper.selectList(wrapper);
+        List<MemberInfo> result = memberInfoMapper.selectList(wrapper);
+        fillCoachNames(result);
+        return result;
+    }
+
+    private void fillCoachNames(List<MemberInfo> members) {
+        if (members == null || members.isEmpty()) return;
+        List<Long> coachIds = members.stream()
+            .map(MemberInfo::getCoachId)
+            .filter(id -> id != null)
+            .distinct()
+            .collect(Collectors.toList());
+        if (coachIds.isEmpty()) return;
+        Map<Long, String> coachNameMap = new HashMap<>();
+        coachIds.forEach(id -> {
+            CoachInfo coach = coachInfoMapper.selectById(id);
+            if (coach != null) coachNameMap.put(id, coach.getCoachName());
+        });
+        members.forEach(m -> {
+            if (m.getCoachId() != null) {
+                m.setCoachName(coachNameMap.get(m.getCoachId()));
+            }
+        });
     }
 
     private LambdaQueryWrapper<MemberInfo> buildQueryWrapper(MemberInfo memberInfo) {

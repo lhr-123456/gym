@@ -11,8 +11,35 @@ import CoachMySchedule from '@/views/coach/mySchedule.vue'
 import CoachMembers from '@/views/coach/members.vue'
 import CoachMyReviews from '@/views/coach/myReviews.vue'
 import CoachBodyTest from '@/views/coach/bodyTest.vue'
+import CoachMessages from '@/views/coach/messages.vue'
+import CoachHomework from '@/views/coach/homework.vue'
 
 Vue.use(Router)
+
+/** 统一解析用户类型（后端可能返回数字或字符串） */
+function normalizeUserType(store) {
+  const raw = store.getters.userType
+  if (raw !== null && raw !== undefined && raw !== '') {
+    const n = Number(raw)
+    if (!Number.isNaN(n)) return n
+  }
+  const role = String(store.getters.role || '').toUpperCase()
+  if (role.includes('COACH') || role === '教练') return 2
+  if (role.includes('MEMBER') || role.includes('会员')) return 3
+  if (role.includes('ADMIN') || role.includes('管理')) return 1
+  return null
+}
+
+function defaultHomePath(store) {
+  const t = normalizeUserType(store)
+  if (t === 2) return '/coach-dashboard/index'
+  if (t === 3) return '/member/home'
+  return '/dashboard/index'
+}
+
+function isAdminDashboardRoute(path) {
+  return path === '/dashboard' || path === '/dashboard/index'
+}
 
 export const constantRoutes = [
   {
@@ -112,9 +139,36 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/member',
+    path: '/coach-homework',
+    component: Layout,
+    redirect: '/coach-homework/list',
+    children: [
+      {
+        path: 'list',
+        component: CoachHomework,
+        name: 'CoachHomework',
+        meta: { title: '布置作业', icon: 'document-copy', roles: [2] }
+      }
+    ]
+  },
+  {
+    path: '/coach-messages',
+    component: Layout,
+    redirect: '/coach-messages/list',
+    children: [
+      {
+        path: 'list',
+        component: CoachMessages,
+        name: 'CoachMessages',
+        meta: { title: '学员消息', icon: 'chat-line-round', roles: [2] }
+      }
+    ]
+  },
+  // 管理员 - 会员管理
+  {
+    path: '/admin-member',
     component: () => import('@/views/layout/index'),
-    redirect: '/member/list',
+    redirect: '/admin-member/list',
     meta: { title: '会员管理', icon: 'user', roles: [1] },
     children: [
       {
@@ -249,9 +303,9 @@ export const constantRoutes = [
       },
       {
         path: 'booking',
-        component: () => import('@/views/course/booking'),
-        name: 'CourseBooking',
-        meta: { title: '课程预约', icon: 'date' }
+        component: () => import('@/views/member/booking.vue'),
+        name: 'MemberBookingPage',
+        meta: { title: '我的预约', icon: 'date' }
       },
       {
         path: 'review',
@@ -278,6 +332,77 @@ export const constantRoutes = [
         component: () => import('@/views/equipment/booking'),
         name: 'EquipmentBooking',
         meta: { title: '器材预约', icon: 'date' }
+      }
+    ]
+  },
+  {
+    path: '/points',
+    component: () => import('@/views/layout/index'),
+    redirect: '/points/goods',
+    meta: { title: '积分商城', icon: 'shopping-bag-2', roles: [1] },
+    children: [
+      {
+        path: 'goods',
+        component: () => import('@/views/points/goods'),
+        name: 'PointsGoods',
+        meta: { title: '商品管理', icon: 'shopping-bag-2', roles: [1] }
+      }
+    ]
+  },
+  // 会员端专用路由
+  {
+    path: '/member',
+    component: () => import('@/views/layout/index'),
+    redirect: '/member/home',
+    meta: { title: '会员中心', icon: 'user' },
+    children: [
+      {
+        path: 'home',
+        component: () => import('@/views/member/dashboard.vue'),
+        name: 'MemberHome',
+        meta: { title: '会员首页', icon: 's-home' }
+      },
+      {
+        path: 'bodytest',
+        component: () => import('@/views/member/bodyTest'),
+        name: 'MemberBodyTestPage',
+        meta: { title: '体测记录', icon: 'data-analysis' }
+      },
+      {
+        path: 'points',
+        component: () => import('@/views/member/points.vue'),
+        name: 'MemberPoints',
+        meta: { title: '积分商城', icon: 'shopping-bag-2' }
+      },
+      {
+        path: 'messages',
+        component: () => import('@/views/member/messages.vue'),
+        name: 'MemberMessages',
+        meta: { title: '消息中心', icon: 'bell' }
+      },
+      {
+        path: 'profile',
+        component: () => import('@/views/member/profile.vue'),
+        name: 'MemberProfilePage',
+        meta: { title: '个人中心', icon: 'user' }
+      },
+      {
+        path: 'contactCoach',
+        component: () => import('@/views/member/contactCoach.vue'),
+        name: 'MemberContactCoach',
+        meta: { title: '联系教练', icon: 'chat-line-round' }
+      },
+      {
+        path: 'sportData',
+        component: () => import('@/views/member/sportData.vue'),
+        name: 'MemberSportData',
+        meta: { title: '运动数据', icon: 'data-line' }
+      },
+      {
+        path: 'homework',
+        component: () => import('@/views/member/homework.vue'),
+        name: 'MemberHomework',
+        meta: { title: '我的作业', icon: 'document-copy' }
       }
     ]
   },
@@ -329,20 +454,40 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
     } else {
       // 检查是否有用户信息
-      if (store.getters.userInfo && store.getters.userInfo.userType) {
-        // 教练/管理员访问根路径时，按身份跳转默认首页，避免落到不存在的页面
+      const hasUserContext = store.getters.token && (
+        (store.getters.userInfo && store.getters.userInfo.userType !== null && store.getters.userInfo.userType !== undefined && store.getters.userInfo.userType !== '') ||
+        (store.getters.role && String(store.getters.role).length > 0)
+      )
+      if (hasUserContext && normalizeUserType(store) !== null) {
+        const t = normalizeUserType(store)
         if (to.path === '/') {
-          const userType = store.getters.userInfo.userType
-          next({ path: userType === 2 ? '/coach-dashboard/index' : '/dashboard/index' })
+          next({ path: defaultHomePath(store), replace: true })
+          return
+        }
+        // 教练、会员禁止进入管理端数据统计首页
+        if (t === 2 && isAdminDashboardRoute(to.path)) {
+          next({ path: '/coach-dashboard/index', replace: true })
+          return
+        }
+        if (t === 3 && isAdminDashboardRoute(to.path)) {
+          next({ path: '/member/home', replace: true })
           return
         }
         next()
       } else {
         // 获取用户信息
         store.dispatch('user/getInfo').then(() => {
+          const t = normalizeUserType(store)
           if (to.path === '/') {
-            const userType = store.getters.userInfo.userType
-            next({ path: userType === 2 ? '/coach-dashboard/index' : '/dashboard/index' })
+            next({ path: defaultHomePath(store), replace: true })
+            return
+          }
+          if (t === 2 && isAdminDashboardRoute(to.path)) {
+            next({ path: '/coach-dashboard/index', replace: true })
+            return
+          }
+          if (t === 3 && isAdminDashboardRoute(to.path)) {
+            next({ path: '/member/home', replace: true })
             return
           }
           next()

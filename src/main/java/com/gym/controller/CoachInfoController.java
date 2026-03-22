@@ -33,7 +33,7 @@ public class CoachInfoController {
         return ApiResponse.success(list);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public ApiResponse<CoachInfo> getById(@PathVariable Long id) {
         CoachInfo coachInfo = coachInfoService.getById(id);
         if (coachInfo == null) {
@@ -63,7 +63,7 @@ public class CoachInfoController {
         return ApiResponse.error("更新教练失败");
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id:\\d+}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         boolean result = coachInfoService.deleteById(id);
         if (result) {

@@ -45,3 +45,15 @@ export function deleteEquipment(id) {
     method: 'delete'
   })
 }
+
+export function uploadEquipmentImage(file) {
+  const formData = new FormData()
+  formData.append('file', file)
+  return request({
+    url: '/equipment/upload',
+    method: 'post',
+    data: formData
+    // 不手动设置 Content-Type，由浏览器带上 multipart 边界；手动写 multipart/form-data 会缺 boundary
+  })
+}
+

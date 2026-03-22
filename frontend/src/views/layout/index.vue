@@ -20,32 +20,32 @@
               <i class="el-icon-s-home"></i>
               <span slot="title">首页</span>
             </el-menu-item>
-            <el-submenu index="/member">
+            <el-submenu index="/admin-member">
               <template slot="title">
                 <i class="el-icon-user"></i>
                 <span slot="title">会员管理</span>
               </template>
-              <el-menu-item index="/member/list">
+              <el-menu-item index="/admin-member/list">
                 <i class="el-icon-list"></i>
                 <span slot="title">会员列表</span>
               </el-menu-item>
-              <el-menu-item index="/member/level">
+              <el-menu-item index="/admin-member/level">
                 <i class="el-icon-medal"></i>
                 <span slot="title">会员等级</span>
               </el-menu-item>
-              <el-menu-item index="/member/card">
+              <el-menu-item index="/admin-member/card">
                 <i class="el-icon-credit-card"></i>
                 <span slot="title">会员卡管理</span>
               </el-menu-item>
-              <el-menu-item index="/member/signin">
+              <el-menu-item index="/admin-member/signin">
                 <i class="el-icon-calendar"></i>
                 <span slot="title">会员签到</span>
               </el-menu-item>
-              <el-menu-item index="/member/bodyTest">
+              <el-menu-item index="/admin-member/bodyTest">
                 <i class="el-icon-data-analysis"></i>
                 <span slot="title">体测记录</span>
               </el-menu-item>
-              <el-menu-item index="/member/consumption">
+              <el-menu-item index="/admin-member/consumption">
                 <i class="el-icon-shopping-cart-2"></i>
                 <span slot="title">消费记录</span>
               </el-menu-item>
@@ -132,6 +132,16 @@
                 <span slot="title">器材列表</span>
               </el-menu-item>
             </el-submenu>
+            <el-submenu index="/points">
+              <template slot="title">
+                <i class="el-icon-shopping-bag-2"></i>
+                <span slot="title">积分商城</span>
+              </template>
+              <el-menu-item index="/points/goods">
+                <i class="el-icon-shopping-bag-2"></i>
+                <span slot="title">商品管理</span>
+              </el-menu-item>
+            </el-submenu>
           </template>
 
           <!-- 教练菜单 -->
@@ -156,6 +166,10 @@
               <i class="el-icon-data-analysis"></i>
               <span slot="title">录入体测</span>
             </el-menu-item>
+            <el-menu-item index="/coach-homework/list">
+              <i class="el-icon-document-copy"></i>
+              <span slot="title">布置作业</span>
+            </el-menu-item>
             <el-menu-item index="/profile/index">
               <i class="el-icon-setting"></i>
               <span slot="title">个人中心</span>
@@ -164,9 +178,9 @@
 
           <!-- 会员菜单 -->
           <template v-else-if="userType === 3">
-            <el-menu-item index="/dashboard/index">
+            <el-menu-item index="/member/home">
               <i class="el-icon-s-home"></i>
-              <span slot="title">首页</span>
+              <span slot="title">会员首页</span>
             </el-menu-item>
             <el-submenu index="/course">
               <template slot="title">
@@ -174,10 +188,42 @@
                 <span slot="title">课程预约</span>
               </template>
               <el-menu-item index="/course/available">
-                <i class="el-icon-list"></i>
+                <i class="el-icon-search"></i>
                 <span slot="title">可预约课程</span>
               </el-menu-item>
+              <el-menu-item index="/course/booking">
+                <i class="el-icon-tickets"></i>
+                <span slot="title">我的预约</span>
+              </el-menu-item>
             </el-submenu>
+            <el-menu-item index="/member/bodytest">
+              <i class="el-icon-data-analysis"></i>
+              <span slot="title">体测记录</span>
+            </el-menu-item>
+            <el-menu-item index="/member/contactCoach">
+              <i class="el-icon-chat-line-round"></i>
+              <span slot="title">联系教练</span>
+            </el-menu-item>
+            <el-menu-item index="/member/sportData">
+              <i class="el-icon-data-line"></i>
+              <span slot="title">运动数据</span>
+            </el-menu-item>
+            <el-menu-item index="/member/points">
+              <i class="el-icon-shopping-bag-2"></i>
+              <span slot="title">积分商城</span>
+            </el-menu-item>
+            <el-menu-item index="/member/messages">
+              <i class="el-icon-bell"></i>
+              <span slot="title">消息中心</span>
+            </el-menu-item>
+            <el-menu-item index="/member/homework">
+              <i class="el-icon-document-copy"></i>
+              <span slot="title">我的作业</span>
+            </el-menu-item>
+            <el-menu-item index="/member/profile">
+              <i class="el-icon-user"></i>
+              <span slot="title">个人中心</span>
+            </el-menu-item>
           </template>
         </el-menu>
       </el-aside>

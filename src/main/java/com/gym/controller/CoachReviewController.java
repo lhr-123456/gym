@@ -30,7 +30,9 @@ public class CoachReviewController {
 
     @GetMapping("/list")
     public ApiResponse<List<CoachReview>> getList(CoachReview coachReview) {
-        List<CoachReview> list = coachReviewService.list();
+        List<CoachReview> list = coachReviewService.lambdaQuery()
+                .eq(coachReview.getCoachId() != null, CoachReview::getCoachId, coachReview.getCoachId())
+                .list();
         return ApiResponse.success(list);
     }
 
