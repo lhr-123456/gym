@@ -17,6 +17,9 @@ public class CoachShiftChange implements Serializable {
     @TableId(value = "shift_id", type = IdType.AUTO)
     private Long shiftId;
 
+    @TableField("original_schedule_id")
+    private Long originalScheduleId;
+
     @TableField("coach_id")
     private Long coachId;
 

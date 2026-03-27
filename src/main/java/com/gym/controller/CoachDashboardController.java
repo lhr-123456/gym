@@ -394,17 +394,28 @@ public class CoachDashboardController {
                     .eq(CourseBooking::getCoachId, coachId)
             );
 
-            List<Long> memberIds = allBookings.stream()
+            java.util.Set<Long> memberIdSet = new java.util.LinkedHashSet<>();
+            allBookings.stream()
                 .map(CourseBooking::getMemberId)
                 .filter(Objects::nonNull)
-                .distinct()
-                .collect(Collectors.toList());
+                .forEach(memberIdSet::add);
 
-            if (memberIds.isEmpty()) {
+            // 分配了该教练但尚未产生预约记录的会员，也应出现在下拉列表中（布置作业等场景）
+            List<MemberInfo> assignedByCoach = memberInfoMapper.selectList(
+                new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<MemberInfo>()
+                    .eq(MemberInfo::getCoachId, coachId)
+            );
+            for (MemberInfo m : assignedByCoach) {
+                if (m != null && m.getMemberId() != null) {
+                    memberIdSet.add(m.getMemberId());
+                }
+            }
+
+            if (memberIdSet.isEmpty()) {
                 return ApiResponse.success(Collections.emptyList());
             }
 
-            List<MemberInfo> members = memberInfoMapper.selectBatchIds(memberIds);
+            List<MemberInfo> members = memberInfoMapper.selectBatchIds(new ArrayList<>(memberIdSet));
             List<Map<String, Object>> result = new ArrayList<>();
             for (MemberInfo m : members) {
                 if (m == null) continue;

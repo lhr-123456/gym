@@ -1,265 +1,274 @@
 <template>
-  <div class="performance-container">
+  <div class="coach-performance-container">
+    <!-- 绩效概览卡片 -->
+    <el-row :gutter="20" class="stat-row">
+      <el-col :span="8">
+        <el-card shadow="hover" class="stat-card">
+          <div class="stat-label">本月评价均分</div>
+          <div class="stat-value large">{{ avgRating || '—' }}</div>
+          <div class="stat-sub">满分 5.0</div>
+        </el-card>
+      </el-col>
+      <el-col :span="8">
+        <el-card shadow="hover" class="stat-card">
+          <div class="stat-label">本月课时数</div>
+          <div class="stat-value large">{{ monthHours || 0 }}</div>
+          <div class="stat-sub">已完成</div>
+        </el-card>
+      </el-col>
+      <el-col :span="8">
+        <el-card shadow="hover" class="stat-card">
+          <div class="stat-label">出勤率</div>
+          <div class="stat-value large">{{ attendanceRate || '—' }}</div>
+          <div class="stat-sub">本月</div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <!-- 多维评分雷达图 + 评价分布 -->
+    <el-row :gutter="20" class="chart-row">
+      <el-col :span="12">
+        <el-card>
+          <div slot="header" class="card-header"><i class="el-icon-data-analysis"></i> 多维评分</div>
+          <div ref="radarChartRef" style="height: 280px;"></div>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card>
+          <div slot="header" class="card-header"><i class="el-icon-pie-chart"></i> 评价分布</div>
+          <div ref="pieChartRef" style="height: 280px;"></div>
+        </el-card>
+      </el-col>
+    </el-row>
+
+    <!-- 绩效记录列表 -->
     <el-card>
-      <div class="toolbar">
-        <el-form :inline="true" :model="queryForm">
-          <el-form-item label="教练">
-            <el-select v-model="queryForm.coachId" placeholder="请选择教练" clearable>
-              <el-option v-for="coach in coachList" :key="coach.coachId" :label="coach.coachName" :value="coach.coachId"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="评估月份">
-            <el-date-picker v-model="queryForm.evalMonth" type="month" placeholder="选择月份" clearable></el-date-picker>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="handleQuery">查询</el-button>
-            <el-button @click="handleReset">重置</el-button>
-          </el-form-item>
-        </el-form>
+      <div slot="header" class="card-header">
+        <span><i class="el-icon-tickets"></i> 绩效记录</span>
+        <el-select v-model="filterMonth" size="small" placeholder="按月份筛选" clearable @change="handleQuery" style="width: 140px">
+          <el-option v-for="m in monthOptions" :key="m" :label="m" :value="m"></el-option>
+        </el-select>
       </div>
-
-      <div class="table-toolbar">
-        <el-button type="primary" @click="handleAdd">新增绩效</el-button>
-      </div>
-
-      <div class="table-wrapper">
-        <el-table :data="tableData" border v-loading="loading">
-          <el-table-column prop="perfId" label="ID" width="80"></el-table-column>
-          <el-table-column prop="coachId" label="教练ID" width="80"></el-table-column>
-          <el-table-column prop="evalMonth" label="评估月份" width="120"></el-table-column>
-          <el-table-column prop="attendanceScore" label="出勤评分" width="100"></el-table-column>
-          <el-table-column prop="teachingScore" label="教学评分" width="100"></el-table-column>
-          <el-table-column prop="serviceScore" label="服务评分" width="100"></el-table-column>
-          <el-table-column prop="salesScore" label="销售评分" width="100"></el-table-column>
-          <el-table-column prop="totalScore" label="总分" width="80"></el-table-column>
-          <el-table-column prop="evalLevel" label="评级" width="80">
-            <template slot-scope="scope">
-              <el-tag :type="scope.row.evalLevel === 'A' ? 'success' : scope.row.evalLevel === 'B' ? 'warning' : 'danger'">
-                {{ scope.row.evalLevel }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column prop="evalRemarks" label="备注"></el-table-column>
-          <el-table-column label="操作" fixed="right" width="150">
-            <template slot-scope="scope">
-              <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-
+      <el-table :data="tableData" border v-loading="loading">
+        <el-table-column prop="evalMonth" label="评估月份" width="110"></el-table-column>
+        <el-table-column prop="attendanceScore" label="出勤评分" width="100" align="center">
+          <template slot-scope="scope">{{ scope.row.attendanceScore || '-' }}</template>
+        </el-table-column>
+        <el-table-column prop="teachingScore" label="教学评分" width="100" align="center">
+          <template slot-scope="scope">{{ scope.row.teachingScore || '-' }}</template>
+        </el-table-column>
+        <el-table-column prop="serviceScore" label="服务评分" width="100" align="center">
+          <template slot-scope="scope">{{ scope.row.serviceScore || '-' }}</template>
+        </el-table-column>
+        <el-table-column prop="salesScore" label="销售评分" width="100" align="center">
+          <template slot-scope="scope">{{ scope.row.salesScore || '-' }}</template>
+        </el-table-column>
+        <el-table-column prop="studentFeedback" label="学员反馈" width="100" align="center">
+          <template slot-scope="scope">{{ scope.row.studentFeedback || '-' }}</template>
+        </el-table-column>
+        <el-table-column prop="totalScore" label="总分" width="80" align="center">
+          <template slot-scope="scope">
+            <strong>{{ scope.row.totalScore || '-' }}</strong>
+          </template>
+        </el-table-column>
+        <el-table-column prop="evalLevel" label="评级" width="80" align="center">
+          <template slot-scope="scope">
+            <el-tag size="mini"
+              :type="scope.row.evalLevel === 'A' ? 'success' : scope.row.evalLevel === 'B' ? 'warning' : 'danger'">
+              {{ scope.row.evalLevel || '-' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="evalRemarks" label="备注" min-width="120" show-overflow-tooltip></el-table-column>
+      </el-table>
       <div class="pagination">
         <el-pagination
-          :current-page="pageNum"
-          :page-size="pageSize"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        ></el-pagination>
+          :current-page="pageNum" :page-size="pageSize" :total="total"
+          layout="total, prev, pager, next"
+          @current-change="handlePageChange">
+        </el-pagination>
       </div>
     </el-card>
-
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="700px">
-      <el-form ref="dataForm" :model="formData" :rules="rules" label-width="110px">
-        <el-form-item label="教练" prop="coachId">
-          <el-select v-model="formData.coachId" placeholder="请选择教练" style="width: 100%">
-            <el-option v-for="coach in coachList" :key="coach.coachId" :label="coach.coachName" :value="coach.coachId"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="评估月份" prop="evalMonth">
-          <el-date-picker v-model="formData.evalMonth" type="month" placeholder="选择月份" style="width: 100%"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="出勤评分" prop="attendanceScore">
-          <el-input-number v-model="formData.attendanceScore" :min="0" :max="100" :step="0.5" style="width: 100%"></el-input-number>
-        </el-form-item>
-        <el-form-item label="教学评分" prop="teachingScore">
-          <el-input-number v-model="formData.teachingScore" :min="0" :max="100" :step="0.5" style="width: 100%"></el-input-number>
-        </el-form-item>
-        <el-form-item label="服务评分" prop="serviceScore">
-          <el-input-number v-model="formData.serviceScore" :min="0" :max="100" :step="0.5" style="width: 100%"></el-input-number>
-        </el-form-item>
-        <el-form-item label="销售评分" prop="salesScore">
-          <el-input-number v-model="formData.salesScore" :min="0" :max="100" :step="0.5" style="width: 100%"></el-input-number>
-        </el-form-item>
-        <el-form-item label="学员反馈评分" prop="studentFeedback">
-          <el-input-number v-model="formData.studentFeedback" :min="0" :max="100" :step="0.5" style="width: 100%"></el-input-number>
-        </el-form-item>
-        <el-form-item label="评级" prop="evalLevel">
-          <el-select v-model="formData.evalLevel" placeholder="请选择评级" style="width: 100%">
-            <el-option label="A级" value="A"></el-option>
-            <el-option label="B级" value="B"></el-option>
-            <el-option label="C级" value="C"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="备注" prop="evalRemarks">
-          <el-input v-model="formData.evalRemarks" type="textarea" rows="3" placeholder="请输入备注"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSubmit">确定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import { getCoachPerformancePage, addCoachPerformance, updateCoachPerformance, deleteCoachPerformance } from '@/api/coachPerformance'
-import { getCoachList } from '@/api/coach'
+import { mapGetters } from 'vuex'
+import { getCoachPerformancePage } from '@/api/coachPerformance'
+import { getCoachReviews } from '@/api/coachDashboard'
+import { getCoachPerformanceSummary } from '@/api/statistics'
+import * as echarts from 'echarts'
 
 export default {
   name: 'CoachPerformance',
   data() {
     return {
-      queryForm: {
-        coachId: null,
-        evalMonth: ''
-      },
       tableData: [],
       loading: false,
       pageNum: 1,
       pageSize: 10,
       total: 0,
-      coachList: [],
-      dialogVisible: false,
-      dialogTitle: '',
-      formData: {
-        perfId: null,
-        coachId: null,
-        evalMonth: '',
-        attendanceScore: 0,
-        teachingScore: 0,
-        serviceScore: 0,
-        salesScore: 0,
-        studentFeedback: 0,
-        totalScore: 0,
-        evalLevel: '',
-        evalRemarks: ''
-      },
-      rules: {
-        coachId: [{ required: true, message: '请选择教练', trigger: 'change' }],
-        evalMonth: [{ required: true, message: '请选择评估月份', trigger: 'change' }]
-      }
+      filterMonth: '',
+      monthOptions: [],
+      avgRating: null,
+      monthHours: 0,
+      attendanceRate: null,
+      radarChart: null,
+      pieChart: null,
+      reviewStats: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
     }
   },
+  computed: {
+    ...mapGetters(['userId', 'coachId'])
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.initCharts()
+    })
+  },
+  beforeDestroy() {
+    if (this.radarChart) this.radarChart.dispose()
+    if (this.pieChart) this.pieChart.dispose()
+  },
   created() {
-    this.getCoachList()
-    this.getList()
+    this.fetchSummary()
+    this.fetchReviews()
+    this.fetchList()
   },
   methods: {
-    getCoachList() {
-      getCoachList().then(response => {
-        this.coachList = response.data || []
-      })
+    fetchSummary() {
+      getCoachPerformanceSummary(this.coachId || null).then(res => {
+        if (res && res.code === 200) {
+          const d = res.data || {}
+          this.avgRating = d.avgRating ? d.avgRating.toFixed(1) : null
+          this.monthHours = d.monthHours || 0
+          this.attendanceRate = d.attendanceRate || null
+        }
+      }).catch(() => {})
     },
-    getList() {
+    fetchReviews() {
+      getCoachReviews(null).then(res => {
+        if (res && res.code === 200) {
+          const reviews = res.data || []
+          const stats = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 }
+          reviews.forEach(r => {
+            const rating = Math.round(r.rating || 0)
+            if (rating >= 1 && rating <= 5) stats[rating]++
+          })
+          this.reviewStats = stats
+          this.$nextTick(() => this.updatePieChart())
+        }
+      }).catch(() => {})
+    },
+    fetchList() {
       this.loading = true
-      const params = {
-        pageNum: this.pageNum,
-        pageSize: this.pageSize
-      }
-      if (this.queryForm.coachId) {
-        params.coachId = this.queryForm.coachId
-      }
-      if (this.queryForm.evalMonth) {
-        const d = new Date(this.queryForm.evalMonth)
-        params.evalMonth = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0')
-      }
-      getCoachPerformancePage(params).then(response => {
-        this.tableData = response.data.records || []
-        this.total = response.data.total || 0
+      const params = { pageNum: this.pageNum, pageSize: this.pageSize }
+      if (this.filterMonth) params.evalMonth = this.filterMonth
+      getCoachPerformancePage(params).then(res => {
+        if (res && res.code === 200) {
+          const page = res.data || {}
+          let records = page.records || []
+          if (this.coachId) {
+            records = records.filter(r => r.coachId === this.coachId)
+          }
+          this.tableData = records
+          this.total = records.length
+          const months = [...new Set(records.map(r => r.evalMonth).filter(Boolean))]
+          this.monthOptions = months.sort().reverse()
+          this.updateRadar()
+        }
         this.loading = false
-      }).catch(() => {
-        this.loading = false
-      })
+      }).catch(() => { this.loading = false })
     },
     handleQuery() {
       this.pageNum = 1
-      this.getList()
+      this.fetchList()
     },
-    handleReset() {
-      this.queryForm = { coachId: null, evalMonth: '' }
-      this.handleQuery()
+    handlePageChange(page) {
+      this.pageNum = page
+      this.fetchList()
     },
-    handleAdd() {
-      this.dialogTitle = '新增绩效'
-      this.formData = {
-        perfId: null,
-        coachId: null,
-        evalMonth: '',
-        attendanceScore: 0,
-        teachingScore: 0,
-        serviceScore: 0,
-        salesScore: 0,
-        studentFeedback: 0,
-        totalScore: 0,
-        evalLevel: '',
-        evalRemarks: ''
+    initCharts() {
+      this.radarChart = echarts.init(this.$refs.radarChartRef)
+      this.pieChart = echarts.init(this.$refs.pieChartRef)
+    },
+    updateRadar() {
+      if (!this.radarChart || this.tableData.length === 0) return
+      const latest = this.tableData[0]
+      const radarOption = {
+        tooltip: {},
+        radar: {
+          indicator: [
+            { name: '出勤', max: 100 },
+            { name: '教学', max: 100 },
+            { name: '服务', max: 100 },
+            { name: '销售', max: 100 },
+            { name: '学员反馈', max: 100 }
+          ],
+          radius: '65%'
+        },
+        series: [{
+          type: 'radar',
+          data: [{
+            value: [
+              latest.attendanceScore || 0,
+              latest.teachingScore || 0,
+              latest.serviceScore || 0,
+              latest.salesScore || 0,
+              latest.studentFeedback || 0
+            ],
+            name: '本月评分',
+            areaStyle: { color: 'rgba(64,158,255,0.3)' },
+            lineStyle: { color: '#409EFF' },
+            itemStyle: { color: '#409EFF' }
+          }]
+        }]
       }
-      this.dialogVisible = true
-      this.$nextTick(() => {
-        this.$refs.dataForm.clearValidate()
-      })
+      this.radarChart.setOption(radarOption)
     },
-    handleEdit(row) {
-      this.dialogTitle = '编辑绩效'
-      this.formData = { ...row }
-      this.dialogVisible = true
-    },
-    handleDelete(row) {
-      this.$confirm('确定要删除该绩效记录吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        deleteCoachPerformance(row.perfId).then(() => {
-          this.$message.success('删除成功')
-          this.getList()
-        })
-      })
-    },
-    handleSubmit() {
-      this.$refs.dataForm.validate(valid => {
-        if (valid) {
-          // 计算总分
-          const total = (Number(this.formData.attendanceScore) + Number(this.formData.teachingScore) + 
-                        Number(this.formData.serviceScore) + Number(this.formData.salesScore) + 
-                        Number(this.formData.studentFeedback)) / 5
-          this.formData.totalScore = Math.round(total * 100) / 100
-          
-          const data = { ...this.formData }
-          if (data.evalMonth) {
-            const d = new Date(data.evalMonth)
-            data.evalMonth = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0')
-          }
-          
-          const api = this.formData.perfId ? updateCoachPerformance : addCoachPerformance
-          api(data).then(() => {
-            this.$message.success(this.formData.perfId ? '更新成功' : '添加成功')
-            this.dialogVisible = false
-            this.getList()
-          })
-        }
-      })
-    },
-    handleSizeChange(val) {
-      this.pageSize = val
-      this.getList()
-    },
-    handleCurrentChange(val) {
-      this.pageNum = val
-      this.getList()
+    updatePieChart() {
+      if (!this.pieChart) return
+      const s = this.reviewStats
+      const hasData = Object.values(s).some(v => v > 0)
+      if (!hasData) return
+      const pieOption = {
+        tooltip: { trigger: 'item', formatter: '{b}: {c}人 ({d}%)' },
+        legend: { bottom: 0 },
+        color: ['#67C23A', '#409EFF', '#E6A23C', '#F56C6C', '#909399'],
+        series: [{
+          type: 'pie',
+          radius: ['40%', '70%'],
+          data: [
+            { value: s[5], name: '5星' },
+            { value: s[4], name: '4星' },
+            { value: s[3], name: '3星' },
+            { value: s[2], name: '2星' },
+            { value: s[1], name: '1星' }
+          ]
+        }]
+      }
+      this.pieChart.setOption(pieOption)
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.performance-container {
-  .toolbar, .table-toolbar { margin-bottom: 20px; }
-  .table-wrapper { width: 100%; overflow-x: auto; }
+.coach-performance-container {
+  .stat-row { margin-bottom: 20px; }
+  .chart-row { margin-bottom: 20px; }
+  .stat-card {
+    text-align: center; padding: 20px 0;
+    .stat-label { font-size: 13px; color: #909399; margin-bottom: 10px; }
+    .stat-value { font-size: 32px; font-weight: bold; color: #303133; }
+    .stat-value.large { color: #409EFF; }
+    .stat-sub { font-size: 12px; color: #c0c4cc; margin-top: 4px; }
+  }
+  .card-header {
+    font-size: 15px; font-weight: bold;
+    display: flex; justify-content: space-between; align-items: center;
+    i { margin-right: 6px; }
+  }
   .pagination { margin-top: 20px; text-align: right; }
 }
 </style>

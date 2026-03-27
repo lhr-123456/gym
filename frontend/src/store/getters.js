@@ -5,6 +5,8 @@ const getters = {
   userType: state => state.user.userType,
   userInfo: state => state.user,
   role: state => state.user.role,
+  /** 当前登录用户的头像路径 */
+  avatar: state => state.user.avatar,
   permissions: state => state.user.permissions,
   routes: state => state.permission.routes,
   addRoutes: state => state.permission.addRoutes,

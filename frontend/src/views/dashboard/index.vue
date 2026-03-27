@@ -4,6 +4,23 @@
     <member-dashboard v-if="userType === 3" />
     <!-- 管理员首页 -->
     <template v-else>
+    <!-- 轮播图横幅 -->
+    <el-card class="carousel-card" :body-style="{ padding: '0px' }">
+      <el-carousel height="420px" indicator-position="outside" arrow="always" :interval="4000">
+        <el-carousel-item v-for="(img, idx) in carouselImages" :key="idx">
+          <div class="carousel-slide">
+            <img :src="img.url" :alt="img.title" class="carousel-img" />
+            <div class="carousel-overlay">
+              <div class="carousel-text">
+                <h2>{{ img.title }}</h2>
+                <p>{{ img.subtitle }}</p>
+              </div>
+            </div>
+          </div>
+        </el-carousel-item>
+      </el-carousel>
+    </el-card>
+
     <!-- 欢迎横幅 -->
     <el-card class="welcome-card">
       <div class="welcome-bg-images">
@@ -200,7 +217,34 @@ export default {
         coachCount: 0
       },
       currentTime: '',
-      timer: null
+      timer: null,
+      carouselImages: [
+        {
+          url: '/uploads/equipment/Treadmill.jpeg',
+          title: '跑步机',
+          subtitle: '有氧训练首选器械，高效燃脂'
+        },
+        {
+          url: '/uploads/equipment/Dumbbell Set.jpeg',
+          title: '哑铃组合',
+          subtitle: '自由重量训练，雕刻完美肌肉线条'
+        },
+        {
+          url: '/uploads/equipment/Elliptical.jpeg',
+          title: '椭圆机',
+          subtitle: '低冲击全身有氧，保护关节更安全'
+        },
+        {
+          url: '/uploads/equipment/Smith Machine.jpeg',
+          title: '史密斯机',
+          subtitle: '安全固定轨迹，多角度力量训练'
+        },
+        {
+          url: '/uploads/equipment/284a43da1f494ad3ba172a92e505bb25.jpg',
+          title: '综合训练区',
+          subtitle: '多功能器械组合，全面提升身体素质'
+        }
+      ]
     }
   },
   computed: {
@@ -286,6 +330,112 @@ export default {
 
 <style lang="scss" scoped>
 .dashboard-container {
+  .carousel-card {
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 12px;
+    overflow: hidden;
+
+    ::v-deep .el-card__body {
+      padding: 0;
+    }
+
+    .carousel-slide {
+      width: 100%;
+      height: 420px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+
+      .carousel-img {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+        object-position: center;
+        transform: scale(0.88);
+        transition: transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      }
+
+      &:hover .carousel-img {
+        transform: scale(1);
+      }
+    }
+
+    .carousel-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(
+        to right,
+        rgba(0, 0, 0, 0.65) 0%,
+        rgba(0, 0, 0, 0.2) 60%,
+        rgba(0, 0, 0, 0.05) 100%
+      );
+      display: flex;
+      align-items: center;
+    }
+
+    .carousel-text {
+      padding: 0 60px;
+      max-width: 600px;
+
+      h2 {
+        margin: 0 0 12px 0;
+        font-size: 32px;
+        color: #fff;
+        font-weight: bold;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+      }
+
+      p {
+        margin: 0;
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.9);
+        letter-spacing: 1px;
+      }
+    }
+
+    ::v-deep .el-carousel__item--card {
+      width: 100%;
+    }
+
+    ::v-deep .el-carousel__item {
+      background-color: #1a1a2e;
+    }
+
+    ::v-deep .el-carousel__button {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: rgba(255, 255, 255, 0.5);
+    }
+
+    ::v-deep .el-carousel__indicator--horizontal {
+      padding: 6px 4px;
+    }
+
+    ::v-deep .el-carousel__arrow {
+      width: 44px;
+      height: 44px;
+      background-color: rgba(0, 0, 0, 0.4);
+      border: none;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+
+      i {
+        font-size: 18px;
+        color: #fff;
+      }
+    }
+  }
+
   .welcome-card {
     margin-bottom: 20px;
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.5) 0%, rgba(118, 75, 162, 0.5) 100%);

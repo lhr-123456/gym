@@ -24,4 +24,8 @@ public class LoginResponse {
      * 教练ID（仅 userType=2 时有值）
      */
     private Long coachId;
+    /**
+     * 头像路径
+     */
+    private String avatar;
 }

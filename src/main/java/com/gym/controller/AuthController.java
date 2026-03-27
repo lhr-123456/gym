@@ -8,6 +8,8 @@ import com.gym.entity.MemberInfo;
 import com.gym.entity.UserInfo;
 import com.gym.mapper.MemberInfoMapper;
 import com.gym.mapper.UserInfoMapper;
+import com.gym.mapper.CoachInfoMapper;
+import com.gym.entity.CoachInfo;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,17 +29,20 @@ public class AuthController {
     private final JwtUtil jwtUtil;
     private final UserInfoMapper userInfoMapper;
     private final MemberInfoMapper memberInfoMapper;
+    private final CoachInfoMapper coachInfoMapper;
     private final PasswordEncoder passwordEncoder;
 
     public AuthController(AuthenticationManager authenticationManager,
                          JwtUtil jwtUtil,
                          UserInfoMapper userInfoMapper,
                          MemberInfoMapper memberInfoMapper,
+                         CoachInfoMapper coachInfoMapper,
                          PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
         this.userInfoMapper = userInfoMapper;
         this.memberInfoMapper = memberInfoMapper;
+        this.coachInfoMapper = coachInfoMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -78,6 +83,26 @@ public class AuthController {
                 userInfo.getCoachId()
             );
 
+            // 查询头像：会员查 member_info.avatar，教练查 coach_info.avatar_url
+            String avatar = null;
+            if (userInfo.getUserType() != null && userInfo.getUserType() == 3) {
+                Long memberId = userInfo.getMemberId();
+                if (memberId == null) {
+                    // 兜底：按用户名查会员档案
+                    LambdaQueryWrapper<MemberInfo> mb = new LambdaQueryWrapper<>();
+                    mb.eq(MemberInfo::getMemberName, userInfo.getUsername());
+                    MemberInfo fallback = memberInfoMapper.selectOne(mb);
+                    if (fallback != null) memberId = fallback.getMemberId();
+                }
+                if (memberId != null) {
+                    MemberInfo member = memberInfoMapper.selectById(memberId);
+                    if (member != null) avatar = member.getAvatar();
+                }
+            } else if (userInfo.getUserType() != null && userInfo.getUserType() == 2 && userInfo.getCoachId() != null) {
+                CoachInfo coach = coachInfoMapper.selectById(userInfo.getCoachId());
+                if (coach != null) avatar = coach.getAvatarUrl();
+            }
+
             // 创建响应对象
             String role = getUserRole(userInfo.getUserType());
             LoginResponse response = LoginResponse.builder()
@@ -88,6 +113,7 @@ public class AuthController {
                 .role(role)
                 .memberId(userInfo.getMemberId())
                 .coachId(userInfo.getCoachId())
+                .avatar(avatar)
                 .build();
 
             return ApiResponse.success(response);

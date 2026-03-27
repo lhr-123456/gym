@@ -1,137 +1,196 @@
 <template>
-  <div class="salary-container">
-    <el-card>
-      <div class="toolbar">
-        <el-form :inline="true" :model="queryForm">
-          <el-form-item label="教练ID">
-            <el-input v-model.number="queryForm.coachId" placeholder="请输入教练ID" clearable></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="handleQuery">查询</el-button>
-            <el-button @click="handleReset">重置</el-button>
-          </el-form-item>
-        </el-form>
-      </div>
+  <div class="coach-salary-container">
+    <!-- 顶部统计卡片 -->
+    <el-row :gutter="20" class="stat-row">
+      <el-col :span="6">
+        <el-card shadow="hover" class="stat-card">
+          <div class="stat-icon base"><i class="el-icon-money"></i></div>
+          <div class="stat-info">
+            <div class="stat-value">¥{{ summary.baseSalary }}</div>
+            <div class="stat-label">基本工资</div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card shadow="hover" class="stat-card">
+          <div class="stat-icon course"><i class="el-icon-reading"></i></div>
+          <div class="stat-info">
+            <div class="stat-value">¥{{ summary.courseFee }}</div>
+            <div class="stat-label">本月课时费</div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card shadow="hover" class="stat-card">
+          <div class="stat-icon bonus"><i class="el-icon-star-on"></i></div>
+          <div class="stat-info">
+            <div class="stat-value">¥{{ summary.performanceBonus }}</div>
+            <div class="stat-label">绩效奖金</div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card shadow="hover" class="stat-card highlight">
+          <div class="stat-icon total"><i class="el-icon-wallet"></i></div>
+          <div class="stat-info">
+            <div class="stat-value">¥{{ summary.totalSalary }}</div>
+            <div class="stat-label">本月总收入</div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
 
-      <div class="table-toolbar">
-        <el-button type="primary" @click="handleAdd">新增工资</el-button>
-      </div>
+    <el-row :gutter="20" class="stat-row">
+      <el-col :span="6">
+        <el-card shadow="hover" class="stat-card">
+          <div class="stat-info">
+            <div class="stat-value">{{ summary.courseHours }}h</div>
+            <div class="stat-label">本月课时数</div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card shadow="hover" class="stat-card">
+          <div class="stat-info">
+            <div class="stat-value">{{ summary.monthEvalScore || '—' }}</div>
+            <div class="stat-label">本月评价均分</div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
 
-      <div class="table-wrapper">
-        <el-table :data="tableData" border v-loading="loading">
-          <el-table-column prop="salaryId" label="工资ID" width="80"></el-table-column>
-          <el-table-column prop="coachId" label="教练ID" width="80"></el-table-column>
-          <el-table-column prop="salaryMonth" label="工资月份" width="120"></el-table-column>
-          <el-table-column prop="baseSalary" label="基本工资" width="100"></el-table-column>
-          <el-table-column prop="performanceBonus" label="绩效奖金" width="100"></el-table-column>
-          <el-table-column prop="courseBonus" label="课时费" width="100"></el-table-column>
-          <el-table-column prop="totalSalary" label="总工资" width="100"></el-table-column>
-          <el-table-column prop="status" label="状态" width="100">
-            <template slot-scope="scope">
-              <el-tag :type="scope.row.status === 0 ? 'warning' : scope.row.status === 1 ? 'success' : 'danger'">
-                {{ scope.row.status === 0 ? '待发放' : scope.row.status === 1 ? '已发放' : '已扣款' }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" fixed="right" width="150">
-            <template slot-scope="scope">
-              <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
-              <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+    <el-card class="chart-card" v-if="salaryTrendChart.length > 0">
+      <div slot="header" class="card-header">
+        <span><i class="el-icon-data-line"></i> 收入趋势（近6个月）</span>
       </div>
-
-      <div class="pagination">
-        <el-pagination
-          :current-page="pageNum"
-          :page-size="pageSize"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-        ></el-pagination>
-      </div>
+      <div ref="salaryChartRef" style="height: 260px;"></div>
     </el-card>
 
-    <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="600px">
-      <el-form ref="dataForm" :model="formData" :rules="rules" label-width="100px">
-        <el-form-item label="教练ID" prop="coachId">
-          <el-input v-model.number="formData.coachId" placeholder="请输入教练ID"></el-input>
-        </el-form-item>
-        <el-form-item label="工资月份" prop="salaryMonth">
-          <el-date-picker v-model="formData.salaryMonth" type="month" placeholder="选择月份" style="width: 100%"></el-date-picker>
-        </el-form-item>
-        <el-form-item label="基本工资" prop="baseSalary">
-          <el-input v-model.number="formData.baseSalary" placeholder="请输入基本工资"></el-input>
-        </el-form-item>
-        <el-form-item label="绩效奖金" prop="performanceBonus">
-          <el-input v-model.number="formData.performanceBonus" placeholder="请输入绩效奖金"></el-input>
-        </el-form-item>
-        <el-form-item label="课时费" prop="courseBonus">
-          <el-input v-model.number="formData.courseBonus" placeholder="请输入课时费"></el-input>
-        </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-radio-group v-model="formData.status">
-            <el-radio :label="0">待发放</el-radio>
-            <el-radio :label="1">已发放</el-radio>
-            <el-radio :label="2">已扣款</el-radio>
-          </el-radio-group>
-        </el-form-item>
-      </el-form>
-      <div slot="footer">
-        <el-button @click="dialogVisible = false">取消</el-button>
-        <el-button type="primary" @click="handleSubmit">确定</el-button>
+    <el-card>
+      <div slot="header" class="card-header">
+        <span><i class="el-icon-tickets"></i> 工资明细</span>
+        <el-select v-model="filterMonth" size="small" placeholder="按月份筛选" clearable @change="handleQuery" style="width: 140px">
+          <el-option v-for="m in monthOptions" :key="m" :label="m" :value="m"></el-option>
+        </el-select>
       </div>
-    </el-dialog>
+      <el-table :data="tableData" border v-loading="loading">
+        <el-table-column prop="salaryMonth" label="月份" width="110"></el-table-column>
+        <el-table-column prop="baseSalary" label="基本工资" width="110">
+          <template slot-scope="scope">¥{{ scope.row.baseSalary }}</template>
+        </el-table-column>
+        <el-table-column prop="courseBonus" label="课时费" width="110">
+          <template slot-scope="scope">¥{{ scope.row.courseBonus }}</template>
+        </el-table-column>
+        <el-table-column prop="performanceBonus" label="绩效奖金" width="110">
+          <template slot-scope="scope">¥{{ scope.row.performanceBonus }}</template>
+        </el-table-column>
+        <el-table-column label="应发工资" width="120">
+          <template slot-scope="scope">
+            <strong style="color:#67C23A;">¥{{ (scope.row.totalSalary || 0).toFixed(2) }}</strong>
+          </template>
+        </el-table-column>
+        <el-table-column prop="status" label="状态" width="90" align="center">
+          <template slot-scope="scope">
+            <el-tag :type="scope.row.status === 1 ? 'success' : scope.row.status === 2 ? 'danger' : 'warning'" size="mini">
+              {{ ['', '已发放', '已扣款'][scope.row.status] || '待发放' }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="evalLevel" label="评级" width="80" align="center">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.evalLevel" size="mini"
+              :type="scope.row.evalLevel === 'A' ? 'success' : scope.row.evalLevel === 'B' ? 'warning' : 'danger'">
+              {{ scope.row.evalLevel }}级
+            </el-tag>
+            <span v-else style="color:#c0c4cc;">—</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="pagination">
+        <el-pagination
+          :current-page="pageNum" :page-size="pageSize" :total="total"
+          layout="total, prev, pager, next"
+          @current-change="handlePageChange">
+        </el-pagination>
+      </div>
+    </el-card>
   </div>
 </template>
 
 <script>
-import { getCoachSalaryPage, addCoachSalary, updateCoachSalary, deleteCoachSalary } from '@/api/coachSalary'
+import { mapGetters } from 'vuex'
+import { getCoachSalaryPage } from '@/api/coachSalary'
+import { getCoachSalarySummary } from '@/api/statistics'
+import * as echarts from 'echarts'
 
 export default {
   name: 'CoachSalary',
   data() {
     return {
-      queryForm: {
-        coachId: null
-      },
       tableData: [],
       loading: false,
       pageNum: 1,
       pageSize: 10,
       total: 0,
-      dialogVisible: false,
-      dialogTitle: '',
-      formData: {
-        salaryId: null,
-        coachId: null,
-        salaryMonth: '',
+      filterMonth: '',
+      monthOptions: [],
+      salaryTrendChart: [],
+      summary: {
         baseSalary: 0,
+        courseFee: 0,
         performanceBonus: 0,
-        courseBonus: 0,
         totalSalary: 0,
-        status: 0
-      },
-      rules: {
-        coachId: [{ required: true, message: '请输入教练ID', trigger: 'blur' }]
+        courseHours: 0,
+        monthEvalScore: null
       }
     }
   },
+  computed: {
+    ...mapGetters(['userId', 'coachId'])
+  },
   created() {
-    this.getList()
+    this.fetchSummary()
+    this.fetchList()
+  },
+  beforeDestroy() {
+    this.salaryChart = null
   },
   methods: {
-    getList() {
+    fetchSummary() {
+      getCoachSalarySummary(this.coachId || null).then(res => {
+        if (res && res.code === 200) {
+          const d = res.data || {}
+          this.summary.baseSalary = (d.baseSalary || 0).toFixed(2)
+          this.summary.courseFee = (d.monthCourseFee || 0).toFixed(2)
+          this.summary.performanceBonus = (d.monthPerformanceBonus || 0).toFixed(2)
+          this.summary.totalSalary = (d.monthTotalSalary || 0).toFixed(2)
+          this.summary.courseHours = d.monthHours || 0
+          this.summary.monthEvalScore = d.avgRating ? d.avgRating.toFixed(1) : null
+        }
+      }).catch(() => {})
+    },
+    fetchList() {
       this.loading = true
-      getCoachSalaryPage({
-        pageNum: this.pageNum,
-        pageSize: this.pageSize,
-        ...this.queryForm
-      }).then(response => {
-        this.tableData = response.data.records
-        this.total = response.data.total
+      const params = { pageNum: this.pageNum, pageSize: this.pageSize }
+      if (this.filterMonth) params.salaryMonth = this.filterMonth
+      getCoachSalaryPage(params).then(res => {
+        if (res && res.code === 200) {
+          const page = res.data || {}
+          let records = page.records || []
+          // 自动筛选当前教练（从薪资记录中匹配）
+          if (this.coachId) {
+            records = records.filter(r => r.coachId === this.coachId)
+          }
+          this.tableData = records
+          this.total = records.length
+          // 收集月份选项
+          const months = [...new Set(records.map(r => r.salaryMonth).filter(Boolean))]
+          this.monthOptions = months.sort().reverse()
+          // 趋势图数据
+          const trend = [...records].sort((a, b) => String(a.salaryMonth).localeCompare(String(b.salaryMonth))).slice(-6)
+          this.salaryTrendChart = trend
+          this.$nextTick(() => this.updateChart())
+        }
         this.loading = false
       }).catch(() => {
         this.loading = false
@@ -139,75 +198,66 @@ export default {
     },
     handleQuery() {
       this.pageNum = 1
-      this.getList()
+      this.fetchList()
     },
-    handleReset() {
-      this.queryForm = { coachId: null }
-      this.handleQuery()
+    handlePageChange(page) {
+      this.pageNum = page
+      this.fetchList()
     },
-    handleAdd() {
-      this.dialogTitle = '新增工资'
-      this.formData = {
-        salaryId: null,
-        coachId: null,
-        salaryMonth: '',
-        baseSalary: 0,
-        performanceBonus: 0,
-        courseBonus: 0,
-        totalSalary: 0,
-        status: 0
+    updateChart() {
+      if (this.salaryTrendChart.length === 0) return
+      const dom = this.$refs.salaryChartRef
+      if (!dom) return
+      if (!this.salaryChart) {
+        this.salaryChart = echarts.init(dom)
       }
-      this.dialogVisible = true
-      this.$nextTick(() => {
-        this.$refs.dataForm.clearValidate()
-      })
-    },
-    handleEdit(row) {
-      this.dialogTitle = '编辑工资'
-      this.formData = { ...row }
-      this.dialogVisible = true
-    },
-    handleDelete(row) {
-      this.$confirm('确定要删除该工资记录吗？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        deleteCoachSalary(row.salaryId).then(() => {
-          this.$message.success('删除成功')
-          this.getList()
-        })
-      })
-    },
-    handleSubmit() {
-      this.$refs.dataForm.validate(valid => {
-        if (valid) {
-          this.formData.totalSalary = this.formData.baseSalary + this.formData.performanceBonus + this.formData.courseBonus
-          const api = this.formData.salaryId ? updateCoachSalary : addCoachSalary
-          api(this.formData).then(() => {
-            this.$message.success(this.formData.salaryId ? '更新成功' : '添加成功')
-            this.dialogVisible = false
-            this.getList()
-          })
-        }
-      })
-    },
-    handleSizeChange(val) {
-      this.pageSize = val
-      this.getList()
-    },
-    handleCurrentChange(val) {
-      this.pageNum = val
-      this.getList()
+      const data = this.salaryTrendChart
+      const option = {
+        tooltip: { trigger: 'axis', formatter: p => `${p[0].name}<br/>总收入：¥${p[0].value}` },
+        grid: { left: '3%', right: '4%', bottom: '3%', top: '10%', containLabel: true },
+        xAxis: { type: 'category', data: data.map(d => d.salaryMonth || ''), axisLabel: { fontSize: 11 } },
+        yAxis: { type: 'value', axisLabel: { formatter: '¥{value}' } },
+        series: [{
+          data: data.map(d => d.totalSalary || 0),
+          type: 'line',
+          smooth: true,
+          lineStyle: { width: 3, color: '#409EFF' },
+          itemStyle: { color: '#409EFF' },
+          areaStyle: { color: 'rgba(64,158,255,0.15)' }
+        }]
+      }
+      this.salaryChart.setOption(option, { notMerge: true })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.salary-container {
-  .toolbar, .table-toolbar { margin-bottom: 20px; }
-  .table-wrapper { width: 100%; overflow-x: auto; }
+.coach-salary-container {
+  .stat-row { margin-bottom: 20px; }
+  .stat-card {
+    display: flex; align-items: center; gap: 16px;
+    .stat-icon {
+      width: 48px; height: 48px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; color: #fff;
+      &.base { background: linear-gradient(135deg, #667eea, #764ba2); }
+      &.course { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+      &.bonus { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+      &.total { background: linear-gradient(135deg, #f093fb, #f5576c); }
+    }
+    .stat-info {
+      .stat-value { font-size: 20px; font-weight: bold; color: #303133; }
+      .stat-label { font-size: 12px; color: #909399; margin-top: 4px; }
+    }
+    &.highlight .stat-value { color: #67C23A; }
+  }
+  .chart-card { margin-bottom: 20px; }
+  .card-header {
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 15px; font-weight: bold;
+    i { margin-right: 6px; }
+  }
   .pagination { margin-top: 20px; text-align: right; }
 }
 </style>

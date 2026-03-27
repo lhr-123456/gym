@@ -6,3 +6,19 @@ export function getDashboardStatistics() {
     method: 'get'
   })
 }
+
+export function getCoachSalarySummary(coachId) {
+  return request({
+    url: '/statistics/coach-salary-summary',
+    method: 'get',
+    params: coachId ? { coachId } : {}
+  })
+}
+
+export function getCoachPerformanceSummary(coachId) {
+  return request({
+    url: '/statistics/coach-performance-summary',
+    method: 'get',
+    params: coachId ? { coachId } : {}
+  })
+}
