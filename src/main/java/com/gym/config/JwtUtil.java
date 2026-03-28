@@ -13,11 +13,21 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
+    private static final String DEFAULT_SECRET = "gym-management-system-secret-key-2024";
+    private static final Long DEFAULT_EXPIRATION = 86400000L;
+
+    private String secret = DEFAULT_SECRET;
+    private Long expiration = DEFAULT_EXPIRATION;
+
     @Value("${jwt.secret}")
-    private String secret;
+    public void setSecret(String secret) {
+        this.secret = secret;
+    }
 
     @Value("${jwt.expiration}")
-    private Long expiration;
+    public void setExpiration(Long expiration) {
+        this.expiration = expiration;
+    }
 
     public String generateToken(String username, Long userId, Integer userType, Long memberId, Long coachId) {
         Map<String, Object> claims = new HashMap<>();

@@ -1,5 +1,5 @@
 <template>
-  <div class="layout-container">
+  <div class="layout-container" :data-user-type="userType">
     <!-- 顶部导航栏 -->
     <el-header class="top-nav" height="60px">
       <div class="nav-inner">
@@ -14,8 +14,8 @@
           <el-menu
             :default-active="activeMenu"
             mode="horizontal"
-            background-color="#304156"
-            text-color="#bfcbd9"
+            background-color="transparent"
+            text-color="#409EFF"
             active-text-color="#409EFF"
             :router="true"
             menu-trigger="hover"
@@ -79,8 +79,8 @@
           <el-menu
             :default-active="activeMenu"
             mode="horizontal"
-            background-color="#304156"
-            text-color="#bfcbd9"
+            background-color="transparent"
+            text-color="#409EFF"
             active-text-color="#409EFF"
             :router="true"
             menu-trigger="hover"
@@ -111,8 +111,8 @@
           <el-menu
             :default-active="activeMenu"
             mode="horizontal"
-            background-color="#304156"
-            text-color="#bfcbd9"
+            background-color="transparent"
+            text-color="#409EFF"
             active-text-color="#409EFF"
             :router="true"
             menu-trigger="hover"
@@ -217,15 +217,24 @@ export default {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: url('D:/gympicture/bjt2.jpg') no-repeat center center fixed;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  position: relative;
+  z-index: 1;
 }
 
+/* 导航栏样式 - 透明背景 + 蓝色字体 */
 .top-nav {
-  background-color: #304156;
+  background-color: transparent; /* 完全透明背景 */
   padding: 0;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.2);
+  box-shadow: none; /* 移除阴影 */
+  backdrop-filter: none; /* 移除毛玻璃效果 */
 }
 
 .nav-inner {
@@ -233,6 +242,7 @@ export default {
   align-items: stretch;
   height: 60px;
   max-width: 100%;
+  background: transparent;
 }
 
 .nav-logo {
@@ -240,11 +250,11 @@ export default {
   align-items: center;
   padding: 0 24px;
   min-width: 220px;
-  background-color: #2b3a4b;
+  background-color: transparent; /* 完全透明背景 */
   flex-shrink: 0;
 
   .logo-text {
-    color: #fff;
+    color: #409EFF !important; /* 蓝色字体 */
     font-size: 16px;
     font-weight: bold;
     white-space: nowrap;
@@ -256,7 +266,7 @@ export default {
   overflow: hidden;
 
   ::v-deep .el-menu {
-    background-color: transparent;
+    background-color: transparent !important;
     border-bottom: none;
     height: 60px;
 
@@ -264,30 +274,33 @@ export default {
     ::v-deep .el-submenu__title {
       height: 60px;
       line-height: 60px;
-      color: #bfcbd9;
+      color: #409EFF; /* 字体改为蓝色 */
       font-size: 14px;
       padding: 0 16px;
       border-bottom: 3px solid transparent;
       transition: all 0.2s;
+      background-color: transparent !important;
 
-      i {
+      i { 
         margin-right: 5px;
         font-size: 16px;
+        color: #409EFF; /* 图标改为蓝色 */
       }
 
-      span {
+      span { 
         vertical-align: middle;
+        color: #409EFF !important; /* 确保字体蓝色 */
       }
 
       &:hover {
-        background-color: #263445 !important;
-        color: #fff;
+        background-color: rgba(38, 52, 69, 0.8) !important;
+        color: #fff !important;
       }
 
       &.is-active {
-        background-color: #263445 !important;
-        color: #409EFF;
-        border-bottom-color: #409EFF;
+        background-color: rgba(38, 52, 69, 0.8) !important;
+        color: #409EFF !important;
+        border-bottom-color: #409EFF !important;
       }
     }
 
@@ -297,9 +310,9 @@ export default {
       }
 
       .el-menu {
-        background-color: #304156;
-        border-radius: 0 0 4px 4px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        background-color: rgba(48, 65, 86, 0.95); /* 半透明背景 */
+        border-radius: 0 0 8px 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); /* 更柔和的阴影 */
 
         .el-menu-item {
           height: 42px;
@@ -328,19 +341,21 @@ export default {
   align-items: center;
   padding: 0 20px;
   flex-shrink: 0;
-  border-left: 1px solid #3d5166;
+  border-left: none; /* 移除边框 */
+  background: transparent;
 
-    .user-avatar {
+  .user-avatar {
     display: flex;
     align-items: center;
     gap: 8px;
     cursor: pointer;
     padding: 6px 12px;
     border-radius: 4px;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
+    background: transparent;
 
     &:hover {
-      background-color: #263445;
+      background-color: rgba(38, 52, 69, 0.8);
     }
 
     .nav-avatar-img {
@@ -353,7 +368,7 @@ export default {
     }
 
     .username {
-      color: #bfcbd9;
+      color: #409EFF !important; /* 蓝色字体 */
       font-size: 14px;
       max-width: 120px;
       overflow: hidden;
@@ -363,8 +378,9 @@ export default {
   }
 
   ::v-deep .el-dropdown-menu {
-    background-color: #304156;
-    border: 1px solid #3d5166;
+    background-color: rgba(48, 65, 86, 0.95); /* 半透明背景 */
+    border: 1px solid rgba(61, 81, 102, 0.5); /* 半透明边框 */
+    border-radius: 8px;
 
     .el-dropdown-menu__item {
       color: #bfcbd9;
@@ -377,7 +393,7 @@ export default {
       }
 
       &.is-divided {
-        border-top-color: #3d5166;
+        border-top-color: rgba(61, 81, 102, 0.5); /* 半透明分隔线 */
       }
     }
   }
@@ -385,8 +401,11 @@ export default {
 
 .main-content {
   flex: 1;
-  background-color: #f0f2f5;
+  background-color: transparent; /* 完全透明背景 */
   padding: 20px;
   min-height: calc(100vh - 60px);
+  border-radius: 12px;
+  margin: 20px;
+  box-shadow: none; /* 移除阴影 */
 }
 </style>

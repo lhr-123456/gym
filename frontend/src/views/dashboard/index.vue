@@ -335,6 +335,7 @@ export default {
     border: none;
     border-radius: 12px;
     overflow: hidden;
+    background: transparent;
 
     ::v-deep .el-card__body {
       padding: 0;
@@ -348,7 +349,7 @@ export default {
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(160deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      background: transparent;
 
       .carousel-img {
         display: block;
@@ -404,8 +405,16 @@ export default {
       width: 100%;
     }
 
+    ::v-deep .el-carousel {
+      background: transparent;
+    }
+
+    ::v-deep .el-carousel__container {
+      background: transparent;
+    }
+
     ::v-deep .el-carousel__item {
-      background-color: #1a1a2e;
+      background-color: transparent;
     }
 
     ::v-deep .el-carousel__button {

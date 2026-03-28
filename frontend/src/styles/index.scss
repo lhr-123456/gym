@@ -40,3 +40,284 @@ a {
   display: table;
   clear: both;
 }
+
+/* 全局透明化样式 */
+.layout-container {
+  /* 所有用户类型的全局组件样式 */
+  &[data-user-type="3"], &[data-user-type="2"], &[data-user-type="1"] {
+    /* 卡片样式 */
+    ::v-deep .el-card {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      color: #fff;
+      
+      ::v-deep .el-card__body {
+        background: transparent;
+      }
+      
+      ::v-deep .el-card__header {
+        background: transparent;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+      }
+    }
+    
+    /* 按钮样式 */
+    ::v-deep .el-button {
+      border-radius: 8px;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s;
+      
+      &.el-button--primary {
+        background: linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        
+        &:hover {
+          background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+          transform: translateY(-2px);
+          box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+      }
+      
+      &.el-button--success {
+        background: rgba(103, 194, 58, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        
+        &:hover {
+          background: rgba(103, 194, 58, 0.9);
+        }
+      }
+      
+      &.el-button--warning {
+        background: rgba(230, 162, 60, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        
+        &:hover {
+          background: rgba(230, 162, 60, 0.9);
+        }
+      }
+      
+      &.el-button--danger {
+        background: rgba(245, 108, 108, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        
+        &:hover {
+          background: rgba(245, 108, 108, 0.9);
+        }
+      }
+      
+      &.el-button--text {
+        color: #fff;
+        
+        &:hover {
+          color: #409EFF;
+        }
+      }
+    }
+    
+    /* 表格样式 */
+    ::v-deep .el-table {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      backdrop-filter: blur(20px);
+      color: #fff;
+      
+      ::v-deep .el-table__header-wrapper {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      
+      ::v-deep .el-table__header-cell {
+        color: #fff;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      ::v-deep .el-table__body-wrapper {
+        background: transparent;
+      }
+      
+      ::v-deep .el-table__row {
+        color: #fff;
+        transition: all 0.3s;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+        }
+      }
+      
+      ::v-deep .el-table__cell {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.9);
+      }
+      
+      ::v-deep .el-table--border::after,
+      ::v-deep .el-table--group::after,
+      ::v-deep .el-table::before {
+        background: transparent;
+      }
+      
+      ::v-deep .el-table__inner-wrapper::before {
+        background: transparent;
+      }
+    }
+    
+    /* 表单样式 */
+    ::v-deep .el-form {
+      ::v-deep .el-form-item__label {
+        color: rgba(255, 255, 255, 0.9);
+      }
+      
+      ::v-deep .el-input__inner,
+      ::v-deep .el-select__input,
+      ::v-deep .el-textarea__inner {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        color: #fff;
+        backdrop-filter: blur(10px);
+        
+        &::placeholder {
+          color: rgba(255, 255, 255, 0.5);
+        }
+        
+        &:focus {
+          border-color: #409EFF;
+          box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+        }
+      }
+      
+      ::v-deep .el-select-dropdown {
+        background: rgba(48, 65, 86, 0.95);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
+        backdrop-filter: blur(20px);
+        
+        ::v-deep .el-select-dropdown__item {
+          color: rgba(255, 255, 255, 0.9);
+          
+          &:hover {
+            background: rgba(64, 158, 255, 0.5);
+          }
+          
+          &.selected {
+            background: rgba(64, 158, 255, 0.3);
+          }
+        }
+      }
+    }
+    
+    /* 对话框样式 */
+    ::v-deep .el-dialog {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      color: #fff;
+      
+      ::v-deep .el-dialog__header {
+        background: transparent;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      
+      ::v-deep .el-dialog__title {
+        color: #fff;
+      }
+      
+      ::v-deep .el-dialog__body {
+        background: transparent;
+        color: #fff;
+      }
+      
+      ::v-deep .el-dialog__footer {
+        background: transparent;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+    }
+    
+    /* 标签样式 */
+    ::v-deep .el-tag {
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #fff;
+    }
+    
+    /* 进度条样式 */
+    ::v-deep .el-progress {
+      ::v-deep .el-progress__bar {
+        border-radius: 10px;
+        
+        ::v-deep .el-progress__bar-inner {
+          border-radius: 10px;
+        }
+      }
+    }
+    
+    /* 分页样式 */
+    ::v-deep .el-pagination {
+      ::v-deep .el-pagination__total,
+      ::v-deep .el-pagination__sizes,
+      ::v-deep .el-pagination__jump {
+        color: rgba(255, 255, 255, 0.9);
+      }
+      
+      ::v-deep .el-pager li {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.9);
+        border-radius: 4px;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+        
+        &.active {
+          background: #409EFF;
+          border-color: #409EFF;
+          color: #fff;
+        }
+      }
+      
+      ::v-deep .btn-prev,
+      ::v-deep .btn-next {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.9);
+        border-radius: 4px;
+        
+        &:hover {
+          background: rgba(255, 255, 255, 0.2);
+        }
+      }
+    }
+    
+    /* 警告框样式 */
+    ::v-deep .el-alert {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      backdrop-filter: blur(20px);
+      color: #fff;
+      
+      ::v-deep .el-alert__description {
+        color: rgba(255, 255, 255, 0.9);
+      }
+    }
+    
+    /* 列表样式 */
+    ::v-deep .el-list {
+      ::v-deep .el-list-item {
+        background: rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: #fff;
+      }
+    }
+  }
+}
