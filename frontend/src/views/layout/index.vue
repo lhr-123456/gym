@@ -5,7 +5,7 @@
       <div class="nav-inner">
         <!-- Logo -->
         <div class="nav-logo">
-          <i class="el-icon-d-arrow-left" style="font-size:20px;color:#409EFF;margin-right:6px;"></i>
+          <i class="el-icon-d-arrow-left" style="font-size:20px;color:#8B4513;margin-right:6px;"></i>
           <span class="logo-text">健身房管理系统</span>
         </div>
 
@@ -15,8 +15,8 @@
             :default-active="activeMenu"
             mode="horizontal"
             background-color="transparent"
-            text-color="#409EFF"
-            active-text-color="#409EFF"
+            text-color="#8B4513"
+            active-text-color="#FF3B30"
             :router="true"
             menu-trigger="hover"
           >
@@ -80,8 +80,8 @@
             :default-active="activeMenu"
             mode="horizontal"
             background-color="transparent"
-            text-color="#409EFF"
-            active-text-color="#409EFF"
+            text-color="#8B4513"
+            active-text-color="#FF3B30"
             :router="true"
             menu-trigger="hover"
           >
@@ -112,8 +112,8 @@
             :default-active="activeMenu"
             mode="horizontal"
             background-color="transparent"
-            text-color="#409EFF"
-            active-text-color="#409EFF"
+            text-color="#8B4513"
+            active-text-color="#FF3B30"
             :router="true"
             menu-trigger="hover"
           >
@@ -153,9 +153,9 @@
           <el-dropdown @command="handleCommand" trigger="click">
             <div class="user-avatar">
               <img v-if="avatar" :src="avatar" alt="avatar" class="nav-avatar-img" />
-              <i v-else class="el-icon-user-solid" style="font-size:20px;color:#409EFF;"></i>
+              <i v-else class="el-icon-user-solid" style="font-size:20px;color:#8B4513;"></i>
               <span class="username">{{ username }}</span>
-              <i class="el-icon-arrow-down el-icon--right" style="font-size:12px;color:#909399;"></i>
+              <i class="el-icon-arrow-down el-icon--right" style="font-size:12px;color:#8B4513;"></i>
             </div>
             <el-dropdown-menu slot="dropdown" style="min-width: 160px;">
               <el-dropdown-item command="profile" icon="el-icon-user">个人中心</el-dropdown-item>
@@ -213,11 +213,31 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/* ============================================================
+ * 海绵宝宝动漫风格 - 布局页面
+ * ============================================================ */
+
+/* 海绵宝宝主题色 */
+$spongebob-yellow: #FFE873;
+$spongebob-bright-yellow: #FFF176;
+$spongebob-dark-yellow: #E6C84D;
+$spongebob-brown: #8B4513;
+$spongebob-dark-brown: #5D2E0C;
+$spongebob-red: #FF3B30;
+$spongebob-orange: #FF9500;
+$spongebob-white: #FFFFFF;
+
+$cartoon-border: 3px;
+$cartoon-radius-sm: 12px;
+$cartoon-radius-md: 16px;
+$cartoon-radius-lg: 24px;
+$cartoon-transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
 .layout-container {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: url('D:/gympicture/bjt2.jpg') no-repeat center center fixed;
+  background: url('D:/gympicture/hmbb.png') no-repeat center center fixed;
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
@@ -226,15 +246,15 @@ export default {
   z-index: 1;
 }
 
-/* 导航栏样式 - 透明背景 + 蓝色字体 */
+/* 导航栏样式 - 海绵宝宝风格 */
 .top-nav {
-  background-color: transparent; /* 完全透明背景 */
+  background: linear-gradient(180deg, $spongebob-yellow, $spongebob-dark-yellow);
   padding: 0;
   position: sticky;
   top: 0;
   z-index: 1000;
-  box-shadow: none; /* 移除阴影 */
-  backdrop-filter: none; /* 移除毛玻璃效果 */
+  box-shadow: 0 4px 0 $spongebob-dark-brown;
+  border-bottom: $cartoon-border solid $spongebob-brown;
 }
 
 .nav-inner {
@@ -242,7 +262,6 @@ export default {
   align-items: stretch;
   height: 60px;
   max-width: 100%;
-  background: transparent;
 }
 
 .nav-logo {
@@ -250,14 +269,17 @@ export default {
   align-items: center;
   padding: 0 24px;
   min-width: 220px;
-  background-color: transparent; /* 完全透明背景 */
+  background: $spongebob-brown;
   flex-shrink: 0;
+  border-right: $cartoon-border solid $spongebob-dark-brown;
 
   .logo-text {
-    color: #409EFF !important; /* 蓝色字体 */
+    color: $spongebob-yellow !important;
     font-size: 16px;
     font-weight: bold;
     white-space: nowrap;
+    font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+    text-shadow: 1px 1px 0 $spongebob-dark-brown;
   }
 }
 
@@ -274,45 +296,68 @@ export default {
     ::v-deep .el-submenu__title {
       height: 60px;
       line-height: 60px;
-      color: #409EFF; /* 字体改为蓝色 */
+      color: $spongebob-brown;
       font-size: 14px;
+      font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+      font-weight: bold;
       padding: 0 16px;
-      border-bottom: 3px solid transparent;
-      transition: all 0.2s;
+      border-bottom: 4px solid transparent;
+      transition: $cartoon-transition;
       background-color: transparent !important;
+      text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
 
       i { 
         margin-right: 5px;
         font-size: 16px;
-        color: #409EFF; /* 图标改为蓝色 */
+        color: $spongebob-brown;
       }
 
       span { 
         vertical-align: middle;
-        color: #409EFF !important; /* 确保字体蓝色 */
+        color: $spongebob-brown !important;
+        text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
       }
 
       &:hover {
-        background-color: rgba(38, 52, 69, 0.8) !important;
-        color: #fff !important;
+        background-color: rgba(255, 232, 115, 0.5) !important;
+        color: $spongebob-red !important;
+        border-bottom-color: $spongebob-orange;
+
+        i {
+          color: $spongebob-red;
+        }
+
+        span {
+          color: $spongebob-red !important;
+        }
       }
 
       &.is-active {
-        background-color: rgba(38, 52, 69, 0.8) !important;
-        color: #409EFF !important;
-        border-bottom-color: #409EFF !important;
+        background-color: rgba(255, 232, 115, 0.6) !important;
+        color: $spongebob-red !important;
+        border-bottom-color: $spongebob-red !important;
+
+        i {
+          color: $spongebob-red;
+        }
+
+        span {
+          color: $spongebob-red !important;
+        }
       }
     }
 
     ::v-deep .el-submenu {
       .el-submenu__title {
-        border-bottom: 3px solid transparent;
+        border-bottom: 4px solid transparent;
       }
 
       .el-menu {
-        background-color: rgba(48, 65, 86, 0.95); /* 半透明背景 */
-        border-radius: 0 0 8px 8px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15); /* 更柔和的阴影 */
+        background: linear-gradient(180deg, $spongebob-yellow, $spongebob-dark-yellow);
+        border: $cartoon-border solid $spongebob-brown;
+        border-radius: $cartoon-radius-sm;
+        box-shadow: 0 4px 0 $spongebob-dark-brown, 0 8px 20px rgba(139, 69, 19, 0.3);
+        margin-top: 4px;
 
         .el-menu-item {
           height: 42px;
@@ -320,15 +365,20 @@ export default {
           padding: 0 20px;
           font-size: 13px;
           border-bottom: none;
+          color: $spongebob-brown;
+          font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+          font-weight: bold;
+          text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+          border-radius: 0;
 
           &:hover {
-            background-color: #409EFF !important;
-            color: #fff;
+            background: $spongebob-orange !important;
+            color: $spongebob-white !important;
           }
 
           &.is-active {
-            background-color: #409EFF !important;
-            color: #fff;
+            background: $spongebob-red !important;
+            color: $spongebob-white !important;
           }
         }
       }
@@ -341,8 +391,8 @@ export default {
   align-items: center;
   padding: 0 20px;
   flex-shrink: 0;
-  border-left: none; /* 移除边框 */
-  background: transparent;
+  background: $spongebob-brown;
+  border-left: $cartoon-border solid $spongebob-dark-brown;
 
   .user-avatar {
     display: flex;
@@ -350,12 +400,12 @@ export default {
     gap: 8px;
     cursor: pointer;
     padding: 6px 12px;
-    border-radius: 4px;
-    transition: all 0.2s;
+    border-radius: $cartoon-radius-sm;
+    transition: $cartoon-transition;
     background: transparent;
 
     &:hover {
-      background-color: rgba(38, 52, 69, 0.8);
+      background: rgba(255, 232, 115, 0.3);
     }
 
     .nav-avatar-img {
@@ -365,35 +415,42 @@ export default {
       object-fit: cover;
       object-position: center;
       flex-shrink: 0;
+      border: 2px solid $spongebob-yellow;
     }
 
     .username {
-      color: #409EFF !important; /* 蓝色字体 */
+      color: $spongebob-yellow !important;
       font-size: 14px;
+      font-weight: bold;
+      font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
       max-width: 120px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+      text-shadow: 1px 1px 0 $spongebob-dark-brown;
     }
   }
 
   ::v-deep .el-dropdown-menu {
-    background-color: rgba(48, 65, 86, 0.95); /* 半透明背景 */
-    border: 1px solid rgba(61, 81, 102, 0.5); /* 半透明边框 */
-    border-radius: 8px;
+    background: linear-gradient(180deg, $spongebob-yellow, $spongebob-dark-yellow);
+    border: $cartoon-border solid $spongebob-brown;
+    border-radius: $cartoon-radius-md;
+    box-shadow: 0 4px 0 $spongebob-dark-brown, 0 8px 20px rgba(139, 69, 19, 0.3);
 
     .el-dropdown-menu__item {
-      color: #bfcbd9;
+      color: $spongebob-brown;
       font-size: 14px;
-      padding: 8px 20px;
+      font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+      font-weight: bold;
+      padding: 10px 20px;
 
       &:hover {
-        background-color: #409EFF;
-        color: #fff;
+        background: $spongebob-orange;
+        color: $spongebob-white;
       }
 
       &.is-divided {
-        border-top-color: rgba(61, 81, 102, 0.5); /* 半透明分隔线 */
+        border-top-color: $spongebob-brown;
       }
     }
   }
@@ -401,11 +458,11 @@ export default {
 
 .main-content {
   flex: 1;
-  background-color: transparent; /* 完全透明背景 */
+  background-color: transparent;
   padding: 20px;
   min-height: calc(100vh - 60px);
-  border-radius: 12px;
+  border-radius: $cartoon-radius-lg;
   margin: 20px;
-  box-shadow: none; /* 移除阴影 */
+  box-shadow: none;
 }
 </style>

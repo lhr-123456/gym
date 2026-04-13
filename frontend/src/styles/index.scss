@@ -1,3 +1,41 @@
+/* ============================================================
+ * 海绵宝宝动漫风格 - 全局样式 v2
+ * SpongeBob SquarePants Theme for Gym Management System
+ * ============================================================ */
+
+/* ============================================================
+ * 1. 海绵宝宝主题色变量
+ * ============================================================ */
+$spongebob-yellow: #FFE873;
+$spongebob-bright-yellow: #FFF176;
+$spongebob-dark-yellow: #E6C84D;
+$spongebob-deep-yellow: #FFD700;
+$spongebob-cream: #FFF9C4;
+$spongebob-brown: #8B4513;
+$spongebob-dark-brown: #5D2E0C;
+$spongebob-red: #FF3B30;
+$spongebob-orange: #FF9500;
+$spongebob-white: #FFFFFF;
+$spongebob-black: #2C2C2C;
+$spongebob-blue: #5AC8FA;
+$spongebob-pink: #FF6B9D;
+
+/* 卡通描边宽度 */
+$cartoon-border: 3px;
+$cartoon-border-thick: 4px;
+
+/* 卡通圆角 */
+$cartoon-radius-sm: 8px;
+$cartoon-radius-md: 12px;
+$cartoon-radius-lg: 16px;
+$cartoon-radius-xl: 24px;
+
+/* 卡通过渡动画 */
+$cartoon-transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+/* ============================================================
+ * 2. 全局重置与基础样式
+ * ============================================================ */
 body {
   margin: 0;
   padding: 0;
@@ -17,307 +55,1093 @@ a {
   box-sizing: border-box;
 }
 
+/* ============================================================
+ * 3. 海绵宝宝风格滚动条
+ * ============================================================ */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 14px;
+  height: 14px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: #dcdfe6;
-  border-radius: 3px;
+  background: linear-gradient(180deg, $spongebob-yellow, $spongebob-dark-yellow);
+  border: 3px solid $spongebob-brown;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
   &:hover {
-    background-color: #c0c4cc;
+    background: linear-gradient(180deg, $spongebob-bright-yellow, $spongebob-yellow);
   }
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #f5f7fa;
+  background: $spongebob-brown;
+  border-radius: 6px;
 }
 
+::-webkit-scrollbar-corner {
+  background: $spongebob-brown;
+}
+
+/* ============================================================
+ * 4. 全局浮动样式工具类
+ * ============================================================ */
 .clearfix::after {
   content: '';
   display: table;
   clear: both;
 }
 
-/* 全局透明化样式 */
+/* ============================================================
+ * 5. 布局容器样式（所有用户类型通用）
+ * ============================================================ */
 .layout-container {
-  /* 所有用户类型的全局组件样式 */
-  &[data-user-type="3"], &[data-user-type="2"], &[data-user-type="1"] {
-    /* 卡片样式 */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-attachment: fixed;
+
+  &[data-user-type="3"],
+  &[data-user-type="2"],
+  &[data-user-type="1"] {
+
+    /* -------- 内容区域大框样式 -------- */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* -------- 功能框/面板区域 - 黄色大框 -------- */
+    .el-card,
+    .panel,
+    .content-box,
+    .data-box,
+    .query-box,
+    .filter-box,
+    .search-box {
+      background: linear-gradient(145deg, $spongebob-yellow 0%, $spongebob-dark-yellow 100%) !important;
+      border: $cartoon-border-thick solid $spongebob-brown !important;
+      border-radius: $cartoon-radius-md !important;
+      box-shadow: 
+        0 6px 0 $spongebob-dark-brown,
+        0 8px 20px rgba(139, 69, 19, 0.25),
+        inset 0 2px 0 rgba(255, 255, 255, 0.4) !important;
+      color: $spongebob-black !important;
+      transition: $cartoon-transition;
+      position: relative;
+      overflow: hidden;
+
+      /* 卡通高光效果 */
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), transparent);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+          0 8px 0 $spongebob-dark-brown,
+          0 12px 30px rgba(139, 69, 19, 0.35),
+          0 0 25px rgba(255, 232, 115, 0.4),
+          inset 0 2px 0 rgba(255, 255, 255, 0.4) !important;
+        border-color: $spongebob-orange !important;
+      }
+    }
+
+    /* -------- Element UI 卡片样式覆盖 -------- */
     ::v-deep .el-card {
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      color: #fff;
-      
+      background: linear-gradient(145deg, $spongebob-yellow 0%, $spongebob-dark-yellow 100%) !important;
+      border: $cartoon-border-thick solid $spongebob-brown !important;
+      border-radius: $cartoon-radius-md !important;
+      box-shadow: 
+        0 6px 0 $spongebob-dark-brown,
+        0 8px 20px rgba(139, 69, 19, 0.25),
+        inset 0 2px 0 rgba(255, 255, 255, 0.4) !important;
+      color: $spongebob-black !important;
+      transition: $cartoon-transition;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), transparent);
+        pointer-events: none;
+        z-index: 0;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 
+          0 8px 0 $spongebob-dark-brown,
+          0 12px 30px rgba(139, 69, 19, 0.35),
+          0 0 25px rgba(255, 232, 115, 0.4),
+          inset 0 2px 0 rgba(255, 255, 255, 0.4) !important;
+        border-color: $spongebob-orange !important;
+      }
+
       ::v-deep .el-card__body {
-        background: transparent;
+        background: transparent !important;
+        position: relative;
+        z-index: 1;
+        padding: 20px;
       }
-      
+
       ::v-deep .el-card__header {
-        background: transparent;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        color: #fff;
+        background: linear-gradient(180deg, $spongebob-deep-yellow, $spongebob-yellow) !important;
+        border-bottom: $cartoon-border solid $spongebob-brown !important;
+        color: $spongebob-black !important;
+        font-weight: bold;
+        font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+        font-size: 16px;
+        padding: 14px 20px;
+        position: relative;
+        z-index: 1;
       }
     }
-    
-    /* 按钮样式 */
+
+    /* -------- Element UI 按钮样式覆盖 -------- */
     ::v-deep .el-button {
-      border-radius: 8px;
-      backdrop-filter: blur(10px);
-      transition: all 0.3s;
-      
+      border-radius: $cartoon-radius-sm !important;
+      border: $cartoon-border solid !important;
+      font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+      font-weight: bold !important;
+      transition: $cartoon-transition;
+      position: relative;
+      overflow: hidden;
+      text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+
+      /* 按钮高光 */
+      &::before {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: 8%;
+        right: 8%;
+        height: 40%;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent);
+        border-radius: 50%;
+        pointer-events: none;
+      }
+
       &.el-button--primary {
-        background: linear-gradient(135deg, rgba(102, 126, 234, 0.8), rgba(118, 75, 162, 0.8));
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: #fff;
-        
+        background: linear-gradient(180deg, $spongebob-yellow, $spongebob-dark-yellow) !important;
+        border-color: $spongebob-brown !important;
+        color: $spongebob-black !important;
+        box-shadow: 0 4px 0 $spongebob-dark-brown !important;
+
         &:hover {
-          background: linear-gradient(135deg, rgba(102, 126, 234, 0.9), rgba(118, 75, 162, 0.9));
+          background: linear-gradient(180deg, $spongebob-bright-yellow, $spongebob-yellow) !important;
           transform: translateY(-2px);
-          box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+          box-shadow: 0 6px 0 $spongebob-dark-brown, 0 0 20px rgba(255, 232, 115, 0.5) !important;
+        }
+
+        &:active {
+          transform: translateY(2px);
+          box-shadow: 0 2px 0 $spongebob-dark-brown !important;
         }
       }
-      
+
       &.el-button--success {
-        background: rgba(103, 194, 58, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: #fff;
-        
+        background: linear-gradient(180deg, $spongebob-yellow, $spongebob-dark-yellow) !important;
+        border-color: $spongebob-brown !important;
+        color: $spongebob-black !important;
+        box-shadow: 0 4px 0 $spongebob-dark-brown !important;
+
         &:hover {
-          background: rgba(103, 194, 58, 0.9);
+          background: linear-gradient(180deg, #7FD97F, #5CB85C) !important;
+          border-color: #3D8B3D !important;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 0 #3D8B3D, 0 0 20px rgba(92, 184, 92, 0.5) !important;
+          color: #fff !important;
+          text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        &:active {
+          transform: translateY(2px);
+          box-shadow: 0 2px 0 #3D8B3D !important;
         }
       }
-      
+
       &.el-button--warning {
-        background: rgba(230, 162, 60, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: #fff;
-        
+        background: linear-gradient(180deg, $spongebob-yellow, $spongebob-dark-yellow) !important;
+        border-color: $spongebob-brown !important;
+        color: $spongebob-black !important;
+        box-shadow: 0 4px 0 $spongebob-dark-brown !important;
+
         &:hover {
-          background: rgba(230, 162, 60, 0.9);
+          background: linear-gradient(180deg, #FFB347, #FF9500) !important;
+          border-color: #CC7700 !important;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 0 #CC7700, 0 0 20px rgba(255, 149, 0, 0.5) !important;
+          color: #fff !important;
+          text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        &:active {
+          transform: translateY(2px);
+          box-shadow: 0 2px 0 #CC7700 !important;
         }
       }
-      
+
       &.el-button--danger {
-        background: rgba(245, 108, 108, 0.8);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: #fff;
-        
+        background: linear-gradient(180deg, #FF6B6B, $spongebob-red) !important;
+        border-color: #CC2F26 !important;
+        color: #fff !important;
+        text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 0 #CC2F26 !important;
+
         &:hover {
-          background: rgba(245, 108, 108, 0.9);
+          background: linear-gradient(180deg, #FF8585, #FF6B6B) !important;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 0 #CC2F26, 0 0 20px rgba(255, 59, 48, 0.5) !important;
+        }
+
+        &:active {
+          transform: translateY(2px);
+          box-shadow: 0 2px 0 #CC2F26 !important;
         }
       }
-      
+
       &.el-button--text {
-        color: #fff;
-        
+        color: $spongebob-brown !important;
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+
         &:hover {
-          color: #409EFF;
+          color: $spongebob-orange !important;
+          background: rgba(255, 232, 115, 0.3) !important;
         }
       }
+
+      &.el-button--small {
+        padding: 6px 14px;
+        font-size: 12px;
+        box-shadow: 0 3px 0 $spongebob-dark-brown !important;
+      }
+
+      &.is-disabled {
+        background: #ddd !important;
+        border-color: #bbb !important;
+        color: #999 !important;
+        box-shadow: none !important;
+        cursor: not-allowed;
+      }
     }
-    
-    /* 表格样式 */
+
+    /* -------- Element UI 表格样式覆盖 -------- */
     ::v-deep .el-table {
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      backdrop-filter: blur(20px);
-      color: #fff;
-      
+      background: $spongebob-white !important;
+      border: $cartoon-border-thick solid $spongebob-brown !important;
+      border-radius: $cartoon-radius-md !important;
+      box-shadow: 
+        0 4px 0 $spongebob-dark-brown,
+        0 6px 16px rgba(139, 69, 19, 0.2);
+      color: $spongebob-black !important;
+      font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+      overflow: hidden;
+
+      &::before {
+        display: none !important;
+      }
+
+      /* 表头样式 - 深黄色 */
       ::v-deep .el-table__header-wrapper {
-        background: rgba(255, 255, 255, 0.2);
+        background: linear-gradient(180deg, $spongebob-deep-yellow, $spongebob-yellow) !important;
       }
-      
+
       ::v-deep .el-table__header-cell {
-        color: #fff;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        color: $spongebob-black !important;
+        font-weight: bold !important;
+        font-size: 14px !important;
+        border-bottom: $cartoon-border solid $spongebob-brown !important;
+        background: transparent !important;
+        padding: 14px 10px !important;
       }
-      
+
       ::v-deep .el-table__body-wrapper {
-        background: transparent;
+        background: $spongebob-cream !important;
       }
-      
+
+      /* 表格行 - 浅黄和白色交替 */
       ::v-deep .el-table__row {
-        color: #fff;
-        transition: all 0.3s;
-        
-        &:hover {
-          background: rgba(255, 255, 255, 0.1);
+        color: $spongebob-black !important;
+        transition: $cartoon-transition;
+        background: $spongebob-white !important;
+
+        &:hover > td {
+          background: rgba(255, 232, 115, 0.6) !important;
+        }
+
+        &:nth-child(even) {
+          background: $spongebob-cream !important;
+        }
+
+        &:nth-child(even):hover > td {
+          background: rgba(255, 232, 115, 0.6) !important;
         }
       }
-      
+
       ::v-deep .el-table__cell {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        color: rgba(255, 255, 255, 0.9);
+        border-bottom: 1px solid rgba(139, 69, 19, 0.15) !important;
+        padding: 12px 10px !important;
       }
-      
-      ::v-deep .el-table--border::after,
-      ::v-deep .el-table--group::after,
-      ::v-deep .el-table::before {
-        background: transparent;
+
+      ::v-deep .el-table--border .el-table__cell {
+        border-right: 1px solid rgba(139, 69, 19, 0.15) !important;
       }
-      
-      ::v-deep .el-table__inner-wrapper::before {
-        background: transparent;
+
+      ::v-deep .el-table__empty-text {
+        color: $spongebob-brown !important;
+        font-style: italic;
+      }
+
+      /* 表格边框 */
+      ::v-deep .el-table--border,
+      ::v-deep .el-table--group {
+        border-color: $spongebob-brown !important;
       }
     }
-    
-    /* 表单样式 */
+
+    /* -------- Element UI 表单样式覆盖 -------- */
     ::v-deep .el-form {
       ::v-deep .el-form-item__label {
-        color: rgba(255, 255, 255, 0.9);
+        color: $spongebob-black !important;
+        font-weight: bold !important;
+        font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+        font-size: 14px !important;
       }
-      
+
+      /* 输入框样式 - 黄色背景 */
       ::v-deep .el-input__inner,
       ::v-deep .el-select__input,
       ::v-deep .el-textarea__inner {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 8px;
-        color: #fff;
-        backdrop-filter: blur(10px);
-        
+        background: $spongebob-yellow !important;
+        border: $cartoon-border solid $spongebob-brown !important;
+        border-radius: $cartoon-radius-sm !important;
+        color: $spongebob-black !important;
+        font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+        font-size: 14px !important;
+        transition: $cartoon-transition;
+        box-shadow: inset 0 2px 4px rgba(139, 69, 19, 0.1);
+
         &::placeholder {
-          color: rgba(255, 255, 255, 0.5);
+          color: rgba(139, 69, 19, 0.5) !important;
         }
-        
+
+        &:hover {
+          border-color: $spongebob-orange !important;
+          background: $spongebob-bright-yellow !important;
+        }
+
         &:focus {
-          border-color: #409EFF;
-          box-shadow: 0 0 0 2px rgba(64, 158, 255, 0.2);
+          border-color: $spongebob-orange !important;
+          background: $spongebob-white !important;
+          box-shadow: 0 0 0 3px rgba(255, 149, 0, 0.3), inset 0 2px 4px rgba(139, 69, 19, 0.1) !important;
         }
       }
-      
+
+      ::v-deep .el-input__prefix {
+        color: $spongebob-brown !important;
+        left: 10px;
+      }
+
+      ::v-deep .el-input__icon {
+        color: $spongebob-brown !important;
+      }
+
+      /* 下拉框样式 */
+      ::v-deep .el-select {
+        ::v-deep .el-input__inner {
+          padding-left: 36px;
+        }
+      }
+
       ::v-deep .el-select-dropdown {
-        background: rgba(48, 65, 86, 0.95);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 8px;
-        backdrop-filter: blur(20px);
-        
+        background: $spongebob-yellow !important;
+        border: $cartoon-border solid $spongebob-brown !important;
+        border-radius: $cartoon-radius-sm !important;
+        box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3) !important;
+
         ::v-deep .el-select-dropdown__item {
-          color: rgba(255, 255, 255, 0.9);
-          
+          color: $spongebob-black !important;
+          font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+          padding: 10px 16px;
+
           &:hover {
-            background: rgba(64, 158, 255, 0.5);
+            background: $spongebob-dark-yellow !important;
           }
-          
+
           &.selected {
-            background: rgba(64, 158, 255, 0.3);
+            background: $spongebob-brown !important;
+            color: $spongebob-white !important;
+            font-weight: bold !important;
           }
         }
       }
+
+      /* 日期选择器 */
+      ::v-deep .el-date-editor {
+        ::v-deep .el-input__inner {
+          padding-left: 36px;
+        }
+      }
+
+      ::v-deep .el-picker-panel {
+        background: $spongebob-yellow !important;
+        border: $cartoon-border solid $spongebob-brown !important;
+        border-radius: $cartoon-radius-sm !important;
+        box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3) !important;
+
+        ::v-deep .el-date-table th {
+          color: $spongebob-black !important;
+          font-weight: bold;
+        }
+
+        ::v-deep .el-date-table td.available:hover span {
+          background: $spongebob-dark-yellow !important;
+        }
+
+        ::v-deep .el-date-table td.today span {
+          background: $spongebob-orange !important;
+          color: #fff !important;
+        }
+
+        ::v-deep .el-date-table td.current:not(.disabled) span {
+          background: $spongebob-brown !important;
+          color: #fff !important;
+        }
+      }
     }
-    
-    /* 对话框样式 */
+
+    /* -------- 查询表单区域样式 -------- */
+    ::v-deep .el-form--inline {
+      .el-form-item {
+        margin-bottom: 0;
+        margin-right: 16px;
+      }
+    }
+
+    /* -------- Element UI 对话框样式覆盖 -------- */
     ::v-deep .el-dialog {
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 12px;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      color: #fff;
-      
+      background: linear-gradient(145deg, $spongebob-yellow, $spongebob-dark-yellow) !important;
+      border: $cartoon-border-thick solid $spongebob-brown !important;
+      border-radius: $cartoon-radius-xl !important;
+      box-shadow: 
+        0 10px 0 $spongebob-dark-brown,
+        0 15px 40px rgba(139, 69, 19, 0.4),
+        0 0 30px rgba(255, 232, 115, 0.3) !important;
+      position: relative;
+      overflow: hidden;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.35), transparent);
+        pointer-events: none;
+      }
+
       ::v-deep .el-dialog__header {
-        background: transparent;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        background: transparent !important;
+        border-bottom: $cartoon-border solid $spongebob-brown !important;
+        position: relative;
+        z-index: 1;
+        padding: 16px 20px;
       }
-      
+
       ::v-deep .el-dialog__title {
-        color: #fff;
+        color: $spongebob-black !important;
+        font-weight: bold !important;
+        font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+        font-size: 20px !important;
       }
-      
+
       ::v-deep .el-dialog__body {
-        background: transparent;
-        color: #fff;
+        background: transparent !important;
+        color: $spongebob-black !important;
+        position: relative;
+        z-index: 1;
+        padding: 24px 20px;
       }
-      
+
       ::v-deep .el-dialog__footer {
-        background: transparent;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        background: transparent !important;
+        border-top: $cartoon-border solid $spongebob-brown !important;
+        position: relative;
+        z-index: 1;
+        padding: 16px 20px;
+      }
+
+      ::v-deep .el-dialog__close {
+        color: $spongebob-brown !important;
+        font-size: 20px !important;
+
+        &:hover {
+          color: $spongebob-red !important;
+          transform: rotate(90deg);
+        }
       }
     }
-    
-    /* 标签样式 */
-    ::v-deep .el-tag {
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      color: #fff;
+
+    /* 对话框遮罩层 */
+    ::v-deep .el-dialog__wrapper {
+      backdrop-filter: blur(4px);
     }
-    
-    /* 进度条样式 */
+
+    /* -------- Element UI 标签样式覆盖 -------- */
+    ::v-deep .el-tag {
+      background: linear-gradient(180deg, $spongebob-yellow, $spongebob-dark-yellow) !important;
+      border: 2px solid $spongebob-brown !important;
+      border-radius: $cartoon-radius-xl !important;
+      color: $spongebob-black !important;
+      font-weight: bold !important;
+      font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+      box-shadow: 0 2px 0 $spongebob-dark-brown !important;
+
+      &.el-tag--success {
+        background: linear-gradient(180deg, #A0E8A0, #5CB85C) !important;
+        border-color: #3D8B3D !important;
+        color: #fff !important;
+        box-shadow: 0 2px 0 #3D8B3D !important;
+      }
+
+      &.el-tag--warning {
+        background: linear-gradient(180deg, #FFCC80, #FF9500) !important;
+        border-color: #CC7700 !important;
+        color: #fff !important;
+        box-shadow: 0 2px 0 #CC7700 !important;
+      }
+
+      &.el-tag--danger {
+        background: linear-gradient(180deg, #FF8585, $spongebob-red) !important;
+        border-color: #CC2F26 !important;
+        color: #fff !important;
+        box-shadow: 0 2px 0 #CC2F26 !important;
+      }
+
+      &.el-tag--info {
+        background: linear-gradient(180deg, #E8E8E8, #CCCCCC) !important;
+        border-color: #999 !important;
+        color: $spongebob-black !important;
+        box-shadow: 0 2px 0 #999 !important;
+      }
+    }
+
+    /* -------- Element UI 进度条样式覆盖 -------- */
     ::v-deep .el-progress {
       ::v-deep .el-progress__bar {
-        border-radius: 10px;
-        
-        ::v-deep .el-progress__bar-inner {
-          border-radius: 10px;
-        }
+        border-radius: $cartoon-radius-xl;
+      }
+
+      ::v-deep .el-progress__bar-inner {
+        background: linear-gradient(90deg, $spongebob-yellow, $spongebob-orange) !important;
+        border-radius: $cartoon-radius-xl;
+        box-shadow: 0 0 10px rgba(255, 149, 0, 0.5);
+      }
+
+      ::v-deep .el-progress__text {
+        color: $spongebob-black !important;
+        font-weight: bold !important;
+        font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
       }
     }
-    
-    /* 分页样式 */
+
+    /* -------- Element UI 分页样式覆盖 -------- */
     ::v-deep .el-pagination {
+      padding: 16px 0;
+      text-align: center;
+
       ::v-deep .el-pagination__total,
       ::v-deep .el-pagination__sizes,
       ::v-deep .el-pagination__jump {
-        color: rgba(255, 255, 255, 0.9);
+        color: $spongebob-black !important;
+        font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+        font-weight: bold !important;
       }
-      
+
       ::v-deep .el-pager li {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: rgba(255, 255, 255, 0.9);
-        border-radius: 4px;
-        
+        background: $spongebob-white !important;
+        border: 2px solid $spongebob-brown !important;
+        border-radius: $cartoon-radius-sm !important;
+        color: $spongebob-black !important;
+        font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+        font-weight: bold !important;
+        transition: $cartoon-transition;
+        box-shadow: 0 2px 0 $spongebob-dark-brown !important;
+        min-width: 32px;
+        height: 32px;
+        line-height: 30px;
+
         &:hover {
-          background: rgba(255, 255, 255, 0.2);
+          background: $spongebob-yellow !important;
+          border-color: $spongebob-orange !important;
+          transform: translateY(-1px);
         }
-        
+
         &.active {
-          background: #409EFF;
-          border-color: #409EFF;
-          color: #fff;
+          background: linear-gradient(180deg, $spongebob-red, #CC2F26) !important;
+          border-color: #CC2F26 !important;
+          color: #fff !important;
+          box-shadow: 0 2px 0 #CC2F26 !important;
         }
       }
-      
+
       ::v-deep .btn-prev,
       ::v-deep .btn-next {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        color: rgba(255, 255, 255, 0.9);
-        border-radius: 4px;
-        
+        background: $spongebob-white !important;
+        border: 2px solid $spongebob-brown !important;
+        border-radius: $cartoon-radius-sm !important;
+        color: $spongebob-black !important;
+        box-shadow: 0 2px 0 $spongebob-dark-brown !important;
+        min-width: 32px;
+        height: 32px;
+
         &:hover {
-          background: rgba(255, 255, 255, 0.2);
+          background: $spongebob-yellow !important;
+          border-color: $spongebob-orange !important;
+        }
+      }
+
+      ::v-deep .el-pagination__sizes {
+        .el-input__inner {
+          background: $spongebob-yellow !important;
+          border-color: $spongebob-brown !important;
+          color: $spongebob-black !important;
         }
       }
     }
-    
-    /* 警告框样式 */
+
+    /* -------- Element UI 警告框样式覆盖 -------- */
     ::v-deep .el-alert {
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 8px;
-      backdrop-filter: blur(20px);
-      color: #fff;
-      
+      background: $spongebob-yellow !important;
+      border: $cartoon-border solid $spongebob-brown !important;
+      border-radius: $cartoon-radius-sm !important;
+      color: $spongebob-black !important;
+      font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+      box-shadow: 0 4px 0 $spongebob-dark-brown !important;
+
+      ::v-deep .el-alert__title {
+        font-weight: bold !important;
+      }
+
       ::v-deep .el-alert__description {
-        color: rgba(255, 255, 255, 0.9);
+        color: $spongebob-black !important;
+      }
+
+      &.el-alert--success {
+        background: linear-gradient(180deg, #A0E8A0, #5CB85C) !important;
+        border-color: #3D8B3D !important;
+      }
+
+      &.el-alert--warning {
+        background: linear-gradient(180deg, #FFCC80, #FF9500) !important;
+        border-color: #CC7700 !important;
+      }
+
+      &.el-alert--error {
+        background: linear-gradient(180deg, #FF8585, $spongebob-red) !important;
+        border-color: #CC2F26 !important;
+        color: #fff !important;
       }
     }
-    
-    /* 列表样式 */
-    ::v-deep .el-list {
-      ::v-deep .el-list-item {
-        background: rgba(255, 255, 255, 0.1);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        color: #fff;
+
+    /* -------- Element UI 消息提示样式覆盖 -------- */
+    ::v-deep .el-message {
+      background: linear-gradient(145deg, $spongebob-yellow, $spongebob-dark-yellow) !important;
+      border: $cartoon-border solid $spongebob-brown !important;
+      border-radius: $cartoon-radius-sm !important;
+      box-shadow: 0 4px 0 $spongebob-dark-brown, 0 8px 20px rgba(139, 69, 19, 0.3) !important;
+      color: $spongebob-black !important;
+      font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+
+      ::v-deep .el-message__content {
+        color: $spongebob-black !important;
       }
     }
+
+    /* -------- Element UI 通知/提示样式覆盖 -------- */
+    ::v-deep .el-notification {
+      background: linear-gradient(145deg, $spongebob-yellow, $spongebob-dark-yellow) !important;
+      border: $cartoon-border solid $spongebob-brown !important;
+      border-radius: $cartoon-radius-md !important;
+      box-shadow: 0 6px 0 $spongebob-dark-brown, 0 10px 30px rgba(139, 69, 19, 0.3) !important;
+
+      ::v-deep .el-notification__title {
+        color: $spongebob-black !important;
+        font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+        font-weight: bold !important;
+      }
+
+      ::v-deep .el-notification__content {
+        color: $spongebob-black !important;
+      }
+    }
+
+    /* -------- Element UI 导航菜单样式覆盖 -------- */
+    ::v-deep .el-menu {
+      background: transparent !important;
+      border: none !important;
+
+      ::v-deep .el-menu-item {
+        color: $spongebob-black !important;
+        font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+        font-weight: bold !important;
+        border-radius: $cartoon-radius-sm !important;
+        margin: 2px 8px;
+        transition: $cartoon-transition;
+
+        &:hover {
+          background: rgba(255, 232, 115, 0.5) !important;
+          color: $spongebob-brown !important;
+        }
+
+        &.is-active {
+          background: linear-gradient(180deg, $spongebob-yellow, $spongebob-dark-yellow) !important;
+          border: 2px solid $spongebob-brown !important;
+          color: $spongebob-black !important;
+        }
+      }
+
+      ::v-deep .el-submenu__title {
+        color: $spongebob-black !important;
+        font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+        font-weight: bold !important;
+        transition: $cartoon-transition;
+
+        &:hover {
+          background: rgba(255, 232, 115, 0.5) !important;
+          color: $spongebob-brown !important;
+        }
+      }
+    }
+
+    /* -------- Element UI 标签页样式覆盖 -------- */
+    ::v-deep .el-tabs {
+      ::v-deep .el-tabs__header {
+        background: transparent !important;
+        margin-bottom: 16px;
+      }
+
+      ::v-deep .el-tabs__nav-wrap::after {
+        background: $spongebob-brown !important;
+        height: 3px;
+      }
+
+      ::v-deep .el-tabs__item {
+        color: $spongebob-brown !important;
+        font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+        font-weight: bold !important;
+        font-size: 14px !important;
+        transition: $cartoon-transition;
+        padding: 0 20px !important;
+        height: 40px;
+        line-height: 40px;
+
+        &:hover {
+          color: $spongebob-orange !important;
+        }
+
+        &.is-active {
+          color: $spongebob-red !important;
+        }
+      }
+
+      ::v-deep .el-tabs__active-bar {
+        background: $spongebob-red !important;
+        height: 4px !important;
+        border-radius: 2px;
+      }
+
+      ::v-deep .el-tabs__content {
+        background: transparent;
+      }
+    }
+
+    /* -------- Element UI 下拉菜单样式 -------- */
+    ::v-deep .el-dropdown-menu {
+      background: $spongebob-yellow !important;
+      border: $cartoon-border solid $spongebob-brown !important;
+      border-radius: $cartoon-radius-sm !important;
+      box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3) !important;
+
+      ::v-deep .el-dropdown-menu__item {
+        color: $spongebob-black !important;
+        font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+        font-weight: bold !important;
+        padding: 10px 20px;
+
+        &:hover {
+          background: $spongebob-dark-yellow !important;
+          color: $spongebob-black !important;
+        }
+
+        &.is-divided {
+          border-top-color: $spongebob-brown !important;
+        }
+      }
+    }
+
+    /* -------- Element UI 复选框样式 -------- */
+    ::v-deep .el-checkbox__input.is-checked .el-checkbox__inner {
+      background-color: $spongebob-brown !important;
+      border-color: $spongebob-brown !important;
+    }
+
+    ::v-deep .el-checkbox__label {
+      color: $spongebob-black !important;
+      font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+    }
+
+    /* -------- Element UI 单选框样式 -------- */
+    ::v-deep .el-radio__input.is-checked .el-radio__inner {
+      background-color: $spongebob-brown !important;
+      border-color: $spongebob-brown !important;
+    }
+
+    ::v-deep .el-radio__label {
+      color: $spongebob-black !important;
+      font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+    }
+
+    ::v-deep .el-radio-button__inner {
+      background: $spongebob-yellow !important;
+      border-color: $spongebob-brown !important;
+      color: $spongebob-black !important;
+      font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif !important;
+
+      &:hover {
+        background: $spongebob-bright-yellow !important;
+      }
+    }
+
+    ::v-deep .el-radio-button__orig-radio:checked + .el-radio-button__inner {
+      background: $spongebob-brown !important;
+      border-color: $spongebob-brown !important;
+      color: #fff !important;
+      box-shadow: none !important;
+    }
+
+    /* -------- Element UI 开关样式 -------- */
+    ::v-deep .el-switch.is-checked .el-switch__core {
+      background-color: $spongebob-brown !important;
+      border-color: $spongebob-brown !important;
+    }
+
+    /* -------- Element UI 滑块样式 -------- */
+    ::v-deep .el-slider__runway {
+      background: $spongebob-white !important;
+      border: 2px solid $spongebob-brown !important;
+    }
+
+    ::v-deep .el-slider__bar {
+      background: linear-gradient(90deg, $spongebob-yellow, $spongebob-orange) !important;
+    }
+
+    ::v-deep .el-slider__button {
+      border-color: $spongebob-brown !important;
+      background: $spongebob-yellow !important;
+    }
+  }
+}
+
+/* ============================================================
+ * 6. 海绵宝宝卡片样式（工具类）
+ * ============================================================ */
+.spongebob-card {
+  background: linear-gradient(145deg, $spongebob-yellow 0%, $spongebob-dark-yellow 100%);
+  border: $cartoon-border-thick solid $spongebob-brown;
+  border-radius: $cartoon-radius-md;
+  box-shadow: 
+    0 6px 0 $spongebob-dark-brown,
+    0 8px 20px rgba(139, 69, 19, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.4);
+  transition: $cartoon-transition;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 50%;
+    height: 30%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), transparent);
+    border-radius: $cartoon-radius-sm $cartoon-radius-sm 50% 50%;
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 
+      0 10px 0 $spongebob-dark-brown,
+      0 14px 30px rgba(139, 69, 19, 0.4),
+      0 0 20px rgba(255, 232, 115, 0.5),
+      inset 0 2px 0 rgba(255, 255, 255, 0.4);
+    border-color: $spongebob-orange;
+  }
+}
+
+/* ============================================================
+ * 7. 海绵宝宝按钮样式（工具类）
+ * ============================================================ */
+.spongebob-btn {
+  background: linear-gradient(180deg, $spongebob-yellow, $spongebob-dark-yellow);
+  border: $cartoon-border solid $spongebob-brown;
+  border-radius: $cartoon-radius-sm;
+  color: $spongebob-black;
+  font-weight: bold;
+  font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: $cartoon-transition;
+  box-shadow: 
+    0 4px 0 $spongebob-dark-brown,
+    0 6px 12px rgba(139, 69, 19, 0.2);
+  text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    left: 10%;
+    right: 10%;
+    height: 40%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.5), transparent);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  &:hover {
+    background: linear-gradient(180deg, $spongebob-bright-yellow, $spongebob-yellow);
+    transform: translateY(-2px);
+    box-shadow: 
+      0 6px 0 $spongebob-dark-brown,
+      0 10px 20px rgba(139, 69, 19, 0.3),
+      0 0 15px rgba(255, 232, 115, 0.5);
+  }
+
+  &:active {
+    transform: translateY(2px);
+    box-shadow: 
+      0 2px 0 $spongebob-dark-brown,
+      0 3px 8px rgba(139, 69, 19, 0.2);
+  }
+}
+
+/* ============================================================
+ * 8. 页面容器样式
+ * ============================================================ */
+.page-container {
+  padding: 24px;
+  min-height: calc(100vh - 120px);
+}
+
+/* ============================================================
+ * 9. 标题区域样式
+ * ============================================================ */
+.page-header {
+  margin-bottom: 24px;
+  padding: 16px 24px;
+  background: linear-gradient(145deg, $spongebob-yellow, $spongebob-dark-yellow);
+  border: $cartoon-border solid $spongebob-brown;
+  border-radius: $cartoon-radius-md;
+  box-shadow: 0 4px 0 $spongebob-dark-brown;
+
+  h2 {
+    margin: 0;
+    color: $spongebob-black;
+    font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: 2px 2px 0 rgba(255, 255, 255, 0.5);
+  }
+
+  p {
+    margin: 8px 0 0;
+    color: $spongebob-black;
+    opacity: 0.8;
+    font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+  }
+}
+
+/* ============================================================
+ * 10. 查询按钮组样式
+ * ============================================================ */
+.query-buttons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* ============================================================
+ * 11. 数据统计卡片样式
+ * ============================================================ */
+.stat-card {
+  background: linear-gradient(145deg, $spongebob-yellow, $spongebob-dark-yellow);
+  border: $cartoon-border-thick solid $spongebob-brown;
+  border-radius: $cartoon-radius-md;
+  padding: 20px;
+  box-shadow: 
+    0 4px 0 $spongebob-dark-brown,
+    0 6px 16px rgba(139, 69, 19, 0.2);
+  transition: $cartoon-transition;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), transparent);
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 
+      0 6px 0 $spongebob-dark-brown,
+      0 10px 24px rgba(139, 69, 19, 0.3),
+      0 0 15px rgba(255, 232, 115, 0.4);
+  }
+
+  .stat-title {
+    color: $spongebob-black;
+    font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    color: $spongebob-brown;
+    font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+    font-weight: bold;
+    font-size: 28px;
   }
 }

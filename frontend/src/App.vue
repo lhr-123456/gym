@@ -11,15 +11,18 @@ export default {
 </script>
 
 <style lang="scss">
+/* 海绵宝宝动漫风格 - 应用根样式 */
+
 #app {
   width: 100%;
   min-height: 100vh;
+  position: relative;
 }
 
 body {
   margin: 0;
   padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
   overflow-x: hidden;
 }
 </style>

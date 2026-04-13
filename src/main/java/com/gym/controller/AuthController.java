@@ -125,6 +125,9 @@ public class AuthController {
     @PostMapping("/register")
     public ApiResponse<String> register(@RequestBody UserInfo userInfo) {
         try {
+            System.out.println("========== 注册请求开始 ==========");
+            System.out.println("接收到的注册信息: username=" + userInfo.getUsername() + ", userType=" + userInfo.getUserType());
+
             LambdaQueryWrapper<UserInfo> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(UserInfo::getUsername, userInfo.getUsername());
             UserInfo existingUser = userInfoMapper.selectOne(wrapper);
@@ -133,31 +136,60 @@ public class AuthController {
                 return ApiResponse.error("用户名已存在");
             }
 
+            // 保存原始密码用于日志
+            String rawPassword = userInfo.getPassword();
             userInfo.setPassword(passwordEncoder.encode(userInfo.getPassword()));
             userInfo.setStatus(1);
-            userInfoMapper.insert(userInfo);
+            int userInsertResult = userInfoMapper.insert(userInfo);
+            System.out.println("UserInfo 插入结果: " + userInsertResult + ", userId=" + userInfo.getUserId());
 
             // 如果注册的是会员类型，自动创建 MemberInfo 档案
             Integer ut = userInfo.getUserType();
+            System.out.println("用户类型: " + ut);
             if (ut != null && ut == 3) {
                 MemberInfo member = new MemberInfo();
                 member.setMemberName(userInfo.getUsername());
-                member.setPhoneNum("");
+                member.setPhoneNum("MEMBER_" + System.currentTimeMillis());
                 member.setFitnessLevel("初级");
                 member.setMemberLevel(1);
                 member.setPoints(0);
                 member.setBalance(0.0);
                 member.setAccountStatus(0);
                 member.setRegTime(LocalDateTime.now());
-                memberInfoMapper.insert(member);
+                int memberInsertResult = memberInfoMapper.insert(member);
+                System.out.println("MemberInfo 插入结果: " + memberInsertResult + ", memberId=" + member.getMemberId());
 
                 // 回填 user_info.member_id 关联
                 userInfo.setMemberId(member.getMemberId());
-                userInfoMapper.updateById(userInfo);
+                int updateResult = userInfoMapper.updateById(userInfo);
+                System.out.println("UserInfo 回填 memberId 结果: " + updateResult);
             }
 
+            // 如果注册的是教练类型，自动创建 CoachInfo 档案
+            if (ut != null && ut == 2) {
+                CoachInfo coach = new CoachInfo();
+                coach.setCoachName(userInfo.getUsername());
+                coach.setGender("");
+                coach.setPhoneNum("COACH_" + System.currentTimeMillis());
+                coach.setEmailAddr("");
+                coach.setSpecialty("");
+                coach.setExperienceYears(0);
+                coach.setCertification("");
+                coach.setStatus(1);
+                int coachInsertResult = coachInfoMapper.insert(coach);
+                System.out.println("CoachInfo 插入结果: " + coachInsertResult + ", coachId=" + coach.getCoachId());
+
+                // 回填 user_info.coach_id 关联
+                userInfo.setCoachId(coach.getCoachId());
+                int updateResult = userInfoMapper.updateById(userInfo);
+                System.out.println("UserInfo 回填 coachId 结果: " + updateResult);
+            }
+
+            System.out.println("========== 注册请求完成 ==========");
             return ApiResponse.success("注册成功");
         } catch (Exception e) {
+            e.printStackTrace();
+            System.err.println("注册异常: " + e.getMessage());
             return ApiResponse.error("注册失败：" + e.getMessage());
         }
     }

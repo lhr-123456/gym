@@ -1,0 +1,214 @@
+// ============================================================
+// Gym管理系统 - 设计系统变量
+// Design Tokens for Gym Management System
+// ============================================================
+
+// --------------------------------------------------------
+// 1. 色彩系统 Color System
+// --------------------------------------------------------
+
+// 主色 Primary
+$primary-color: #667eea;
+$primary-light: #a78bfa;
+$primary-dark: #4f46e5;
+$primary-gradient: linear-gradient(135deg, $primary-color, #764ba2);
+
+// 辅色 Secondary
+$secondary-color: #f093fb;
+$secondary-light: #f5576c;
+$secondary-gradient: linear-gradient(135deg, $secondary-color, #f5576c);
+
+// 功能色 Semantic Colors
+$success-color: #10b981;
+$warning-color: #f59e0b;
+$danger-color: #ef4444;
+$info-color: #3b82f6;
+
+// 文字色 Text Colors
+$text-primary: #f8fafc;
+$text-secondary: rgba(248, 250, 252, 0.7);
+$text-tertiary: rgba(248, 250, 252, 0.5);
+$text-disabled: rgba(248, 250, 252, 0.3);
+
+// 背景色 Background Colors
+$bg-base: #0f0f23;
+$bg-surface: rgba(255, 255, 255, 0.06);
+$bg-elevated: rgba(255, 255, 255, 0.1);
+$bg-overlay: rgba(15, 15, 35, 0.8);
+
+// 边框色 Border Colors
+$border-light: rgba(255, 255, 255, 0.1);
+$border-medium: rgba(255, 255, 255, 0.2);
+$border-strong: rgba(255, 255, 255, 0.3);
+
+// 毛玻璃 Glass Effect
+$glass-bg: rgba(255, 255, 255, 0.08);
+$glass-bg-hover: rgba(255, 255, 255, 0.12);
+$glass-blur: blur(20px);
+
+// --------------------------------------------------------
+// 2. 圆角系统 Border Radius
+// --------------------------------------------------------
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 12px;
+$radius-xl: 16px;
+$radius-2xl: 24px;
+$radius-full: 9999px;
+
+// --------------------------------------------------------
+// 3. 阴影系统 Shadows
+// --------------------------------------------------------
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.15);
+$shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
+$shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.25);
+$shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.3);
+$shadow-glow: 0 0 24px rgba(102, 126, 234, 0.4);
+$shadow-inset: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+
+// --------------------------------------------------------
+// 4. 间距系统 Spacing (4px Grid)
+// --------------------------------------------------------
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 20px;
+$space-6: 24px;
+$space-8: 32px;
+$space-10: 40px;
+$space-12: 48px;
+$space-16: 64px;
+
+// --------------------------------------------------------
+// 5. 字体 Typography
+// --------------------------------------------------------
+$font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$font-mono: 'SF Mono', 'Fira Code', monospace;
+
+$font-size-xs: 10px;
+$font-size-sm: 12px;
+$font-size-base: 14px;
+$font-size-md: 16px;
+$font-size-lg: 18px;
+$font-size-xl: 20px;
+$font-size-2xl: 24px;
+$font-size-3xl: 30px;
+
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+
+// --------------------------------------------------------
+// 6. 动画时长 Animation Durations
+// --------------------------------------------------------
+$duration-fast: 150ms;
+$duration-normal: 300ms;
+$duration-slow: 500ms;
+$duration-slower: 800ms;
+
+// 缓动函数 Easing Functions
+$ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+$ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+$ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+// --------------------------------------------------------
+// 7. 响应式断点 Breakpoints
+// --------------------------------------------------------
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+$breakpoint-2xl: 1440px;
+
+// --------------------------------------------------------
+// 8. Z-Index 层级
+// --------------------------------------------------------
+$z-dropdown: 100;
+$z-sticky: 200;
+$z-fixed: 300;
+$z-modal-backdrop: 400;
+$z-modal: 500;
+$z-popover: 600;
+$z-tooltip: 700;
+$z-toast: 800;
+
+// --------------------------------------------------------
+// 9. 组件变量 Component Variables
+// --------------------------------------------------------
+
+// 按钮 Button
+$btn-border-radius: $radius-md;
+$btn-padding-y: $space-2;
+$btn-padding-x: $space-4;
+$btn-height-sm: 28px;
+$btn-height-base: 36px;
+$btn-height-lg: 44px;
+
+// 卡片 Card
+$card-border-radius: $radius-xl;
+$card-padding: $space-6;
+$card-gap: $space-4;
+
+// 输入框 Input
+$input-border-radius: $radius-md;
+$input-height: 40px;
+$input-padding: $space-3 $space-4;
+
+// 表格 Table
+$table-border-radius: $radius-lg;
+$table-cell-padding: $space-3 $space-4;
+
+// 导航栏 Navbar
+$navbar-height: 60px;
+$sidebar-width: 220px;
+$sidebar-collapsed-width: 64px;
+
+// --------------------------------------------------------
+// 10. Mixin 预设类
+// --------------------------------------------------------
+
+// 毛玻璃效果
+@mixin glass-effect {
+  background: $glass-bg;
+  backdrop-filter: $glass-blur;
+  -webkit-backdrop-filter: $glass-blur;
+  border: 1px solid $border-light;
+}
+
+// 渐变背景
+@mixin gradient-bg($deg: 135deg) {
+  background: linear-gradient($deg, $primary-color, #764ba2);
+}
+
+// 文字渐变
+@mixin text-gradient($deg: 90deg) {
+  background: linear-gradient($deg, #a8b4fd, #f0abfc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// 悬浮动效
+@mixin hover-lift {
+  transition: transform $duration-normal $ease-out, box-shadow $duration-normal $ease-out;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-lg;
+  }
+}
+
+// 聚焦发光
+@mixin focus-glow($color: $primary-color) {
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba($color, 0.3);
+    border-color: $color;
+  }
+}

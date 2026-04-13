@@ -273,6 +273,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/* ============================================================
+ * 海绵宝宝动漫风格 - 登录页面
+ * ============================================================ */
+
+/* 海绵宝宝主题色 */
+$spongebob-yellow: #FFE873;
+$spongebob-bright-yellow: #FFF176;
+$spongebob-dark-yellow: #E6C84D;
+$spongebob-brown: #8B4513;
+$spongebob-dark-brown: #5D2E0C;
+$spongebob-red: #FF3B30;
+$spongebob-orange: #FF9500;
+$spongebob-white: #FFFFFF;
+
+$cartoon-border: 3px;
+$cartoon-radius-sm: 12px;
+$cartoon-radius-md: 16px;
+$cartoon-radius-lg: 24px;
+$cartoon-radius-xl: 32px;
+$cartoon-transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+
 .login-container {
   min-height: 100vh;
   width: 100%;
@@ -281,37 +302,34 @@ export default {
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  // 图片加载前的底色，避免闪白
-  background-color: #1a1d24;
+  background-color: #2C1810;
 
-  // 全屏铺满（cover）；居中定位保证主体（墙面「健身」区块）始终在视口中央
   &::before {
     content: '';
     position: absolute;
     inset: 0;
-    background-color: #1a1d24;
-    background-image: url('D:\\gympicture\\bjt.jpg');
+    background-color: #2C1810;
+    background-image: url('D:\\gympicture\\hmbb.png');
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
     z-index: 0;
   }
 
-  // 深色渐变叠加层：保护表单可读性
   &::after {
     content: '';
     position: absolute;
     inset: 0;
     background: linear-gradient(
       160deg,
-      rgba(10, 10, 20, 0.55) 0%,
-      rgba(30, 20, 50, 0.45) 50%,
-      rgba(5, 15, 30, 0.60) 100%
+      rgba(44, 24, 16, 0.6) 0%,
+      rgba(60, 40, 30, 0.5) 50%,
+      rgba(30, 20, 15, 0.65) 100%
     );
     z-index: 0;
   }
 
-  // 悬浮光斑装饰
+  /* 悬浮光斑装饰 - 海绵宝宝风格 */
   .bg-animation {
     position: absolute;
     inset: 0;
@@ -327,7 +345,7 @@ export default {
       &.spot1 {
         width: 500px;
         height: 500px;
-        background: radial-gradient(circle, rgba(102, 126, 234, 0.35) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(255, 232, 115, 0.4) 0%, transparent 70%);
         top: -150px;
         left: -100px;
         animation: drift 18s ease-in-out infinite;
@@ -336,7 +354,7 @@ export default {
       &.spot2 {
         width: 400px;
         height: 400px;
-        background: radial-gradient(circle, rgba(236, 72, 153, 0.30) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(255, 107, 157, 0.35) 0%, transparent 70%);
         bottom: -120px;
         right: -80px;
         animation: drift 14s ease-in-out infinite reverse;
@@ -345,7 +363,7 @@ export default {
       &.spot3 {
         width: 300px;
         height: 300px;
-        background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, transparent 70%);
+        background: radial-gradient(circle, rgba(255, 232, 115, 0.3) 0%, transparent 70%);
         top: 50%;
         left: 55%;
         transform: translate(-50%, -50%);
@@ -364,90 +382,107 @@ export default {
     50%       { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
   }
 
-  // 登录卡片：高级毛玻璃
+  /* 登录卡片 - 海绵宝宝风格 */
   .login-box {
     position: relative;
     z-index: 1;
     width: 440px;
     padding: 48px 44px;
-    background: rgba(255, 255, 255, 0.08);
-    backdrop-filter: blur(28px) saturate(160%);
-    -webkit-backdrop-filter: blur(28px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    border-radius: 28px;
-    box-shadow:
-      0 24px 64px rgba(0, 0, 0, 0.35),
-      0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-    animation: cardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    background: linear-gradient(145deg, $spongebob-yellow, $spongebob-dark-yellow);
+    border: 4px solid $spongebob-brown;
+    border-radius: $cartoon-radius-xl;
+    box-shadow: 
+      0 10px 0 $spongebob-dark-brown,
+      0 15px 40px rgba(139, 69, 19, 0.5),
+      0 0 40px rgba(255, 232, 115, 0.3),
+      inset 0 4px 0 rgba(255, 255, 255, 0.4);
+    animation: cardIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+
+    /* 卡通高光效果 */
+    &::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 50%;
+      height: 80px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), transparent);
+      border-radius: $cartoon-radius-md $cartoon-radius-md 50% 50%;
+      pointer-events: none;
+    }
 
     @keyframes cardIn {
       from { opacity: 0; transform: translateY(24px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0)    scale(1); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .form-container {
       width: 100%;
 
-      // 标题区
+      /* 标题区 */
       .brand {
         text-align: center;
         margin-bottom: 36px;
 
         .brand-title {
-          font-size: 26px;
-          font-weight: 700;
-          color: #fff;
-          letter-spacing: 3px;
-          margin: 0 0 6px;
-          background: linear-gradient(90deg, #a8b4fd 0%, #f0abfc 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
+          font-size: 32px;
+          font-weight: bold;
+          color: $spongebob-brown;
+          letter-spacing: 4px;
+          margin: 0 0 8px;
+          font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+          text-shadow: 
+            3px 3px 0 $spongebob-white,
+            -1px -1px 0 rgba(139, 69, 19, 0.2);
         }
 
         .brand-sub {
-          font-size: 12px;
-          color: rgba(255, 255, 255, 0.45);
-          letter-spacing: 4px;
-          text-transform: uppercase;
+          font-size: 14px;
+          color: $spongebob-dark-brown;
+          letter-spacing: 3px;
+          font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+          font-weight: bold;
         }
       }
 
-      // 登录/注册切换标签
+      /* 登录/注册切换标签 - 海绵宝宝风格 */
       .tabs {
         display: flex;
         margin-bottom: 32px;
-        border-radius: 12px;
-        background: rgba(255, 255, 255, 0.07);
+        border-radius: $cartoon-radius-md;
+        background: $spongebob-brown;
         padding: 4px;
         gap: 4px;
+        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 
         .tab-item {
           flex: 1;
           text-align: center;
-          padding: 10px 0;
-          font-size: 14px;
-          font-weight: 500;
-          color: rgba(255, 255, 255, 0.5);
+          padding: 12px 0;
+          font-size: 15px;
+          font-weight: bold;
+          color: rgba(255, 255, 255, 0.7);
           cursor: pointer;
-          border-radius: 10px;
-          transition: all 0.3s;
-          letter-spacing: 1px;
+          border-radius: $cartoon-radius-sm;
+          transition: $cartoon-transition;
+          font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+          text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
 
           &.active {
-            background: rgba(255, 255, 255, 0.15);
-            color: #fff;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
-            font-weight: 600;
+            background: linear-gradient(180deg, $spongebob-yellow, $spongebob-dark-yellow);
+            color: $spongebob-brown;
+            box-shadow: 0 3px 0 $spongebob-dark-brown;
+            text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
           }
 
           &:hover:not(.active) {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.1);
           }
         }
       }
 
-      // 表单
+      /* 表单样式 */
       .login-form {
         .user-type-group {
           width: 100%;
@@ -461,57 +496,64 @@ export default {
               width: 100%;
               padding: 10px 4px;
               font-size: 13px;
-              background: rgba(255, 255, 255, 0.07);
-              border: 1px solid rgba(255, 255, 255, 0.14);
-              border-radius: 10px;
-              color: rgba(255, 255, 255, 0.65);
-              box-shadow: none !important;
-              transition: all 0.25s;
+              font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+              font-weight: bold;
+              background: $spongebob-white;
+              border: 3px solid $spongebob-brown;
+              border-radius: $cartoon-radius-sm;
+              color: $spongebob-brown;
+              box-shadow: 0 3px 0 $spongebob-dark-brown !important;
+              transition: $cartoon-transition;
 
               &:hover {
-                background: rgba(255, 255, 255, 0.12);
-                color: #fff;
+                background: $spongebob-bright-yellow;
               }
             }
 
             &.is-active .el-radio-button__inner {
-              background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(168, 85, 247, 0.9) 100%);
-              border-color: transparent;
-              color: #fff;
-              box-shadow: 0 4px 16px rgba(102, 126, 234, 0.45) !important;
+              background: linear-gradient(180deg, $spongebob-red, #CC2F26);
+              border-color: #CC2F26;
+              color: $spongebob-white;
+              box-shadow: 0 3px 0 #CC2F26 !important;
+              text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
             }
           }
         }
 
-        // 输入框
+        /* 表单项 */
         ::v-deep .el-form-item {
           margin-bottom: 20px;
         }
 
+        /* 输入框 - 海绵宝宝风格 */
         ::v-deep .el-input {
           .el-input__inner {
-            background: rgba(255, 255, 255, 0.10);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            color: #fff;
-            border-radius: 12px;
+            background: $spongebob-white;
+            border: 3px solid $spongebob-brown;
+            color: $spongebob-brown;
+            border-radius: $cartoon-radius-sm;
             font-size: 14px;
-            height: 44px;
-            transition: all 0.3s;
-            padding-left: 40px;
+            font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+            font-weight: bold;
+            height: 48px;
+            transition: $cartoon-transition;
+            padding-left: 44px;
+            box-shadow: inset 0 2px 4px rgba(139, 69, 19, 0.1);
 
             &::placeholder {
-              color: rgba(255, 255, 255, 0.40);
+              color: rgba(139, 69, 19, 0.5);
+              font-weight: normal;
             }
 
             &:hover {
-              border-color: rgba(255, 255, 255, 0.35);
-              background: rgba(255, 255, 255, 0.14);
+              border-color: $spongebob-orange;
+              background: $spongebob-bright-yellow;
             }
 
             &:focus {
-              border-color: rgba(102, 126, 234, 0.8);
-              background: rgba(255, 255, 255, 0.14);
-              box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.20);
+              border-color: $spongebob-orange;
+              background: $spongebob-white;
+              box-shadow: 0 0 0 3px rgba(255, 149, 0, 0.3), inset 0 2px 4px rgba(139, 69, 19, 0.1);
             }
           }
 
@@ -520,37 +562,54 @@ export default {
           }
 
           .el-input__icon {
-            color: rgba(255, 255, 255, 0.55);
-            font-size: 16px;
+            color: $spongebob-brown;
+            font-size: 18px;
           }
         }
 
-        // 提交按钮
+        /* 提交按钮 - 海绵宝宝风格 */
         .login-btn {
           width: 100%;
           margin-top: 8px;
-          height: 48px;
-          font-size: 15px;
-          font-weight: 600;
-          letter-spacing: 2px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          border: none;
-          border-radius: 12px;
-          color: #fff;
+          height: 52px;
+          font-size: 18px;
+          font-weight: bold;
+          letter-spacing: 3px;
+          font-family: 'Comic Sans MS', 'Microsoft YaHei', cursive, sans-serif;
+          background: linear-gradient(180deg, $spongebob-red, #CC2F26);
+          border: 4px solid #AA2520;
+          border-radius: $cartoon-radius-md;
+          color: $spongebob-white;
           cursor: pointer;
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-          box-shadow: 0 8px 24px rgba(102, 126, 234, 0.35);
+          transition: $cartoon-transition;
+          box-shadow: 0 6px 0 #AA2520, 0 8px 20px rgba(255, 59, 48, 0.3);
+          text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
           margin-bottom: 16px;
+          position: relative;
+          overflow: hidden;
+
+          /* 按钮高光 */
+          &::before {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: 10%;
+            right: 10%;
+            height: 40%;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.4), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+          }
 
           &:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 14px 36px rgba(102, 126, 234, 0.50);
-            background: linear-gradient(135deg, #7b8ff5 0%, #8d5dc0 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 9px 0 #AA2520, 0 12px 30px rgba(255, 59, 48, 0.4), 0 0 25px rgba(255, 59, 48, 0.4);
+            background: linear-gradient(180deg, #FF5252, $spongebob-red);
           }
 
           &:active {
-            transform: translateY(0);
-            box-shadow: 0 6px 18px rgba(102, 126, 234, 0.35);
+            transform: translateY(3px);
+            box-shadow: 0 3px 0 #AA2520, 0 5px 15px rgba(255, 59, 48, 0.3);
           }
 
           &:disabled {
@@ -561,15 +620,6 @@ export default {
         }
       }
     }
-  }
-}
-
-// 响应式
-@media (max-width: 500px) {
-  .login-container .login-box {
-    width: calc(100% - 32px);
-    padding: 36px 24px;
-    border-radius: 20px;
   }
 }
 </style>

@@ -2,13 +2,8 @@
   <div class="member-bodytest-container">
     <el-card>
       <div class="toolbar">
-        <el-form :inline="true" :model="queryForm">
-          <el-form-item label="会员ID">
-            <el-input v-model="queryForm.memberId" placeholder="请输入会员ID" clearable></el-input>
-          </el-form-item>
+        <el-form :inline="true">
           <el-form-item>
-            <el-button type="primary" icon="el-icon-search" @click="handleQuery">查询</el-button>
-            <el-button icon="el-icon-refresh" @click="handleReset">重置</el-button>
             <el-button type="primary" icon="el-icon-plus" @click="handleAdd">新增体测</el-button>
           </el-form-item>
         </el-form>
@@ -53,8 +48,8 @@
         <el-form ref="form" :model="form" :rules="rules" label-width="120px">
           <el-row :gutter="20">
             <el-col :span="12">
-              <el-form-item label="会员ID" prop="memberId">
-                <el-input-number v-model="form.memberId" :min="1" style="width: 100%"></el-input-number>
+              <el-form-item label="会员ID">
+                <span>{{ memberId }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -119,7 +114,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer">
-          <el-button @click="dialogVisible = false">取消</el-button>
+          <el-button @click="handleCancel">取消</el-button>
           <el-button type="primary" @click="submitForm">确定</el-button>
         </div>
       </el-dialog>
@@ -129,6 +124,7 @@
 
 <script>
 import { getMemberBodyTestPage, addMemberBodyTest, updateMemberBodyTest, deleteMemberBodyTest } from '@/api/memberBodyTest'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'MemberBodyTest',
@@ -139,9 +135,6 @@ export default {
       pageNum: 1,
       pageSize: 10,
       total: 0,
-      queryForm: {
-        memberId: null
-      },
       dialogVisible: false,
       dialogTitle: '',
       form: {
@@ -161,21 +154,37 @@ export default {
         remarks: ''
       },
       rules: {
-        memberId: [{ required: true, message: '请输入会员ID', trigger: 'blur' }],
         testDate: [{ required: true, message: '请选择测试日期', trigger: 'change' }]
       }
     }
   },
+  computed: {
+    ...mapGetters(['memberId'])
+  },
+  watch: {
+    memberId: {
+      handler(newVal) {
+        if (newVal) {
+          this.fetchData()
+        }
+      },
+      immediate: true
+    }
+  },
   created() {
-    this.fetchData()
+    // 如果 memberId 已加载，直接获取数据
+    if (this.memberId) {
+      this.fetchData()
+    }
   },
   methods: {
     fetchData() {
+      if (!this.memberId) return
       this.loading = true
       const params = {
         pageNum: this.pageNum,
         pageSize: this.pageSize,
-        ...this.queryForm
+        memberId: this.memberId
       }
       getMemberBodyTestPage(params).then(res => {
         if (res.code === 200) {
@@ -186,18 +195,14 @@ export default {
         this.loading = false
       })
     },
-    handleQuery() {
-      this.pageNum = 1
-      this.fetchData()
-    },
-    handleReset() {
-      this.queryForm = { memberId: null }
-      this.handleQuery()
+    handleCancel() {
+      this.dialogVisible = false
+      this.$refs.form && this.$refs.form.resetFields()
     },
     handleAdd() {
       this.form = {
         testId: null,
-        memberId: null,
+        memberId: this.memberId,
         testDate: '',
         height: null,
         weight: null,
