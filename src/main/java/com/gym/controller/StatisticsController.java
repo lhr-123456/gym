@@ -45,6 +45,9 @@ public class StatisticsController {
         this.courseReviewMapper = courseReviewMapper;
     }
 
+    /**
+     * 获取仪表盘统计数据
+     */
     @GetMapping("/dashboard")
     public ApiResponse<Map<String, Object>> getDashboardStatistics() {
         try {

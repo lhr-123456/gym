@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface CourseReminderMapper extends BaseMapper<CourseReminder> {
 
-    @Select("SELECT * FROM course_reminder WHERE member_id = #{memberId} AND deleted = 0 ORDER BY class_time ASC")
+    @Select("SELECT * FROM course_reminder WHERE huiyuan_id = #{memberId} AND deleted = 0 ORDER BY keshi_shijian ASC")
     List<CourseReminder> selectByMemberId(@Param("memberId") Long memberId);
 
-    @Select("SELECT * FROM course_reminder WHERE member_id = #{memberId} AND deleted = 0 AND class_time > NOW() ORDER BY class_time ASC")
+    @Select("SELECT * FROM course_reminder WHERE huiyuan_id = #{memberId} AND deleted = 0 AND keshi_shijian > NOW() ORDER BY keshi_shijian ASC")
     List<CourseReminder> selectUpcomingByMemberId(@Param("memberId") Long memberId);
 }

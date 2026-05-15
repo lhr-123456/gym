@@ -12,64 +12,64 @@ public class MemberConsumption implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "consumption_id", type = IdType.AUTO)
+    @TableId(value = "xiaofei_id", type = IdType.AUTO)
     private Long consumptionId;
 
-    @TableField("member_id")
+    @TableField("huiyuan_id")
     private Long memberId;
 
-    @TableField("order_no")
+    @TableField("dingdan_bianhao")
     private String orderNo;
 
-    @TableField("consumption_type")
+    @TableField("xiaofei_leixing")
     private String consumptionType;
 
-    @TableField("consumption_type_name")
+    @TableField("xiaofei_leixing_ming")
     private String consumptionTypeName;
 
-    @TableField("amount")
+    @TableField("jine")
     private Double amount;
 
-    @TableField("actual_amount")
+    @TableField("shiji_jine")
     private Double actualAmount;
 
-    @TableField("discount_amount")
+    @TableField("youhui_jine")
     private Double discountAmount;
 
-    @TableField("points_deducted")
+    @TableField("jifen_koujian")
     private Integer pointsDeducted;
 
-    @TableField("points_earned")
+    @TableField("jifen_zengsong")
     private Integer pointsEarned;
 
-    @TableField("payment_method")
+    @TableField("fukuan_fangshi")
     private String paymentMethod;
 
-    @TableField("consumption_time")
+    @TableField("xiaofei_shijian")
     private LocalDateTime consumptionTime;
 
-    @TableField("related_id")
+    @TableField("guanlian_id")
     private Long relatedId;
 
-    @TableField("related_name")
+    @TableField("guanlian_ming")
     private String relatedName;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
-    @TableField("coach_name")
+    @TableField("jiaolian_xingming")
     private String coachName;
 
-    @TableField("status")
+    @TableField("zhuangtai")
     private Integer status;
 
-    @TableField("remarks")
+    @TableField("beizhu")
     private String remarks;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

@@ -15,42 +15,34 @@ public class PointsGoods implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    /** 商品名称 */
-    @TableField("name")
+    @TableField("mingcheng")
     private String name;
 
-    /** 商品描述 */
-    @TableField("description")
+    @TableField("miaoshu")
     private String description;
 
-    /** 所需积分 */
-    @TableField("points")
+    @TableField("jifen")
     private Integer points;
 
-    /** 库存数量 */
-    @TableField("stock")
+    @TableField("kucun")
     private Integer stock;
 
-    /** 商品图片路径 */
-    @TableField("image")
+    @TableField("tupian")
     private String image;
 
-    /** 商品类型：goods=实物商品，course=课程 */
-    @TableField("type")
+    @TableField("leixing")
     private String type;
 
-    /** 关联ID（如课程ID） */
     @TableField("ref_id")
     private Long refId;
 
-    /** 状态：1=上架，0=下架 */
-    @TableField("status")
+    @TableField("zhuangtai")
     private Integer status;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

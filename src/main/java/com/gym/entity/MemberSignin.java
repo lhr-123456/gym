@@ -13,31 +13,31 @@ public class MemberSignin implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "signin_id", type = IdType.AUTO)
+    @TableId(value = "qiandao_id", type = IdType.AUTO)
     private Long signinId;
 
-    @TableField("member_id")
+    @TableField("huiyuan_id")
     private Long memberId;
 
-    @TableField("signin_date")
+    @TableField("qiandao_riqi")
     private LocalDate signinDate;
 
-    @TableField("signin_time")
+    @TableField("qiandao_shijian")
     private LocalDateTime signinTime;
 
-    @TableField("signin_type")
+    @TableField("qiandao_leixing")
     private String signinType;
 
-    @TableField("points_earned")
+    @TableField("jifen_zengsong")
     private Integer pointsEarned;
 
-    @TableField("consecutive_days")
+    @TableField("lianxu_tianshu")
     private Integer consecutiveDays;
 
-    @TableField("remarks")
+    @TableField("beizhu")
     private String remarks;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @TableLogic

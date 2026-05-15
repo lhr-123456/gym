@@ -26,6 +26,9 @@ public class CourseReviewController {
         this.pointsRecordService = pointsRecordService;
     }
 
+    /**
+     * 分页查询课程评价列表
+     */
     @GetMapping("/page")
     public ApiResponse<Page<CourseReview>> getPage(
             @RequestParam(defaultValue = "1") int pageNum,
@@ -35,12 +38,18 @@ public class CourseReviewController {
         return ApiResponse.success(page);
     }
 
+    /**
+     * 查询课程评价列表（不分页）
+     */
     @GetMapping("/list")
     public ApiResponse<List<CourseReview>> getList(CourseReview courseReview) {
         List<CourseReview> list = courseReviewService.getList(courseReview);
         return ApiResponse.success(list);
     }
 
+    /**
+     * 根据ID查询课程评价详情
+     */
     @GetMapping("/{id}")
     public ApiResponse<CourseReview> getById(@PathVariable Long id) {
         CourseReview courseReview = courseReviewService.getById(id);
@@ -50,12 +59,18 @@ public class CourseReviewController {
         return ApiResponse.success(courseReview);
     }
 
+    /**
+     * 查询指定课程的所有评价
+     */
     @GetMapping("/course/{courseId}")
     public ApiResponse<List<CourseReview>> getCourseReviews(@PathVariable Long courseId) {
         List<CourseReview> list = courseReviewService.getCourseReviews(courseId);
         return ApiResponse.success(list);
     }
 
+    /**
+     * 新增课程评价
+     */
     @PostMapping
     public ApiResponse<String> save(@RequestBody CourseReview courseReview) {
         boolean result = courseReviewService.save(courseReview);
@@ -75,6 +90,9 @@ public class CourseReviewController {
         return ApiResponse.error("添加评价失败");
     }
 
+    /**
+     * 更新课程评价
+     */
     @PutMapping
     public ApiResponse<String> update(@RequestBody CourseReview courseReview) {
         if (courseReview.getReviewId() == null) {
@@ -87,6 +105,9 @@ public class CourseReviewController {
         return ApiResponse.error("更新评价失败");
     }
 
+    /**
+     * 删除课程评价
+     */
     @DeleteMapping("/{id}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         boolean result = courseReviewService.deleteById(id);
@@ -96,6 +117,9 @@ public class CourseReviewController {
         return ApiResponse.error("删除评价失败");
     }
 
+    /**
+     * 教练回复课程评价
+     */
     @PostMapping("/reply/{id}")
     public ApiResponse<String> reply(@PathVariable Long id, @RequestParam String reply) {
         try {

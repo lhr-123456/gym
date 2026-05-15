@@ -19,6 +19,9 @@ public class MemberMessageController {
         this.memberMessageService = memberMessageService;
     }
 
+    /**
+     * 分页获取会员消息列表
+     */
     @GetMapping("/page")
     public ApiResponse<Page<MemberMessage>> getPage(
             @RequestParam(defaultValue = "1") int pageNum,
@@ -30,6 +33,9 @@ public class MemberMessageController {
         return ApiResponse.success(page);
     }
 
+    /**
+     * 获取会员消息列表
+     */
     @GetMapping("/list")
     public ApiResponse<Object> getList(
             @RequestParam(required = false) String type,
@@ -39,6 +45,9 @@ public class MemberMessageController {
         return ApiResponse.success(list);
     }
 
+    /**
+     * 获取会员未读消息数量
+     */
     @GetMapping("/unread-count")
     public ApiResponse<Integer> getUnreadCount(HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("memberId");
@@ -46,12 +55,18 @@ public class MemberMessageController {
         return ApiResponse.success(count);
     }
 
+    /**
+     * 标记单条消息为已读
+     */
     @PutMapping("/read/{id}")
     public ApiResponse<String> markRead(@PathVariable Long id) {
         memberMessageService.markRead(id);
         return ApiResponse.success("已标记为已读");
     }
 
+    /**
+     * 标记全部消息为已读
+     */
     @PutMapping("/read-all")
     public ApiResponse<String> markAllRead(HttpServletRequest request) {
         Long memberId = (Long) request.getAttribute("memberId");

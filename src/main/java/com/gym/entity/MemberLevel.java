@@ -13,46 +13,46 @@ public class MemberLevel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "level_id", type = IdType.AUTO)
+    @TableId(value = "dengji_id", type = IdType.AUTO)
     private Long levelId;
 
-    @TableField("level_name")
+    @TableField("dengji_mingcheng")
     private String levelName;
 
-    @TableField("level_code")
+    @TableField("dengji_daima")
     private String levelCode;
 
-    @TableField("level_order")
+    @TableField("paixu")
     private Integer levelOrder;
 
-    @TableField("discount_rate")
+    @TableField("zhekou")
     private BigDecimal discountRate;
 
-    @TableField("points_rate")
+    @TableField("jifen_bili")
     private BigDecimal pointsRate;
 
-    @TableField("min_points")
+    @TableField("zuidi_jifen")
     private Integer minPoints;
 
-    @TableField("max_points")
+    @TableField("zuigao_jifen")
     private Integer maxPoints;
 
-    @TableField("card_fee")
+    @TableField("kate_jiage")
     private Double cardFee;
 
-    @TableField("description")
+    @TableField("miaoshu")
     private String description;
 
-    @TableField("icon")
+    @TableField("tubiao")
     private String icon;
 
-    @TableField("icon_color")
+    @TableField("tubiao_yanse")
     private String iconColor;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

@@ -12,28 +12,28 @@ public class EquipmentBooking implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "booking_id", type = IdType.AUTO)
+    @TableId(value = "yuyue_id", type = IdType.AUTO)
     private Long bookingId;
 
-    @TableField("member_id")
+    @TableField("huiyuan_id")
     private Long memberId;
 
-    @TableField("equipment_id")
+    @TableField("qicai_id")
     private Long equipmentId;
 
-    @TableField("booking_time")
+    @TableField("yuyue_shijian")
     private LocalDateTime bookingTime;
 
-    @TableField("return_time")
+    @TableField("guihuan_shijian")
     private LocalDateTime returnTime;
 
-    @TableField("status")
+    @TableField("zhuangtai")
     private String status;
 
-    @TableField("remark")
+    @TableField("beizhu")
     private String remark;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @TableLogic

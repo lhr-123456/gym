@@ -46,6 +46,10 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * 用户登录
+     * 校验用户名密码，验证用户类型是否匹配，生成JWT令牌并返回用户信息和头像
+     */
     @PostMapping("/login")
     public ApiResponse<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
         try {
@@ -122,6 +126,10 @@ public class AuthController {
         }
     }
 
+    /**
+     * 用户注册
+     * 校验用户名唯一性，加密密码后保存；根据用户类型自动创建会员或教练档案并回填关联ID
+     */
     @PostMapping("/register")
     public ApiResponse<String> register(@RequestBody UserInfo userInfo) {
         try {
@@ -209,6 +217,10 @@ public class AuthController {
         }
     }
 
+    /**
+     * 获取当前登录用户个人信息
+     * 从SecurityContext中获取用户名，查询并返回用户详情
+     */
     @GetMapping("/profile")
     public ApiResponse<UserInfo> getProfile() {
         try {
@@ -225,6 +237,10 @@ public class AuthController {
         }
     }
 
+    /**
+     * 更新当前登录用户个人信息
+     * 仅允许更新memberId和coachId关联字段，不修改密码和用户类型
+     */
     @PutMapping("/profile")
     public ApiResponse<String> updateProfile(@RequestBody UserInfo userInfo) {
         try {
@@ -255,6 +271,10 @@ public class AuthController {
         }
     }
 
+    /**
+     * 修改密码
+     * 校验旧密码正确性，加密新密码后更新
+     */
     @PutMapping("/password")
     public ApiResponse<String> updatePassword(@RequestBody Map<String, String> passwordRequest) {
         try {
@@ -291,7 +311,10 @@ public class AuthController {
         }
     }
 
-    // 临时接口：修复用户类型（仅用于调试）
+    /**
+     * 修复用户类型（调试接口）
+     * 根据用户名修改用户类型及关联的教练ID
+     */
     @PutMapping("/fix-user-type")
     public ApiResponse<String> fixUserType(@RequestBody Map<String, Object> request) {
         try {

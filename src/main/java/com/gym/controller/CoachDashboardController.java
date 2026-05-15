@@ -273,7 +273,7 @@ public class CoachDashboardController {
 
     /**
      * 获取教练学员列表（分页）
-     * 说明：基于教练历史预约记录统计去重学员，并补充简单统计字段，避免前端使用模拟数据。
+     * 说明：基于教练历史预约记录 + 管理员直接分配的学员，统计去重后返回学员列表。
      */
     @GetMapping("/members/page")
     public ApiResponse<Page<Map<String, Object>>> getCoachMembersPage(
@@ -296,20 +296,32 @@ public class CoachDashboardController {
 
             Long coachId = userInfo.getCoachId();
 
-            // 取出该教练所有预约记录（仅用于统计学员清单与课程次数）
+            // 1. 从预约记录中获取该教练的所有学员ID
             List<CourseBooking> allBookings = courseBookingMapper.selectList(
                 new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<CourseBooking>()
                     .eq(CourseBooking::getCoachId, coachId)
             );
 
-            // 统计每个学员的课程次数与完成次数
             Map<Long, List<CourseBooking>> byMember = allBookings.stream()
-                .filter(b -> b.getMemberId() != null)
-                .collect(Collectors.groupingBy(CourseBooking::getMemberId));
+                    .filter(b -> b.getMemberId() != null)
+                    .collect(Collectors.groupingBy(CourseBooking::getMemberId));
 
-            List<Long> memberIds = byMember.keySet().stream()
-                .sorted()
-                .collect(Collectors.toList());
+            // 2. 同时查询管理员直接分配给该教练的学员
+            List<MemberInfo> assignedMembers = memberInfoMapper.selectList(
+                new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<MemberInfo>()
+                    .eq(MemberInfo::getCoachId, coachId)
+            );
+
+            // 合并：预约记录中的学员 + 管理员分配的学员（去重）
+            java.util.Set<Long> allMemberIds = new java.util.LinkedHashSet<>();
+            byMember.keySet().forEach(allMemberIds::add);
+            assignedMembers.forEach(m -> {
+                if (m != null && m.getMemberId() != null) {
+                    allMemberIds.add(m.getMemberId());
+                }
+            });
+
+            List<Long> memberIds = new ArrayList<>(allMemberIds);
 
             Map<Long, MemberInfo> memberInfoMap = new HashMap<>();
             if (!memberIds.isEmpty()) {
@@ -544,14 +556,15 @@ public class CoachDashboardController {
                 return ApiResponse.error("学员不存在");
             }
 
-            // 校验：教练只能查看自己带过的学员
+            // 校验：教练只能查看自己带过的学员，或者管理员分配给他的学员
             if (coachId != null) {
-                Long count = courseBookingMapper.selectCount(
+                Long bookingCount = courseBookingMapper.selectCount(
                     new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<CourseBooking>()
                         .eq(CourseBooking::getMemberId, memberId)
                         .eq(CourseBooking::getCoachId, coachId)
                 );
-                if (count == null || count == 0L) {
+                boolean isAssigned = member.getCoachId() != null && coachId.equals(member.getCoachId());
+                if ((bookingCount == null || bookingCount == 0L) && !isAssigned) {
                     return ApiResponse.error("该学员不在您的名下，无权查看");
                 }
             }

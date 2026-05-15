@@ -18,6 +18,9 @@ public class PointsGoodsController {
         this.pointsGoodsService = pointsGoodsService;
     }
 
+    /**
+     * 分页查询积分商品列表
+     */
     @GetMapping("/page")
     public ApiResponse<Page<PointsGoods>> getPage(
             @RequestParam(defaultValue = "1") int pageNum,
@@ -27,11 +30,17 @@ public class PointsGoodsController {
         return ApiResponse.success(page);
     }
 
+    /**
+     * 查询积分商品列表（不分页）
+     */
     @GetMapping("/list")
     public ApiResponse<List<PointsGoods>> getList(PointsGoods goods) {
         return ApiResponse.success(pointsGoodsService.listGoods(goods));
     }
 
+    /**
+     * 根据ID查询积分商品详情
+     */
     @GetMapping("/{id}")
     public ApiResponse<PointsGoods> getById(@PathVariable Long id) {
         PointsGoods goods = pointsGoodsService.getById(id);
@@ -41,12 +50,18 @@ public class PointsGoodsController {
         return ApiResponse.success(goods);
     }
 
+    /**
+     * 新增积分商品
+     */
     @PostMapping
     public ApiResponse<String> save(@RequestBody PointsGoods goods) {
         boolean ok = pointsGoodsService.save(goods);
         return ok ? ApiResponse.success("添加成功") : ApiResponse.error("添加失败");
     }
 
+    /**
+     * 更新积分商品信息
+     */
     @PutMapping
     public ApiResponse<String> update(@RequestBody PointsGoods goods) {
         if (goods.getId() == null) {
@@ -56,6 +71,9 @@ public class PointsGoodsController {
         return ok ? ApiResponse.success("更新成功") : ApiResponse.error("更新失败");
     }
 
+    /**
+     * 删除积分商品
+     */
     @DeleteMapping("/{id}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         boolean ok = pointsGoodsService.deleteById(id);

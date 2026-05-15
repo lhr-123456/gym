@@ -18,6 +18,9 @@ public class CoachPerformanceController {
         this.coachPerformanceService = coachPerformanceService;
     }
 
+    /**
+     * 分页查询教练绩效
+     */
     @GetMapping("/page")
     public ApiResponse<Page<CoachPerformance>> getPage(
             @RequestParam(defaultValue = "1") int pageNum,
@@ -28,12 +31,18 @@ public class CoachPerformanceController {
         return ApiResponse.success(result);
     }
 
+    /**
+     * 查询教练绩效列表
+     */
     @GetMapping("/list")
     public ApiResponse<List<CoachPerformance>> getList(CoachPerformance coachPerformance) {
         List<CoachPerformance> list = coachPerformanceService.list();
         return ApiResponse.success(list);
     }
 
+    /**
+     * 根据ID查询教练绩效
+     */
     @GetMapping("/{id}")
     public ApiResponse<CoachPerformance> getById(@PathVariable Long id) {
         CoachPerformance coachPerformance = coachPerformanceService.getById(id);
@@ -43,6 +52,9 @@ public class CoachPerformanceController {
         return ApiResponse.success(coachPerformance);
     }
 
+    /**
+     * 添加教练绩效
+     */
     @PostMapping
     public ApiResponse<String> save(@RequestBody CoachPerformance coachPerformance) {
         boolean result = coachPerformanceService.save(coachPerformance);
@@ -52,6 +64,9 @@ public class CoachPerformanceController {
         return ApiResponse.error("Add performance failed");
     }
 
+    /**
+     * 更新教练绩效
+     */
     @PutMapping
     public ApiResponse<String> update(@RequestBody CoachPerformance coachPerformance) {
         boolean result = coachPerformanceService.updateById(coachPerformance);
@@ -61,6 +76,9 @@ public class CoachPerformanceController {
         return ApiResponse.error("Update performance failed");
     }
 
+    /**
+     * 删除教练绩效
+     */
     @DeleteMapping("/{id}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         boolean result = coachPerformanceService.removeById(id);

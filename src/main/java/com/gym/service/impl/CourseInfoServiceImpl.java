@@ -58,9 +58,9 @@ public class CourseInfoServiceImpl implements CourseInfoService {
         Page<CourseInfo> page = new Page<>(pageNum, pageSize);
         LambdaQueryWrapper<CourseInfo> wrapper = new LambdaQueryWrapper<>();
 
-        // 只查询状态为0（正常）且未满员的课程（以实际预约记录为准，避免 current_capacity 与预约表不一致）
+        // 只查询状态为0（正常）且未满员的课程（以实际预约记录为准，避免 dangqian_renshu 与预约表不一致）
         wrapper.eq(CourseInfo::getStatus, 0)
-               .apply("(SELECT COUNT(*) FROM course_booking WHERE course_id = course_info.course_id AND deleted = 0 AND NOT (status <=> '已取消')) < max_capacity");
+               .apply("(SELECT COUNT(*) FROM course_booking WHERE kecheng_id = course_info.kecheng_id AND deleted = 0 AND NOT (zhuangtai <=> '已取消')) < zuida_renshu");
 
         if (courseInfo != null) {
             wrapper.like(StringUtils.hasText(courseInfo.getCourseName()), CourseInfo::getCourseName, courseInfo.getCourseName())

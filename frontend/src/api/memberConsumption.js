@@ -58,3 +58,10 @@ export function getConsumptionStatistics(memberId) {
     method: 'get'
   })
 }
+
+export function getMemberPurchases(memberId) {
+  return request({
+    url: `/member/consumption/purchases/${memberId}`,
+    method: 'get'
+  })
+}

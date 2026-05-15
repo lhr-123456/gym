@@ -14,52 +14,52 @@ public class CoachShiftChange implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "shift_id", type = IdType.AUTO)
+    @TableId(value = "huanban_id", type = IdType.AUTO)
     private Long shiftId;
 
-    @TableField("original_schedule_id")
+    @TableField("yuan_paiban_id")
     private Long originalScheduleId;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
-    @TableField("original_date")
+    @TableField("yuan_riqi")
     private LocalDate originalDate;
 
-    @TableField("original_start_time")
+    @TableField("yuan_kaishi")
     private LocalTime originalStartTime;
 
-    @TableField("original_end_time")
+    @TableField("yuan_jieshu")
     private LocalTime originalEndTime;
 
-    @TableField("target_date")
+    @TableField("mubiao_riqi")
     private LocalDate targetDate;
 
-    @TableField("target_start_time")
+    @TableField("mubiao_kaishi")
     private LocalTime targetStartTime;
 
-    @TableField("target_end_time")
+    @TableField("mubiao_jieshu")
     private LocalTime targetEndTime;
 
-    @TableField("reason")
+    @TableField("yuanyin")
     private String reason;
 
-    @TableField("status")
+    @TableField("zhuangtai")
     private Integer status;
 
-    @TableField("approve_by")
+    @TableField("pizhun_ren")
     private Long approveBy;
 
-    @TableField("approve_time")
+    @TableField("pizhun_shijian")
     private LocalDateTime approveTime;
 
-    @TableField("reject_reason")
+    @TableField("jujue_yuanyin")
     private String rejectReason;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

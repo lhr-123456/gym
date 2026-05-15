@@ -14,49 +14,49 @@ public class CoachSchedule implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "schedule_id", type = IdType.AUTO)
+    @TableId(value = "paiban_id", type = IdType.AUTO)
     private Long scheduleId;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
-    @TableField("schedule_date")
+    @TableField("paiban_riqi")
     private LocalDate scheduleDate;
 
-    @TableField("start_time")
+    @TableField("kaishi_shijian")
     private LocalTime startTime;
 
-    @TableField("end_time")
+    @TableField("jieshu_shijian")
     private LocalTime endTime;
 
-    @TableField("schedule_type")
+    @TableField("paiban_leixing")
     private String scheduleType;
 
-    @TableField("course_id")
+    @TableField("kecheng_id")
     private Long courseId;
 
-    @TableField("course_name")
+    @TableField("kecheng_ming")
     private String courseName;
 
-    @TableField("location")
+    @TableField("weizhi")
     private String location;
 
-    @TableField("max_capacity")
+    @TableField("zuida_renshu")
     private Integer maxCapacity;
 
-    @TableField("current_capacity")
+    @TableField("dangqian_renshu")
     private Integer currentCapacity;
 
-    @TableField("status")
+    @TableField("zhuangtai")
     private Integer status;
 
-    @TableField("remarks")
+    @TableField("beizhu")
     private String remarks;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

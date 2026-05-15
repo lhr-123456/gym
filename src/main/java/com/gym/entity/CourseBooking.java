@@ -13,16 +13,16 @@ public class CourseBooking implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "booking_id", type = IdType.AUTO)
+    @TableId(value = "yuyue_id", type = IdType.AUTO)
     private Long bookingId;
 
-    @TableField("member_id")
+    @TableField("huiyuan_id")
     private Long memberId;
 
     @TableField(exist = false)
     private String memberName;
 
-    @TableField("course_id")
+    @TableField("kecheng_id")
     private Long courseId;
 
     @TableField(exist = false)
@@ -34,28 +34,28 @@ public class CourseBooking implements Serializable {
     @TableField(exist = false)
     private String courseType;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
     @TableField(exist = false)
     private String coachName;
 
-    @TableField("booking_time")
+    @TableField("yuyue_shijian")
     private LocalDateTime bookingTime;
 
-    @TableField("class_time")
+    @TableField("keshi_shijian")
     private LocalDateTime classTime;
 
-    @TableField("status")
+    @TableField("zhuangtai")
     private String status;
 
-    @TableField("remark")
+    @TableField("beizhu")
     private String remark;
 
-    @TableField("signin_time")
+    @TableField("qiandao_shijian")
     private LocalDateTime signinTime;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @TableLogic

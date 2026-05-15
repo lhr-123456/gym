@@ -15,28 +15,28 @@ public class MemberPointsRecord implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("member_id")
+    @TableField("huiyuan_id")
     private Long memberId;
 
-    @TableField("task_type")
+    @TableField("renwu_leixing")
     private String taskType;
 
-    @TableField("task_name")
+    @TableField("renwu_ming")
     private String taskName;
 
-    @TableField("points")
+    @TableField("jifen")
     private Integer points;
 
-    @TableField("biz_id")
+    @TableField("yewu_id")
     private String bizId;
 
-    @TableField("biz_type")
+    @TableField("yewu_leixing")
     private String bizType;
 
-    @TableField("remark")
+    @TableField("beizhu")
     private String remark;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @TableLogic

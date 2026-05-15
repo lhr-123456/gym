@@ -36,6 +36,10 @@ public class MemberInfoController {
         this.memberInfoMapper = memberInfoMapper;
     }
 
+    /**
+     * 分页查询会员列表
+     * 支持多条件筛选，返回分页结果
+     */
     @GetMapping("/page")
     public ApiResponse<Page<MemberInfo>> getPage(
             @RequestParam(defaultValue = "1") int pageNum,
@@ -45,12 +49,19 @@ public class MemberInfoController {
         return ApiResponse.success(page);
     }
 
+    /**
+     * 获取会员列表（不分页）
+     * 根据条件筛选，返回全部符合条件的会员
+     */
     @GetMapping("/list")
     public ApiResponse<List<MemberInfo>> getList(MemberInfo memberInfo) {
         List<MemberInfo> list = memberInfoService.list(memberInfo);
         return ApiResponse.success(list);
     }
 
+    /**
+     * 根据ID获取会员详情
+     */
     @GetMapping("/{id}")
     public ApiResponse<MemberInfo> getById(@PathVariable Long id) {
         MemberInfo memberInfo = memberInfoService.getById(id);
@@ -60,6 +71,9 @@ public class MemberInfoController {
         return ApiResponse.success(memberInfo);
     }
 
+    /**
+     * 新增会员
+     */
     @PostMapping
     public ApiResponse<String> save(@RequestBody MemberInfo memberInfo) {
         boolean result = memberInfoService.save(memberInfo);
@@ -69,6 +83,10 @@ public class MemberInfoController {
         return ApiResponse.error("添加会员失败");
     }
 
+    /**
+     * 更新会员信息
+     * 必须传入memberId，按ID更新会员资料
+     */
     @PutMapping
     public ApiResponse<String> update(@RequestBody MemberInfo memberInfo) {
         if (memberInfo.getMemberId() == null) {
@@ -81,6 +99,9 @@ public class MemberInfoController {
         return ApiResponse.error("更新会员失败");
     }
 
+    /**
+     * 删除会员
+     */
     @DeleteMapping("/{id}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         boolean result = memberInfoService.deleteById(id);
@@ -110,6 +131,9 @@ public class MemberInfoController {
         return ApiResponse.error("教练分配失败");
     }
 
+    /**
+     * 查询会员当前积分
+     */
     @GetMapping("/points/{id}")
     public ApiResponse<Integer> getPoints(@PathVariable Long id) {
         MemberInfo memberInfo = memberInfoService.getById(id);

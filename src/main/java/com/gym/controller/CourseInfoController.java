@@ -23,6 +23,9 @@ public class CourseInfoController {
         this.pointsRecordService = pointsRecordService;
     }
 
+    /**
+     * 分页查询课程列表
+     */
     @GetMapping("/page")
     public ApiResponse<Page<CourseInfo>> getPage(
             @RequestParam(defaultValue = "1") int pageNum,
@@ -32,6 +35,9 @@ public class CourseInfoController {
         return ApiResponse.success(page);
     }
 
+    /**
+     * 分页查询可预约的课程列表
+     */
     @GetMapping("/available")
     public ApiResponse<Page<CourseInfo>> getAvailable(
             @RequestParam(defaultValue = "1") int pageNum,
@@ -41,18 +47,27 @@ public class CourseInfoController {
         return ApiResponse.success(page);
     }
 
+    /**
+     * 查看指定课程的预约记录
+     */
     @GetMapping("/bookings/{courseId}")
     public ApiResponse<List<CourseBooking>> getCourseBookings(@PathVariable Long courseId) {
         List<CourseBooking> bookings = courseInfoService.getCourseBookings(courseId);
         return ApiResponse.success(bookings);
     }
 
+    /**
+     * 查询课程列表（不分页）
+     */
     @GetMapping("/list")
     public ApiResponse<List<CourseInfo>> getList(CourseInfo courseInfo) {
         List<CourseInfo> list = courseInfoService.list(courseInfo);
         return ApiResponse.success(list);
     }
 
+    /**
+     * 根据ID查询课程详情
+     */
     @GetMapping("/{id}")
     public ApiResponse<CourseInfo> getById(@PathVariable Long id) {
         CourseInfo courseInfo = courseInfoService.getById(id);
@@ -62,6 +77,9 @@ public class CourseInfoController {
         return ApiResponse.success(courseInfo);
     }
 
+    /**
+     * 新增课程
+     */
     @PostMapping
     public ApiResponse<String> save(@RequestBody CourseInfo courseInfo) {
         boolean result = courseInfoService.save(courseInfo);
@@ -71,6 +89,9 @@ public class CourseInfoController {
         return ApiResponse.error("添加课程失败");
     }
 
+    /**
+     * 更新课程信息
+     */
     @PutMapping
     public ApiResponse<String> update(@RequestBody CourseInfo courseInfo) {
         if (courseInfo.getCourseId() == null) {
@@ -88,6 +109,9 @@ public class CourseInfoController {
         }
     }
 
+    /**
+     * 删除课程
+     */
     @DeleteMapping("/{id}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         boolean result = courseInfoService.deleteById(id);
@@ -97,6 +121,9 @@ public class CourseInfoController {
         return ApiResponse.error("删除课程失败");
     }
 
+    /**
+     * 会员预约课程
+     */
     @PostMapping("/book/{courseId}")
     public ApiResponse<String> bookCourse(
             @PathVariable Long courseId,
@@ -121,6 +148,9 @@ public class CourseInfoController {
         }
     }
 
+    /**
+     * 会员取消课程预约
+     */
     @PostMapping("/cancel/{bookingId}")
     public ApiResponse<String> cancelBooking(@PathVariable Long bookingId) {
         try {

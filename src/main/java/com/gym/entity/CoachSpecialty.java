@@ -12,22 +12,22 @@ public class CoachSpecialty implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "specialty_id", type = IdType.AUTO)
+    @TableId(value = "zhuanye_id", type = IdType.AUTO)
     private Long specialtyId;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
-    @TableField("specialty_name")
+    @TableField("zhuanye_ming")
     private String specialtyName;
 
-    @TableField("specialty_desc")
+    @TableField("zhuanye_miaoshu")
     private String specialtyDesc;
 
-    @TableField("level")
+    @TableField("dengji")
     private Integer level;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @TableLogic

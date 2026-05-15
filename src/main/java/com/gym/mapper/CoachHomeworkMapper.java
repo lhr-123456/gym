@@ -10,20 +10,20 @@ import java.util.List;
 
 public interface CoachHomeworkMapper extends BaseMapper<CoachHomework> {
 
-    @Select("SELECT * FROM coach_homework WHERE coach_id = #{coachId} AND deleted = 0 ORDER BY create_time DESC")
+    @Select("SELECT * FROM coach_homework WHERE jiaolian_id = #{coachId} AND deleted = 0 ORDER BY chuangjian_shijian DESC")
     List<CoachHomework> selectByCoachId(@Param("coachId") Long coachId);
 
-    @Select("SELECT * FROM coach_homework WHERE member_id = #{memberId} AND deleted = 0 ORDER BY status ASC, target_date ASC")
+    @Select("SELECT * FROM coach_homework WHERE huiyuan_id = #{memberId} AND deleted = 0 ORDER BY zhuangtai ASC, mubiao_riqi ASC")
     List<CoachHomework> selectByMemberId(@Param("memberId") Long memberId);
 
-    @Select("SELECT * FROM coach_homework WHERE member_id = #{memberId} AND deleted = 0 AND status = 0 ORDER BY target_date ASC")
+    @Select("SELECT * FROM coach_homework WHERE huiyuan_id = #{memberId} AND deleted = 0 AND zhuangtai = 0 ORDER BY mubiao_riqi ASC")
     List<CoachHomework> selectPendingByMemberId(@Param("memberId") Long memberId);
 
     @Select("<script>" +
-            "SELECT * FROM coach_homework WHERE coach_id = #{coachId} AND deleted = 0 " +
-            "<if test='status != null'> AND status = #{status} </if>" +
-            "<if test='memberId != null'> AND member_id = #{memberId} </if>" +
-            "ORDER BY create_time DESC" +
+            "SELECT * FROM coach_homework WHERE jiaolian_id = #{coachId} AND deleted = 0 " +
+            "<if test='status != null'> AND zhuangtai = #{status} </if>" +
+            "<if test='memberId != null'> AND huiyuan_id = #{memberId} </if>" +
+            "ORDER BY chuangjian_shijian DESC" +
             "</script>")
     Page<CoachHomework> selectPageByCoach(@Param("coachId") Long coachId,
                                           @Param("memberId") Long memberId,

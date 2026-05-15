@@ -12,46 +12,46 @@ public class CourseReview implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "review_id", type = IdType.AUTO)
+    @TableId(value = "pingjia_id", type = IdType.AUTO)
     private Long reviewId;
 
-    @TableField("course_id")
+    @TableField("kecheng_id")
     private Long courseId;
 
     @TableField(exist = false)
     private String courseName;
 
-    @TableField("member_id")
+    @TableField("huiyuan_id")
     private Long memberId;
 
     @TableField(exist = false)
     private String memberName;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
     @TableField(exist = false)
     private String coachName;
 
-    @TableField("rating")
+    @TableField("pingfen")
     private Integer rating;
 
-    @TableField("content")
+    @TableField("neirong")
     private String content;
 
-    @TableField("status")
+    @TableField("zhuangtai")
     private Integer status;
 
-    @TableField("reply")
+    @TableField("huifu_neirong")
     private String reply;
 
-    @TableField("reply_time")
+    @TableField("huifu_shijian")
     private LocalDateTime replyTime;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

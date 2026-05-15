@@ -59,7 +59,8 @@ public class MemberSigninController {
     }
 
     /**
-     * 签到
+     * 会员签到
+     * 校验今日是否已签到，计算连续签到天数，根据连续天数发放阶梯积分奖励（7天20分、30天30分，其余10分）
      */
     @PostMapping("/sign")
     public ApiResponse<String> sign(@RequestBody MemberSignin signin) {
@@ -115,7 +116,8 @@ public class MemberSigninController {
     }
 
     /**
-     * 检查今日是否签到
+     * 检查会员今日是否已签到
+     * 返回布尔值，true表示已签到
      */
     @GetMapping("/today/{memberId}")
     public ApiResponse<Boolean> checkTodaySignin(@PathVariable Long memberId) {
@@ -128,6 +130,7 @@ public class MemberSigninController {
 
     /**
      * 获取会员签到统计
+     * 统计总签到次数、总获得积分、最长连续签到天数、本月签到次数
      */
     @GetMapping("/statistics/{memberId}")
     public ApiResponse<Object> getStatistics(@PathVariable Long memberId) {

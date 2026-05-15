@@ -13,49 +13,49 @@ public class MemberInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "member_id", type = IdType.AUTO)
+    @TableId(value = "huiyuan_id", type = IdType.AUTO)
     private Long memberId;
 
-    @TableField("member_name")
+    @TableField("huiyuan_xingming")
     private String memberName;
 
-    @TableField("gender")
+    @TableField("xingbie")
     private String gender;
 
-    @TableField("birth_date")
+    @TableField("chusheng_riqi")
     private LocalDate birthDate;
 
-    @TableField("phone_num")
+    @TableField("shouji_haoma")
     private String phoneNum;
 
-    @TableField("email_addr")
+    @TableField("youxiang")
     private String emailAddr;
 
-    @TableField(value = "reg_time", fill = FieldFill.INSERT)
+    @TableField(value = "zhuce_shijian", fill = FieldFill.INSERT)
     private LocalDateTime regTime;
 
-    @TableField("fitness_level")
+    @TableField("tican_dengji")
     private String fitnessLevel;
 
-    @TableField("last_visit")
+    @TableField("zuihou_fangwen")
     private LocalDateTime lastVisit;
 
-    @TableField("account_status")
+    @TableField("zhanghu_zhuangtai")
     private Integer accountStatus;
 
-    @TableField("member_level")
+    @TableField("huiyuan_dengji")
     private Integer memberLevel;
 
-    @TableField("points")
+    @TableField("jifen")
     private Integer points;
 
-    @TableField("balance")
+    @TableField("yue_e")
     private Double balance;
 
-    @TableField("avatar")
+    @TableField("touxiang")
     private String avatar;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
     @TableField(exist = false)

@@ -13,85 +13,85 @@ public class MemberBodyTest implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "test_id", type = IdType.AUTO)
+    @TableId(value = "tice_id", type = IdType.AUTO)
     private Long testId;
 
-    @TableField("member_id")
+    @TableField("huiyuan_id")
     private Long memberId;
 
-    @TableField("test_date")
+    @TableField("tice_riqi")
     private LocalDate testDate;
 
-    @TableField("height")
+    @TableField("shengao")
     private Double height;
 
-    @TableField("weight")
+    @TableField("tizhong")
     private Double weight;
 
-    @TableField("bmi")
+    @TableField("tizhi_bmi")
     private Double bmi;
 
-    @TableField("body_fat_rate")
+    @TableField("zhifang_bilv")
     private Double bodyFatRate;
 
-    @TableField("muscle_mass")
+    @TableField("jirou_zhiliang")
     private Double muscleMass;
 
-    @TableField("water_content")
+    @TableField("tinei_shuifen")
     private Double waterContent;
 
-    @TableField("visceral_fat")
+    @TableField("neizang_zhifang")
     private Double visceralFat;
 
-    @TableField("basal_metabolism")
+    @TableField("jichu_xindai")
     private Integer basalMetabolism;
 
-    @TableField("chest")
+    @TableField("xiongwei")
     private Double chest;
 
-    @TableField("waist")
+    @TableField("yaowei")
     private Double waist;
 
-    @TableField("hip")
+    @TableField("tunwei")
     private Double hip;
 
-    @TableField("left_arm")
+    @TableField("zuo_bibi")
     private Double leftArm;
 
-    @TableField("right_arm")
+    @TableField("you_bibi")
     private Double rightArm;
 
-    @TableField("left_leg")
+    @TableField("zuo_tuiwei")
     private Double leftLeg;
 
-    @TableField("right_leg")
+    @TableField("you_tuiwei")
     private Double rightLeg;
 
-    @TableField("heart_rate")
+    @TableField("xinshuai")
     private Integer heartRate;
 
-    @TableField("blood_pressure_high")
+    @TableField("shousuoya")
     private Integer bloodPressureHigh;
 
-    @TableField("blood_pressure_low")
+    @TableField("shuzhangya")
     private Integer bloodPressureLow;
 
-    @TableField("health_score")
+    @TableField("jiankang_pingfen")
     private Integer healthScore;
 
-    @TableField("test_result")
+    @TableField("tice_jieguo")
     private String testResult;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
-    @TableField("remarks")
+    @TableField("beizhu")
     private String remarks;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

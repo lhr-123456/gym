@@ -20,7 +20,11 @@
       <div class="table-wrapper">
         <el-table :data="tableData" border v-loading="loading">
           <el-table-column prop="scheduleId" label="排班ID" width="80"></el-table-column>
-          <el-table-column prop="coachId" label="教练ID" width="80"></el-table-column>
+          <el-table-column prop="coachId" label="教练" width="100">
+            <template slot-scope="scope">
+              {{ getCoachName(scope.row.coachId) }}
+            </template>
+          </el-table-column>
           <el-table-column prop="scheduleDate" label="排班日期" width="120"></el-table-column>
           <el-table-column prop="startTime" label="开始时间" width="100"></el-table-column>
           <el-table-column prop="endTime" label="结束时间" width="100"></el-table-column>
@@ -56,8 +60,10 @@
 
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="600px">
       <el-form ref="dataForm" :model="formData" :rules="rules" label-width="100px">
-        <el-form-item label="教练ID" prop="coachId">
-          <el-input v-model.number="formData.coachId" placeholder="请输入教练ID"></el-input>
+        <el-form-item label="教练" prop="coachId">
+          <el-select v-model="formData.coachId" placeholder="请选择教练" style="width: 100%" filterable>
+            <el-option v-for="item in coachList" :key="item.coachId" :label="item.coachName" :value="item.coachId"></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="排班日期" prop="scheduleDate">
           <el-date-picker v-model="formData.scheduleDate" type="date" placeholder="选择日期" style="width: 100%" value-format="yyyy-MM-dd"></el-date-picker>
@@ -95,6 +101,7 @@
 
 <script>
 import { getCoachSchedulePage, addCoachSchedule, updateCoachSchedule, deleteCoachSchedule } from '@/api/coachSchedule'
+import { getCoachList } from '@/api/coach'
 
 export default {
   name: 'CoachSchedule',
@@ -105,6 +112,8 @@ export default {
       },
       tableData: [],
       loading: false,
+      coachList: [],
+      coachLoading: false,
       pageNum: 1,
       pageSize: 10,
       total: 0,
@@ -121,13 +130,14 @@ export default {
         status: 0
       },
       rules: {
-        coachId: [{ required: true, message: '请输入教练ID', trigger: 'blur' }],
+        coachId: [{ required: true, message: '请选择教练', trigger: 'change' }],
         scheduleDate: [{ required: true, message: '请选择排班日期', trigger: 'change' }]
       }
     }
   },
   created() {
     this.getList()
+    this.loadCoachList()
   },
   methods: {
     getList() {
@@ -143,6 +153,20 @@ export default {
       }).catch(() => {
         this.loading = false
       })
+    },
+    loadCoachList() {
+      this.coachLoading = true
+      getCoachList().then(res => {
+        this.coachList = res.data || []
+      }).catch(() => {
+        this.coachList = []
+      }).finally(() => {
+        this.coachLoading = false
+      })
+    },
+    getCoachName(coachId) {
+      const coach = this.coachList.find(c => c.coachId === coachId)
+      return coach ? coach.coachName : coachId
     },
     handleQuery() {
       this.pageNum = 1

@@ -3,22 +3,30 @@ package com.gym.controller;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.gym.dto.ApiResponse;
+import com.gym.entity.MemberCard;
 import com.gym.entity.MemberConsumption;
+import com.gym.mapper.MemberCardMapper;
 import com.gym.mapper.MemberConsumptionMapper;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/member/consumption")
 public class MemberConsumptionController {
 
     private final MemberConsumptionMapper memberConsumptionMapper;
+    private final MemberCardMapper memberCardMapper;
 
-    public MemberConsumptionController(MemberConsumptionMapper memberConsumptionMapper) {
+    public MemberConsumptionController(MemberConsumptionMapper memberConsumptionMapper,
+                                        MemberCardMapper memberCardMapper) {
         this.memberConsumptionMapper = memberConsumptionMapper;
+        this.memberCardMapper = memberCardMapper;
     }
 
     /**
@@ -158,5 +166,69 @@ public class MemberConsumptionController {
         statistics.put("monthAmount", monthAmount);
 
         return ApiResponse.success(statistics);
+    }
+
+    /**
+     * 获取会员购买记录（含会员卡购买和普通消费）
+     */
+    @GetMapping("/purchases/{memberId}")
+    public ApiResponse<List<Map<String, Object>>> getPurchases(@PathVariable Long memberId) {
+        List<Map<String, Object>> purchaseList = new java.util.ArrayList<>();
+
+        // 1. 会员卡购买记录
+        LambdaQueryWrapper<MemberCard> cardWrapper = new LambdaQueryWrapper<>();
+        cardWrapper.eq(MemberCard::getMemberId, memberId);
+        cardWrapper.orderByDesc(MemberCard::getPurchaseDate);
+        List<MemberCard> cards = memberCardMapper.selectList(cardWrapper);
+        for (MemberCard card : cards) {
+            java.util.Map<String, Object> item = new java.util.HashMap<>();
+            item.put("id", card.getCardId());
+            item.put("orderNo", card.getCardNo());
+            item.put("memberId", card.getMemberId());
+            item.put("type", "card");
+            item.put("typeName", "购卡");
+            item.put("itemName", card.getCardTypeName());
+            item.put("amount", card.getTotalAmount());
+            item.put("actualAmount", card.getTotalAmount());
+            item.put("time", card.getPurchaseDate());
+            item.put("paymentMethod", "会员卡购买");
+            item.put("status", card.getStatus());
+            purchaseList.add(item);
+        }
+
+        // 2. 普通消费记录
+        LambdaQueryWrapper<MemberConsumption> conWrapper = new LambdaQueryWrapper<>();
+        conWrapper.eq(MemberConsumption::getMemberId, memberId);
+        conWrapper.orderByDesc(MemberConsumption::getConsumptionTime);
+        List<MemberConsumption> consumptions = memberConsumptionMapper.selectList(conWrapper);
+        for (MemberConsumption con : consumptions) {
+            java.util.Map<String, Object> item = new java.util.HashMap<>();
+            item.put("id", con.getConsumptionId());
+            item.put("orderNo", con.getOrderNo());
+            item.put("memberId", con.getMemberId());
+            item.put("type", "consumption");
+            item.put("typeName", con.getConsumptionTypeName());
+            item.put("itemName", con.getConsumptionTypeName());
+            item.put("amount", con.getAmount());
+            item.put("actualAmount", con.getActualAmount());
+            item.put("discountAmount", con.getDiscountAmount());
+            item.put("time", con.getConsumptionTime());
+            item.put("paymentMethod", con.getPaymentMethod());
+            item.put("pointsEarned", con.getPointsEarned());
+            item.put("status", con.getStatus());
+            item.put("remarks", con.getRemarks());
+            purchaseList.add(item);
+        }
+
+        // 按时间倒序
+        purchaseList.sort((a, b) -> {
+            Object t1 = a.get("time");
+            Object t2 = b.get("time");
+            if (t1 == null) return 1;
+            if (t2 == null) return -1;
+            return t2.toString().compareTo(t1.toString());
+        });
+
+        return ApiResponse.success(purchaseList);
     }
 }

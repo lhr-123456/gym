@@ -18,6 +18,9 @@ public class CoachSpecialtyController {
         this.coachSpecialtyService = coachSpecialtyService;
     }
 
+    /**
+     * 分页查询教练专长
+     */
     @GetMapping("/page")
     public ApiResponse<Page<CoachSpecialty>> getPage(
             @RequestParam(defaultValue = "1") int pageNum,
@@ -28,12 +31,18 @@ public class CoachSpecialtyController {
         return ApiResponse.success(result);
     }
 
+    /**
+     * 查询教练专长列表
+     */
     @GetMapping("/list")
     public ApiResponse<List<CoachSpecialty>> getList(CoachSpecialty coachSpecialty) {
         List<CoachSpecialty> list = coachSpecialtyService.list();
         return ApiResponse.success(list);
     }
 
+    /**
+     * 根据ID查询教练专长
+     */
     @GetMapping("/{id}")
     public ApiResponse<CoachSpecialty> getById(@PathVariable Long id) {
         CoachSpecialty coachSpecialty = coachSpecialtyService.getById(id);
@@ -43,6 +52,9 @@ public class CoachSpecialtyController {
         return ApiResponse.success(coachSpecialty);
     }
 
+    /**
+     * 添加教练专长
+     */
     @PostMapping
     public ApiResponse<String> save(@RequestBody CoachSpecialty coachSpecialty) {
         boolean result = coachSpecialtyService.save(coachSpecialty);
@@ -52,6 +64,9 @@ public class CoachSpecialtyController {
         return ApiResponse.error("添加专长失败");
     }
 
+    /**
+     * 更新教练专长
+     */
     @PutMapping
     public ApiResponse<String> update(@RequestBody CoachSpecialty coachSpecialty) {
         boolean result = coachSpecialtyService.updateById(coachSpecialty);
@@ -61,6 +76,9 @@ public class CoachSpecialtyController {
         return ApiResponse.error("更新专长失败");
     }
 
+    /**
+     * 删除教练专长
+     */
     @DeleteMapping("/{id}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         boolean result = coachSpecialtyService.removeById(id);

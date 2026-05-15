@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -13,58 +14,58 @@ public class CoachSalary implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "salary_id", type = IdType.AUTO)
+    @TableId(value = "gongzi_id", type = IdType.AUTO)
     private Long salaryId;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
-    @TableField("salary_month")
+    @TableField("gongzi_yuefen")
     private String salaryMonth;
 
-    @TableField("base_salary")
-    private java.math.BigDecimal baseSalary;
+    @TableField("jibengongzi")
+    private BigDecimal baseSalary;
 
-    @TableField("class_hours")
-    private java.math.BigDecimal classHours;
+    @TableField("keshi_shu")
+    private BigDecimal classHours;
 
-    @TableField("class_fee")
-    private java.math.BigDecimal classFee;
+    @TableField("dan_ke_jine")
+    private BigDecimal classFee;
 
-    @TableField("class_total")
-    private java.math.BigDecimal classTotal;
+    @TableField("keshi_zongji")
+    private BigDecimal classTotal;
 
-    @TableField("sales_amount")
-    private java.math.BigDecimal salesAmount;
+    @TableField("xiaoshou_jine")
+    private BigDecimal salesAmount;
 
-    @TableField("commission_rate")
-    private java.math.BigDecimal commissionRate;
+    @TableField("ticheng_bili")
+    private BigDecimal commissionRate;
 
-    @TableField("commission")
-    private java.math.BigDecimal commission;
+    @TableField("ticheng_jine")
+    private BigDecimal commission;
 
-    @TableField("bonus")
-    private java.math.BigDecimal bonus;
+    @TableField("jiangjin")
+    private BigDecimal bonus;
 
-    @TableField("penalty")
-    private java.math.BigDecimal penalty;
+    @TableField("faqian")
+    private BigDecimal penalty;
 
-    @TableField("total_salary")
-    private java.math.BigDecimal totalSalary;
+    @TableField("yingfa_zongji")
+    private BigDecimal totalSalary;
 
-    @TableField("payment_status")
+    @TableField("fafang_zhuangtai")
     private Integer paymentStatus;
 
-    @TableField("payment_date")
+    @TableField("fafang_riqi")
     private LocalDate paymentDate;
 
-    @TableField("remarks")
+    @TableField("beizhu")
     private String remarks;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

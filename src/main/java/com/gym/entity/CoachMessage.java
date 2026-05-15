@@ -12,31 +12,28 @@ public class CoachMessage implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "message_id", type = IdType.AUTO)
+    @TableId(value = "xiaoxi_id", type = IdType.AUTO)
     private Long messageId;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
-    @TableField("member_id")
+    @TableField("huiyuan_id")
     private Long memberId;
 
     @TableField(exist = false)
     private String memberName;
 
-    @TableField("content")
+    @TableField("neirong")
     private String content;
 
-    /**
-     * 是否已读：0=未读，1=已读
-     */
-    @TableField("is_read")
+    @TableField("yidu")
     private Integer isRead;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

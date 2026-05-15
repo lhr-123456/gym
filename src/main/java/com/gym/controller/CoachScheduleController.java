@@ -36,6 +36,9 @@ public class CoachScheduleController {
         this.memberMessageService = memberMessageService;
     }
 
+    /**
+     * 分页查询排班信息
+     */
     @GetMapping("/page")
     public ApiResponse<Page<CoachSchedule>> getPage(
             @RequestParam(defaultValue = "1") int pageNum,
@@ -46,6 +49,9 @@ public class CoachScheduleController {
         return ApiResponse.success(result);
     }
 
+    /**
+     * 根据条件查询排班列表
+     */
     @GetMapping("/list")
     public ApiResponse<List<CoachSchedule>> getList(
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
@@ -68,6 +74,9 @@ public class CoachScheduleController {
         return ApiResponse.success(list);
     }
 
+    /**
+     * 根据ID查询排班信息
+     */
     @GetMapping("/{id}")
     public ApiResponse<CoachSchedule> getById(@PathVariable Long id) {
         CoachSchedule schedule = coachScheduleService.getById(id);
@@ -77,6 +86,9 @@ public class CoachScheduleController {
         return ApiResponse.success(schedule);
     }
 
+    /**
+     * 创建排班信息
+     */
     @PostMapping
     public ApiResponse<String> save(@RequestBody CoachSchedule coachSchedule) {
         boolean result = coachScheduleService.saveSchedule(coachSchedule);
@@ -86,6 +98,9 @@ public class CoachScheduleController {
         return ApiResponse.error("排班创建失败");
     }
 
+    /**
+     * 更新排班信息
+     */
     @PutMapping
     public ApiResponse<String> update(@RequestBody CoachSchedule coachSchedule) {
         CoachSchedule old = coachScheduleService.getById(coachSchedule.getScheduleId());
@@ -100,6 +115,9 @@ public class CoachScheduleController {
         return result ? ApiResponse.success("排班更新成功") : ApiResponse.error("排班更新失败");
     }
 
+    /**
+     * 删除排班信息
+     */
     @DeleteMapping("/{id}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         CoachSchedule schedule = coachScheduleService.getById(id);
@@ -110,6 +128,9 @@ public class CoachScheduleController {
         return ApiResponse.success("排班已删除");
     }
 
+    /**
+     * 开始课程
+     */
     @PutMapping("/start/{id}")
     public ApiResponse<String> start(@PathVariable Long id) {
         CoachSchedule schedule = coachScheduleService.getById(id);
@@ -120,6 +141,9 @@ public class CoachScheduleController {
         return result ? ApiResponse.success("课程已开始") : ApiResponse.error("操作失败");
     }
 
+    /**
+     * 结束课程
+     */
     @PutMapping("/end/{id}")
     public ApiResponse<String> end(@PathVariable Long id) {
         CoachSchedule schedule = coachScheduleService.getById(id);

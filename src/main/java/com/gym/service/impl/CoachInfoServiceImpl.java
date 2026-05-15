@@ -55,7 +55,13 @@ public class CoachInfoServiceImpl implements CoachInfoService {
 
     @Override
     public List<CoachInfo> list(CoachInfo coachInfo) {
-        LambdaQueryWrapper<CoachInfo> wrapper = buildQueryWrapper(coachInfo);
+        LambdaQueryWrapper<CoachInfo> wrapper = new LambdaQueryWrapper<>();
+        if (coachInfo != null) {
+            wrapper.like(StringUtils.hasText(coachInfo.getCoachName()), CoachInfo::getCoachName, coachInfo.getCoachName())
+                   .eq(StringUtils.hasText(coachInfo.getGender()), CoachInfo::getGender, coachInfo.getGender())
+                   .eq(StringUtils.hasText(coachInfo.getSpecialty()), CoachInfo::getSpecialty, coachInfo.getSpecialty())
+                   .eq(coachInfo.getStatus() != null, CoachInfo::getStatus, coachInfo.getStatus());
+        }
         return coachInfoMapper.selectList(wrapper);
     }
 

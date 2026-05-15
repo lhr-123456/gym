@@ -8,7 +8,9 @@ import java.util.Map;
 @RequestMapping("/public")
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class PublicTestController {
-    
+    /**
+     * 公开测试接口，返回问候消息
+     */
     @GetMapping("/hello")
     public Map<String, String> hello() {
         Map<String, String> response = new HashMap<>();
@@ -18,6 +20,9 @@ public class PublicTestController {
         return response;
     }
     
+    /**
+     * 回显接收到的数据
+     */
     @PostMapping("/echo")
     public Map<String, Object> echo(@RequestBody Map<String, Object> data) {
         Map<String, Object> response = new HashMap<>();

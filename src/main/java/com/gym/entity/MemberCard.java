@@ -13,55 +13,55 @@ public class MemberCard implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "card_id", type = IdType.AUTO)
+    @TableId(value = "kate_id", type = IdType.AUTO)
     private Long cardId;
 
-    @TableField("card_no")
+    @TableField("kahao")
     private String cardNo;
 
-    @TableField("member_id")
+    @TableField("huiyuan_id")
     private Long memberId;
 
-    @TableField("card_type")
+    @TableField("kate_leixing")
     private String cardType;
 
-    @TableField("card_type_name")
+    @TableField("kate_leixing_ming")
     private String cardTypeName;
 
-    @TableField("total_times")
+    @TableField("zong_cishu")
     private Integer totalTimes;
 
-    @TableField("used_times")
+    @TableField("yishiyong_cishu")
     private Integer usedTimes;
 
-    @TableField("remaining_times")
+    @TableField("shengyu_cishu")
     private Integer remainingTimes;
 
-    @TableField("total_amount")
+    @TableField("zongjine")
     private Double totalAmount;
 
-    @TableField("balance")
+    @TableField("yue_e")
     private Double balance;
 
-    @TableField("purchase_date")
+    @TableField("goumai_riqi")
     private LocalDate purchaseDate;
 
-    @TableField("start_date")
+    @TableField("youxiao_kaishi")
     private LocalDate startDate;
 
-    @TableField("end_date")
+    @TableField("youxiao_jieshu")
     private LocalDate endDate;
 
-    @TableField("status")
+    @TableField("zhuangtai")
     private Integer status;
 
-    @TableField("remarks")
+    @TableField("beizhu")
     private String remarks;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

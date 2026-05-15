@@ -26,6 +26,9 @@ public class CourseBookingController {
         this.pointsRecordService = pointsRecordService;
     }
 
+    /**
+     * 分页查询课程预约记录
+     */
     @GetMapping("/page")
     public ApiResponse<Page<CourseBooking>> getPage(
             @RequestParam(defaultValue = "1") int pageNum,
@@ -35,12 +38,18 @@ public class CourseBookingController {
         return ApiResponse.success(page);
     }
 
+    /**
+     * 查询课程预约记录列表（不分页）
+     */
     @GetMapping("/list")
     public ApiResponse<List<CourseBooking>> getList(CourseBooking courseBooking) {
         List<CourseBooking> list = courseBookingService.getListWithDetails(courseBooking);
         return ApiResponse.success(list);
     }
 
+    /**
+     * 根据ID查询课程预约详情
+     */
     @GetMapping("/{id}")
     public ApiResponse<CourseBooking> getById(@PathVariable Long id) {
         CourseBooking courseBooking = courseBookingService.getById(id);
@@ -50,6 +59,9 @@ public class CourseBookingController {
         return ApiResponse.success(courseBooking);
     }
 
+    /**
+     * 新增课程预约记录
+     */
     @PostMapping
     public ApiResponse<String> save(@RequestBody CourseBooking courseBooking) {
         boolean result = courseBookingService.save(courseBooking);
@@ -59,6 +71,9 @@ public class CourseBookingController {
         return ApiResponse.error("添加课程预约失败");
     }
 
+    /**
+     * 更新课程预约记录
+     */
     @PutMapping
     public ApiResponse<String> update(@RequestBody CourseBooking courseBooking) {
         boolean result = courseBookingService.updateById(courseBooking);
@@ -68,6 +83,9 @@ public class CourseBookingController {
         return ApiResponse.error("更新课程预约失败");
     }
 
+    /**
+     * 删除课程预约记录
+     */
     @DeleteMapping("/{id}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         boolean result = courseBookingService.removeById(id);
@@ -77,6 +95,9 @@ public class CourseBookingController {
         return ApiResponse.error("删除课程预约失败");
     }
 
+    /**
+     * 审核通过课程预约
+     */
     @PutMapping("/approve/{id}")
     public ApiResponse<String> approve(@PathVariable Long id) {
         try {
@@ -100,6 +121,9 @@ public class CourseBookingController {
         }
     }
 
+    /**
+     * 审核拒绝课程预约
+     */
     @PutMapping("/reject/{id}")
     public ApiResponse<String> reject(@PathVariable Long id, @RequestParam String reason) {
         try {
@@ -123,6 +147,9 @@ public class CourseBookingController {
         }
     }
 
+    /**
+     * 取消课程预约
+     */
     @PutMapping("/cancel/{id}")
     public ApiResponse<String> cancel(@PathVariable Long id) {
         try {
@@ -153,6 +180,9 @@ public class CourseBookingController {
         }
     }
 
+    /**
+     * 课程签到
+     */
     @PutMapping("/signin/{id}")
     public ApiResponse<String> signIn(@PathVariable Long id) {
         try {
@@ -184,6 +214,9 @@ public class CourseBookingController {
         }
     }
 
+    /**
+     * 开始课程（将预约状态改为已签到）
+     */
     @PutMapping("/start/{id}")
     public ApiResponse<String> start(@PathVariable Long id) {
         try {

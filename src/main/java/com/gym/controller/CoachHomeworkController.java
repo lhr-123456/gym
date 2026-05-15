@@ -18,6 +18,9 @@ public class CoachHomeworkController {
         this.homeworkService = homeworkService;
     }
 
+    /**
+     * 获取教练布置的作业列表
+     */
     @GetMapping("/list")
     public ApiResponse<List<CoachHomework>> getList(
             @RequestParam Long coachId,
@@ -26,6 +29,9 @@ public class CoachHomeworkController {
         return ApiResponse.success(homeworkService.listByCoach(coachId));
     }
 
+    /**
+     * 分页获取教练布置的作业列表
+     */
     @GetMapping("/page")
     public ApiResponse<Page<CoachHomework>> getPage(
             @RequestParam Long coachId,
@@ -37,11 +43,17 @@ public class CoachHomeworkController {
         return ApiResponse.success(page);
     }
 
+    /**
+     * 获取作业详情
+     */
     @GetMapping("/{id}")
     public ApiResponse<CoachHomework> getById(@PathVariable Long id) {
         return ApiResponse.success(homeworkService.getById(id));
     }
 
+    /**
+     * 布置新作业
+     */
     @PostMapping
     public ApiResponse<String> save(@RequestBody CoachHomework homework) {
         boolean ok = homeworkService.save(homework);
@@ -51,6 +63,9 @@ public class CoachHomeworkController {
         return ApiResponse.error("布置作业失败");
     }
 
+    /**
+     * 更新作业
+     */
     @PutMapping
     public ApiResponse<String> update(@RequestBody CoachHomework homework) {
         boolean ok = homeworkService.updateById(homework);
@@ -60,12 +75,18 @@ public class CoachHomeworkController {
         return ApiResponse.error("更新作业失败");
     }
 
+    /**
+     * 删除作业
+     */
     @DeleteMapping("/{id}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         homeworkService.deleteById(id);
         return ApiResponse.success("删除成功");
     }
 
+    /**
+     * 添加教练备注
+     */
     @PutMapping("/remark/{id}")
     public ApiResponse<String> addRemark(@PathVariable Long id, @RequestParam String remark) {
         homeworkService.addCoachRemark(id, remark);

@@ -15,56 +15,56 @@ public class CourseInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "course_id", type = IdType.AUTO)
+    @TableId(value = "kecheng_id", type = IdType.AUTO)
     private Long courseId;
 
-    @TableField("course_name")
+    @TableField("kecheng_ming")
     private String courseName;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
     @TableField(exist = false)
     private String coachName;
 
-    @TableField("course_type")
+    @TableField("kecheng_leixing")
     private String courseType;
 
-    @TableField("category_id")
+    @TableField("fenlei_id")
     private Long categoryId;
 
     @TableField(exist = false)
     private String categoryName;
 
-    @TableField("description")
+    @TableField("miaoshu")
     private String description;
 
-    @TableField("duration_min")
+    @TableField("shichang_fenzhong")
     private Integer durationMin;
 
-    @TableField("price")
+    @TableField("jiage")
     private BigDecimal price;
 
-    @TableField("max_capacity")
+    @TableField("zuida_renshu")
     private Integer maxCapacity;
 
-    @TableField("current_capacity")
+    @TableField("dangqian_renshu")
     private Integer currentCapacity;
 
-    @TableField("start_time")
+    @TableField("kaishi_shijian")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime startTime;
 
-    @TableField("end_time")
+    @TableField("jieshu_shijian")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private LocalDateTime endTime;
 
-    @TableField("status")
+    @TableField("zhuangtai")
     private Integer status;
 
-    @TableField("room")
+    @TableField("jiaoshi")
     private String room;
 
     @TableLogic

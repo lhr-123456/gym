@@ -15,34 +15,34 @@ public class CourseReminder implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("member_id")
+    @TableField("huiyuan_id")
     private Long memberId;
 
-    @TableField("booking_id")
+    @TableField("yuyue_id")
     private Long bookingId;
 
-    @TableField("course_id")
+    @TableField("kecheng_id")
     private Long courseId;
 
-    @TableField("course_name")
+    @TableField("kecheng_ming")
     private String courseName;
 
-    @TableField("coach_name")
+    @TableField("jiaolian_ming")
     private String coachName;
 
-    @TableField("class_time")
+    @TableField("keshi_shijian")
     private LocalDateTime classTime;
 
-    @TableField("location")
+    @TableField("weizhi")
     private String location;
 
-    @TableField("remind_status")
+    @TableField("tixing_zhuangtai")
     private Integer remindStatus;
 
-    @TableField("remind_time")
+    @TableField("tixing_shijian")
     private LocalDateTime remindTime;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
     @TableLogic

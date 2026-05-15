@@ -22,6 +22,9 @@ public class EquipmentInfoController {
         this.equipmentInfoService = equipmentInfoService;
     }
 
+    /**
+     * 分页查询器材列表
+     */
     @GetMapping("/page")
     public ApiResponse<Page<EquipmentInfo>> getPage(
             @RequestParam(defaultValue = "1") int pageNum,
@@ -31,12 +34,18 @@ public class EquipmentInfoController {
         return ApiResponse.success(page);
     }
 
+    /**
+     * 查询器材列表（不分页）
+     */
     @GetMapping("/list")
     public ApiResponse<List<EquipmentInfo>> getList(EquipmentInfo equipmentInfo) {
         List<EquipmentInfo> list = equipmentInfoService.list(equipmentInfo);
         return ApiResponse.success(list);
     }
 
+    /**
+     * 根据ID查询器材详情
+     */
     @GetMapping("/{id}")
     public ApiResponse<EquipmentInfo> getById(@PathVariable Long id) {
         EquipmentInfo equipmentInfo = equipmentInfoService.getById(id);
@@ -46,6 +55,9 @@ public class EquipmentInfoController {
         return ApiResponse.success(equipmentInfo);
     }
 
+    /**
+     * 新增器材
+     */
     @PostMapping
     public ApiResponse<String> save(@RequestBody EquipmentInfo equipmentInfo) {
         boolean result = equipmentInfoService.save(equipmentInfo);
@@ -55,6 +67,9 @@ public class EquipmentInfoController {
         return ApiResponse.error("添加器材失败");
     }
 
+    /**
+     * 更新器材信息
+     */
     @PutMapping
     public ApiResponse<String> update(@RequestBody EquipmentInfo equipmentInfo) {
         if (equipmentInfo.getEquipmentId() == null) {
@@ -67,6 +82,9 @@ public class EquipmentInfoController {
         return ApiResponse.error("更新器材失败");
     }
 
+    /**
+     * 删除器材
+     */
     @DeleteMapping("/{id}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         boolean result = equipmentInfoService.deleteById(id);

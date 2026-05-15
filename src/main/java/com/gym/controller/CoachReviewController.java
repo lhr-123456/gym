@@ -18,6 +18,9 @@ public class CoachReviewController {
         this.coachReviewService = coachReviewService;
     }
 
+    /**
+     * 分页查询教练评价
+     */
     @GetMapping("/page")
     public ApiResponse<Page<CoachReview>> getPage(
             @RequestParam(defaultValue = "1") int pageNum,
@@ -28,6 +31,9 @@ public class CoachReviewController {
         return ApiResponse.success(result);
     }
 
+    /**
+     * 查询教练评价列表
+     */
     @GetMapping("/list")
     public ApiResponse<List<CoachReview>> getList(CoachReview coachReview) {
         List<CoachReview> list = coachReviewService.lambdaQuery()
@@ -36,6 +42,9 @@ public class CoachReviewController {
         return ApiResponse.success(list);
     }
 
+    /**
+     * 根据ID查询教练评价
+     */
     @GetMapping("/{id}")
     public ApiResponse<CoachReview> getById(@PathVariable Long id) {
         CoachReview coachReview = coachReviewService.getById(id);
@@ -45,6 +54,9 @@ public class CoachReviewController {
         return ApiResponse.success(coachReview);
     }
 
+    /**
+     * 添加教练评价
+     */
     @PostMapping
     public ApiResponse<String> save(@RequestBody CoachReview coachReview) {
         boolean result = coachReviewService.save(coachReview);
@@ -54,6 +66,9 @@ public class CoachReviewController {
         return ApiResponse.error("添加评价失败");
     }
 
+    /**
+     * 更新教练评价
+     */
     @PutMapping
     public ApiResponse<String> update(@RequestBody CoachReview coachReview) {
         boolean result = coachReviewService.updateById(coachReview);
@@ -63,6 +78,9 @@ public class CoachReviewController {
         return ApiResponse.error("更新评价失败");
     }
 
+    /**
+     * 删除教练评价
+     */
     @DeleteMapping("/{id}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         boolean result = coachReviewService.removeById(id);

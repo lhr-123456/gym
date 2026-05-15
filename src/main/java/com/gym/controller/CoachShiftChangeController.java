@@ -34,6 +34,9 @@ public class CoachShiftChangeController {
         this.memberMessageService = memberMessageService;
     }
 
+    /**
+     * 分页查询调班申请
+     */
     @GetMapping("/page")
     public ApiResponse<Page<CoachShiftChange>> getPage(
             @RequestParam(defaultValue = "1") int pageNum,
@@ -44,12 +47,18 @@ public class CoachShiftChangeController {
         return ApiResponse.success(result);
     }
 
+    /**
+     * 查询调班申请列表
+     */
     @GetMapping("/list")
     public ApiResponse<List<CoachShiftChange>> getList(CoachShiftChange coachShiftChange) {
         List<CoachShiftChange> list = coachShiftChangeService.list();
         return ApiResponse.success(list);
     }
 
+    /**
+     * 根据ID查询调班申请
+     */
     @GetMapping("/{id}")
     public ApiResponse<CoachShiftChange> getById(@PathVariable Long id) {
         CoachShiftChange coachShiftChange = coachShiftChangeService.getById(id);
@@ -59,6 +68,9 @@ public class CoachShiftChangeController {
         return ApiResponse.success(coachShiftChange);
     }
 
+    /**
+     * 提交调班申请
+     */
     @PostMapping
     public ApiResponse<String> save(@RequestBody CoachShiftChange coachShiftChange) {
         boolean result = coachShiftChangeService.save(coachShiftChange);
@@ -68,6 +80,9 @@ public class CoachShiftChangeController {
         return ApiResponse.error("提交失败");
     }
 
+    /**
+     * 更新调班申请（审批通过时同步更新排班并通知会员）
+     */
     @PutMapping
     public ApiResponse<String> update(@RequestBody CoachShiftChange coachShiftChange) {
         CoachShiftChange old = coachShiftChangeService.getById(coachShiftChange.getShiftId());
@@ -94,6 +109,9 @@ public class CoachShiftChangeController {
         return ApiResponse.success("更新成功");
     }
 
+    /**
+     * 删除调班申请
+     */
     @DeleteMapping("/{id}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         boolean result = coachShiftChangeService.removeById(id);

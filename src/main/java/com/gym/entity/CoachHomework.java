@@ -16,37 +16,37 @@ public class CoachHomework implements Serializable {
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
-    @TableField("member_id")
+    @TableField("huiyuan_id")
     private Long memberId;
 
-    @TableField("course_booking_id")
+    @TableField("yuyue_id")
     private Long courseBookingId;
 
-    @TableField("title")
+    @TableField("biaoti")
     private String title;
 
-    @TableField("content")
+    @TableField("neirong")
     private String content;
 
-    @TableField("target_date")
+    @TableField("mubiao_riqi")
     private LocalDate targetDate;
 
-    @TableField("status")
+    @TableField("zhuangtai")
     private Integer status;
 
-    @TableField("complete_time")
+    @TableField("wancheng_shijian")
     private LocalDateTime completeTime;
 
-    @TableField("coach_remark")
+    @TableField("jiaolian_beizhu")
     private String coachRemark;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

@@ -18,6 +18,9 @@ public class CoachCertificateController {
         this.coachCertificateService = coachCertificateService;
     }
 
+    /**
+     * 分页查询教练证书
+     */
     @GetMapping("/page")
     public ApiResponse<Page<CoachCertificate>> getPage(
             @RequestParam(defaultValue = "1") int pageNum,
@@ -28,12 +31,18 @@ public class CoachCertificateController {
         return ApiResponse.success(result);
     }
 
+    /**
+     * 查询教练证书列表
+     */
     @GetMapping("/list")
     public ApiResponse<List<CoachCertificate>> getList(CoachCertificate coachCertificate) {
         List<CoachCertificate> list = coachCertificateService.list();
         return ApiResponse.success(list);
     }
 
+    /**
+     * 根据ID查询教练证书
+     */
     @GetMapping("/{id}")
     public ApiResponse<CoachCertificate> getById(@PathVariable Long id) {
         CoachCertificate coachCertificate = coachCertificateService.getById(id);
@@ -43,6 +52,9 @@ public class CoachCertificateController {
         return ApiResponse.success(coachCertificate);
     }
 
+    /**
+     * 添加教练证书
+     */
     @PostMapping
     public ApiResponse<String> save(@RequestBody CoachCertificate coachCertificate) {
         boolean result = coachCertificateService.save(coachCertificate);
@@ -52,6 +64,9 @@ public class CoachCertificateController {
         return ApiResponse.error("添加证书失败");
     }
 
+    /**
+     * 更新教练证书
+     */
     @PutMapping
     public ApiResponse<String> update(@RequestBody CoachCertificate coachCertificate) {
         boolean result = coachCertificateService.updateById(coachCertificate);
@@ -61,6 +76,9 @@ public class CoachCertificateController {
         return ApiResponse.error("更新证书失败");
     }
 
+    /**
+     * 删除教练证书
+     */
     @DeleteMapping("/{id}")
     public ApiResponse<String> delete(@PathVariable Long id) {
         boolean result = coachCertificateService.removeById(id);

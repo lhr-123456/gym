@@ -13,46 +13,46 @@ public class CoachCertificate implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "cert_id", type = IdType.AUTO)
+    @TableId(value = "zhengshu_id", type = IdType.AUTO)
     private Long certId;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
-    @TableField("cert_name")
+    @TableField("zhengshu_ming")
     private String certName;
 
-    @TableField("cert_type")
+    @TableField("zhengshu_leixing")
     private String certType;
 
-    @TableField("cert_no")
+    @TableField("zhengshu_bianhao")
     private String certNo;
 
-    @TableField("issue_org")
+    @TableField("faxing_jigou")
     private String issueOrg;
 
-    @TableField("issue_date")
+    @TableField("faxing_riqi")
     private LocalDate issueDate;
 
-    @TableField("expire_date")
+    @TableField("youxiao_qixian")
     private LocalDate expireDate;
 
-    @TableField("cert_file_url")
+    @TableField("zhengjian_wenjian")
     private String certFileUrl;
 
-    @TableField("status")
+    @TableField("zhuangtai")
     private Integer status;
 
-    @TableField("reject_reason")
+    @TableField("jujue_yuanyin")
     private String rejectReason;
 
-    @TableField("remarks")
+    @TableField("beizhu")
     private String remarks;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

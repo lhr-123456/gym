@@ -12,31 +12,31 @@ public class UserInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "user_id", type = IdType.AUTO)
+    @TableId(value = "yonghu_id", type = IdType.AUTO)
     private Long userId;
 
-    @TableField("username")
+    @TableField("yonghu_ming")
     private String username;
 
-    @TableField("password")
+    @TableField("mi_ma")
     private String password;
 
-    @TableField("user_type")
+    @TableField("yonghu_leixing")
     private Integer userType;
 
-    @TableField("member_id")
+    @TableField("huiyuan_id")
     private Long memberId;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
-    @TableField("status")
+    @TableField("zhuangtai")
     private Integer status;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

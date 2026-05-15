@@ -2,6 +2,7 @@ package com.gym.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,44 +14,57 @@ public class CoachInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "coach_id", type = IdType.AUTO)
+    @TableId(value = "jiaolian_id", type = IdType.AUTO)
+    @JsonProperty("coachId")
     private Long coachId;
 
-    @TableField("coach_name")
+    @TableField("jiaolian_xingming")
+    @JsonProperty("coachName")
     private String coachName;
 
-    @TableField("gender")
+    @TableField("xingbie")
+    @JsonProperty("gender")
     private String gender;
 
-    @TableField("birth_date")
+    @TableField("chusheng_riqi")
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @JsonProperty("birthDate")
     private LocalDate birthDate;
 
-    @TableField("phone_num")
+    @TableField("shouji_haoma")
+    @JsonProperty("phoneNum")
     private String phoneNum;
 
-    @TableField("email_addr")
+    @TableField("youxiang")
+    @JsonProperty("emailAddr")
     private String emailAddr;
 
-    @TableField("specialty")
+    @TableField("zhuanye")
+    @JsonProperty("specialty")
     private String specialty;
 
-    @TableField("experience_years")
+    @TableField("gongzuo_nianxian")
+    @JsonProperty("experienceYears")
     private Integer experienceYears;
 
-    @TableField("certification")
+    @TableField("zige_zheng")
+    @JsonProperty("certification")
     private String certification;
 
-    @TableField("avatar_url")
+    @TableField("touxiang_url")
+    @JsonProperty("avatarUrl")
     private String avatarUrl;
 
-    @TableField("status")
+    @TableField("zhuangtai")
+    @JsonProperty("status")
     private Integer status;
 
-    @TableField(value = "hire_date", fill = FieldFill.INSERT)
+    @TableField(value = "ruzhi_riqi", fill = FieldFill.INSERT)
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @JsonProperty("hireDate")
     private LocalDate hireDate;
 
     @TableLogic
+    @JsonProperty("deleted")
     private Integer deleted;
 }

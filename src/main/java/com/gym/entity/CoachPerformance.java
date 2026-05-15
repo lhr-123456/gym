@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -12,49 +13,49 @@ public class CoachPerformance implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "perf_id", type = IdType.AUTO)
+    @TableId(value = "pingjia_id", type = IdType.AUTO)
     private Long perfId;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
-    @TableField("eval_month")
+    @TableField("pinggu_yuefen")
     private String evalMonth;
 
-    @TableField("attendance_score")
-    private java.math.BigDecimal attendanceScore;
+    @TableField("chuqin_pingfen")
+    private BigDecimal attendanceScore;
 
-    @TableField("teaching_score")
-    private java.math.BigDecimal teachingScore;
+    @TableField("jiaoxue_pingfen")
+    private BigDecimal teachingScore;
 
-    @TableField("service_score")
-    private java.math.BigDecimal serviceScore;
+    @TableField("fuwu_pingfen")
+    private BigDecimal serviceScore;
 
-    @TableField("sales_score")
-    private java.math.BigDecimal salesScore;
+    @TableField("xiaoshou_pingfen")
+    private BigDecimal salesScore;
 
-    @TableField("student_feedback")
-    private java.math.BigDecimal studentFeedback;
+    @TableField("xueyuan_fankui")
+    private BigDecimal studentFeedback;
 
-    @TableField("total_score")
-    private java.math.BigDecimal totalScore;
+    @TableField("zongfen")
+    private BigDecimal totalScore;
 
-    @TableField("eval_level")
+    @TableField("pingjia_dengji")
     private String evalLevel;
 
-    @TableField("eval_by")
+    @TableField("pinggu_ren")
     private Long evalBy;
 
-    @TableField("eval_time")
+    @TableField("pinggu_shijian")
     private LocalDateTime evalTime;
 
-    @TableField("eval_remarks")
+    @TableField("pinggu_beizhu")
     private String evalRemarks;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

@@ -13,40 +13,40 @@ public class EquipmentInfo implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "equipment_id", type = IdType.AUTO)
+    @TableId(value = "qicai_id", type = IdType.AUTO)
     private Long equipmentId;
 
-    @TableField("equipment_name")
+    @TableField("qicai_ming")
     private String equipmentName;
 
-    @TableField("type")
+    @TableField("leixing")
     private String type;
 
-    @TableField("brand")
+    @TableField("pinpai")
     private String brand;
 
-    @TableField("model")
+    @TableField("xinghao")
     private String model;
 
-    @TableField("status")
+    @TableField("zhuangtai")
     private String status;
 
-    @TableField("purchase_date")
+    @TableField("goumai_riqi")
     private LocalDate purchaseDate;
 
-    @TableField("last_maintain")
+    @TableField("zuihou_weixiu")
     private LocalDateTime lastMaintain;
 
-    @TableField("next_maintain")
+    @TableField("xiayou_weixiu")
     private LocalDateTime nextMaintain;
 
-    @TableField("description")
+    @TableField("miaoshu")
     private String description;
 
-    @TableField("location")
+    @TableField("weizhi")
     private String location;
 
-    @TableField("image")
+    @TableField("tupian")
     private String image;
 
     @TableLogic

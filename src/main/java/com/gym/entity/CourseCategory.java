@@ -12,25 +12,25 @@ public class CourseCategory implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "category_id", type = IdType.AUTO)
+    @TableId(value = "fenlei_id", type = IdType.AUTO)
     private Long categoryId;
 
-    @TableField("category_name")
+    @TableField("fenlei_ming")
     private String categoryName;
 
-    @TableField("description")
+    @TableField("miaoshu")
     private String description;
 
-    @TableField("sort_order")
+    @TableField("paixu")
     private Integer sortOrder;
 
-    @TableField("status")
+    @TableField("zhuangtai")
     private Integer status;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic

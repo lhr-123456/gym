@@ -12,49 +12,49 @@ public class CoachReview implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @TableId(value = "review_id", type = IdType.AUTO)
+    @TableId(value = "pingjia_id", type = IdType.AUTO)
     private Long reviewId;
 
-    @TableField("coach_id")
+    @TableField("jiaolian_id")
     private Long coachId;
 
-    @TableField("member_id")
+    @TableField("huiyuan_id")
     private Long memberId;
 
-    @TableField("course_id")
+    @TableField("kecheng_id")
     private Long courseId;
 
-    @TableField("rating")
+    @TableField("zonghe_pingfen")
     private Integer rating;
 
-    @TableField("teaching_rating")
+    @TableField("jiaoxue_pingfen")
     private Integer teachingRating;
 
-    @TableField("service_rating")
+    @TableField("fuwu_pingfen")
     private Integer serviceRating;
 
-    @TableField("professional_rating")
+    @TableField("zhuanye_pingfen")
     private Integer professionalRating;
 
-    @TableField("review_content")
+    @TableField("pingjia_neirong")
     private String reviewContent;
 
-    @TableField("review_pics")
+    @TableField("pingjia_tupian")
     private String reviewPics;
 
-    @TableField("reply_content")
+    @TableField("huifu_neirong")
     private String replyContent;
 
-    @TableField("reply_time")
+    @TableField("huifu_shijian")
     private LocalDateTime replyTime;
 
-    @TableField("status")
+    @TableField("zhuangtai")
     private Integer status;
 
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
+    @TableField(value = "chuangjian_shijian", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    @TableField(value = "gengxin_shijian", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     @TableLogic
